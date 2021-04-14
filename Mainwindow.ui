@@ -19,11 +19,91 @@
   <property name="windowTitle">
    <string>C! IDE</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="Icons.qrc">
+    <normaloff>:/Icons/cIcon.png</normaloff>:/Icons/cIcon.png</iconset>
+  </property>
   <property name="autoFillBackground">
    <bool>false</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="1">
+     <widget class="QGroupBox" name="groupBox_4">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="title">
+       <string>Application log</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QTextBrowser" name="textBrowser">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Clear</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="0" column="0" rowspan="2">
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="title">
+       <string/>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QPlainTextEdit" name="plainTextEdit">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_3">
+         <property name="title">
+          <string>Stout</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QTextBrowser" name="textBrowser_2">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
     <item row="0" column="1">
      <widget class="QGroupBox" name="groupBox">
       <property name="title">
@@ -78,39 +158,6 @@
       </layout>
      </widget>
     </item>
-    <item row="0" column="0">
-     <widget class="QGroupBox" name="groupBox_2">
-      <property name="title">
-       <string/>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QPlainTextEdit" name="plainTextEdit">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox_3">
-         <property name="title">
-          <string>Stout</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox_4">
-         <property name="title">
-          <string>Application log</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -126,23 +173,23 @@
     <property name="title">
      <string>Archivo</string>
     </property>
-    <addaction name="actionAbrir"/>
-    <addaction name="actionGuardar_como"/>
-    <addaction name="actionEliminar"/>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionDelete"/>
    </widget>
    <widget class="QMenu" name="menuEdici_n">
     <property name="title">
      <string>Ediciòn</string>
     </property>
-    <addaction name="actionCopiar"/>
-    <addaction name="actionCortar"/>
-    <addaction name="actionPegar"/>
+    <addaction name="actionCopy"/>
+    <addaction name="actionCut"/>
+    <addaction name="actionPaste"/>
    </widget>
    <widget class="QMenu" name="menuAyuda">
     <property name="title">
      <string>Ayuda</string>
     </property>
-    <addaction name="actionAcerca_de_Qt"/>
+    <addaction name="actionAboutQt"/>
    </widget>
    <widget class="QMenu" name="menuBuild">
     <property name="title">
@@ -173,7 +220,7 @@
    <addaction name="actionPrev_line"/>
    <addaction name="actionNext_line"/>
   </widget>
-  <action name="actionAbrir">
+  <action name="actionOpen">
    <property name="text">
     <string>Abrir</string>
    </property>
@@ -181,7 +228,7 @@
     <string>Ctrl+A</string>
    </property>
   </action>
-  <action name="actionGuardar_como">
+  <action name="actionSave">
    <property name="text">
     <string>Guardar como</string>
    </property>
@@ -189,7 +236,7 @@
     <string>Ctrl+G</string>
    </property>
   </action>
-  <action name="actionCopiar">
+  <action name="actionCopy">
    <property name="text">
     <string>Copiar</string>
    </property>
@@ -197,7 +244,7 @@
     <string>Ctrl+C</string>
    </property>
   </action>
-  <action name="actionCortar">
+  <action name="actionCut">
    <property name="text">
     <string>Cortar</string>
    </property>
@@ -205,7 +252,7 @@
     <string>Ctrl+X</string>
    </property>
   </action>
-  <action name="actionPegar">
+  <action name="actionPaste">
    <property name="text">
     <string>Pegar</string>
    </property>
@@ -213,12 +260,12 @@
     <string>Ctrl+V</string>
    </property>
   </action>
-  <action name="actionAcerca_de_Qt">
+  <action name="actionAboutQt">
    <property name="text">
     <string>Acerca de Qt</string>
    </property>
   </action>
-  <action name="actionEliminar">
+  <action name="actionDelete">
    <property name="text">
     <string>Eliminar</string>
    </property>

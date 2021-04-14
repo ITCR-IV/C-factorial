@@ -3,5 +3,6 @@
         <file>Icons/run.png</file>
         <file>Icons/nextLine.png</file>
         <file>Icons/prevLine.png</file>
+        <file>Icons/cIcon.png</file>
     </qresource>
 </RCC>
