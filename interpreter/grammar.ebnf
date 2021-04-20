@@ -1,0 +1,8 @@
+scope = "{" , loc , "}" ; 
+
+#loc = line of code
+loc = declaration | arithmetic | method_call | token , ";" ;
+declaration = ;
+arithmetic = ;
+method_call = ;
+token = ;
