@@ -1,5 +1,7 @@
 #ifndef LEXER_H
 #define LEXER_H
+#include <exception>
+#include <string>
 
 class Lexer
 {
@@ -11,19 +13,27 @@ private:
     //index of text
     int pos;
 
+    //index of line
+    int line;
+
     char current_char;
 
+    struct SyntaxException : public exception
+    {
+        SyntaxException(const string &msg) : msg_(msg) {}
+
+        string getMessage() const { return (msg_); }
+
+    private:
+        string msg_;
+    };
+
+    void error();
+
 public:
-    Lexer();
+    Lexer(char *text);
 
     /*
-    class Lexer(object):
-    def __init__(self, text):
-        # client string input, e.g. "3 * 5", "12 / 3 * 4", etc
-        self.text = text
-        # self.pos is an index into self.text
-        self.pos = 0
-        self.current_char = self.text[self.pos]
 
     def error(self):
         raise Exception('Invalid character')

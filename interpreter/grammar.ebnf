@@ -1,25 +1,23 @@
-scope = "{" , loc , "}" ; 
+scope = "{" , {loc | scope} , "}" ; 
 
-loc = [ declaration | struct | print_call | return_expression ] , ";" , "\n"; #loc = line of code
+loc = [ declaration | struct | print_call | return_expression ] , ";" ; #loc = line of code
 
 declaration = type , ID , [ "=" , return_expression ] ; #interpreter has to check that type on left == type on right
 
 struct = "struct" , scope , ID ; #struct_id is different from ID only in that it can count as a type 
 
-return_expression = arithmetic | method_call | token | string ;
+return_expression = arithmetic | method_call | token | STRING ;
 
 arithmetic = token , { "+" | "-" | "*" | "/" , token } ;
 
 method_call = "getAddr" | "getValue" , "(" , ID , ")" ;
 
-print_call = "print", "(" , string , ")" ;
+print_call = "print", "(" , STRING , ")" ;
 
 token = ID | number ; 
 
 number = "0" | [ "-" ] , INTEGER , ["." , INTEGER] ;
 
-string = '"' , {CHARACTER} , '"' ;
-
 type = "int" | "long" | "char" | "float" | "double" | ("reference" , "<" , type , ">") , ID ; #ID has to refer to a previously defined struct
 
-# ID refers to a string of characters that just kind of shows up
+# all the predefined strings in here have to be found by the ID method
