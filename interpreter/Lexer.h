@@ -3,6 +3,7 @@
 #include <exception>
 #include <string>
 #include "Token.h"
+#include "TokenConstants.h"
 
 using namespace std;
 
@@ -37,6 +38,8 @@ public:
     Lexer(string text);
 
     void advance();
+
+    char *peek();
 
     void skipWhitespace();
 
