@@ -4,7 +4,7 @@ loc = [ declaration | struct | print_call | return_expression ] , ";" , "\n"; #l
 
 declaration = type , ID , [ "=" , return_expression ] ; #interpreter has to check that type on left == type on right
 
-struct = "struct" , scope , STRUCT_ID ; #struct_id is different from ID only in that it can count as a type 
+struct = "struct" , scope , ID ; #struct_id is different from ID only in that it can count as a type 
 
 return_expression = arithmetic | method_call | token | string ;
 
@@ -20,4 +20,4 @@ number = "0" | [ "-" ] , INTEGER , ["." , INTEGER] ;
 
 string = '"' , {CHARACTER} , '"' ;
 
-type = "int" | "long" | "char" | "float" | "double" | ("reference" , "<" , type , ">") , STRUCT_ID ; 
+type = "int" | "long" | "char" | "float" | "double" | ("reference" , "<" , type , ">") , ID ; #ID has to refer to a previously defined struct
