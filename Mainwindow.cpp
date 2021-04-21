@@ -5,6 +5,7 @@
 #include "QFile"
 #include "QTextStream"
 
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -80,7 +81,6 @@ void MainWindow::on_actionDelete_triggered()
 
 void MainWindow::on_actionRun_triggered()
 {
-
 }
 
 void MainWindow::on_actionNext_line_triggered()
