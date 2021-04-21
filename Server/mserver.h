@@ -2,11 +2,15 @@
 #define MSERVER_H
 
 
+#include <netinet/in.h>
+
+
 class mserver
 {
 public:
     mserver(int PORT, int size);
-    //mserver_read();
+    void request(sockaddr_in address, int serverSocket);
+
 private:
     void* serverMemory;
 

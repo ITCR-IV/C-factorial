@@ -14,18 +14,10 @@ mserver::mserver(int PORT, int size)
 
     int serverBind = 0;
 
-    int newSocket = 0;
-
-    int addressLen = sizeof (address);
-    char buffer[1024] = {0};
-    char *hello = "Hello from server";
-    int valread;
-
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 
     // malloc of the size
-    //serverMemory = malloc(size);
-
+    serverMemory = malloc(size);
 
     // configurar el ambiente para el sockaddr structure
     address.sin_family = AF_INET;
@@ -34,6 +26,7 @@ mserver::mserver(int PORT, int size)
 
     //
     serverBind = bind(serverSocket,(sockaddr *) &address, sizeof (sockaddr));
+
     if (serverBind < 0)
     {
         // add to log
@@ -61,24 +54,42 @@ mserver::mserver(int PORT, int size)
         printf("Started listening local port\n");
     }
 
-    // accept
+    this->request(address, serverSocket);
 
-    newSocket = accept(serverSocket,(sockaddr *) &address, (socklen_t*)&addressLen);
+}
 
-    if (newSocket < 0)
+void mserver::request(sockaddr_in address, int serverSocket) {
+    int newSocket = 0;
+
+    int addressLen = sizeof (address);
+    char buffer[1024] = {0};
+    char *hello = "Hello from server";
+    int valread;
+
+    while (true)
     {
-        // add to log
-        printf("Fail to accept\n");
-    }
-    else
+        // accept
 
-    {
-        // add to log
-        printf("accepted\n");
+        newSocket = accept(serverSocket,(sockaddr *) &address, (socklen_t*)&addressLen);
+
+        if (newSocket < 0)
+        {
+            // add to log
+            printf("Fail to accept\n");
+        }
+        else
+
+        {
+            // add to log
+            printf("accepted\n");
+        }
+
+        valread = read( newSocket , buffer, 1024);
+        printf("%s\n",buffer );
+        send(newSocket , hello , strlen(hello) , 0 );
+        printf("Hello message sent\n");
+
     }
-    valread = read( newSocket , buffer, 1024);
-    printf("%s\n",buffer );
-    send(newSocket , hello , strlen(hello) , 0 );
-    printf("Hello message sent\n");
+
 
 }
