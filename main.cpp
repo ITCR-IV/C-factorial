@@ -1,12 +1,14 @@
 #include "Mainwindow.h"
 #include <QApplication>
-#include "mserver.h"
+#include "Server/mserver.h"
+#include "iostream"
+using namespace std;
+
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
-    mserver Server = mserver();
     return a.exec();
 }

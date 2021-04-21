@@ -11,14 +11,20 @@ CONFIG += c++11
 SOURCES += \
     CodeEditor.cpp \
     Mainwindow.cpp \
+    Server/mserver.cpp \
+    interpreter/Lexer.cpp \
+    interpreter/Parser.cpp \
+    interpreter/Token.cpp \
     main.cpp \
-    mserver.cpp
 
 HEADERS += \
     CodeEditor.h \
     LineNumberArea.h \
     Mainwindow.h \
-    mserver.h
+    Server/mserver.h \
+    interpreter/Lexer.h \
+    interpreter/Parser.h \
+    interpreter/Token.h \
 
 FORMS += \
     Mainwindow.ui
@@ -30,3 +36,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     Icons.qrc
+
+DISTFILES += \
+    interpreter/grammar.ebnf
