@@ -5,9 +5,11 @@
 #include <unordered_map>
 #include "Token.h"
 
+// token types
 const std::string EOFF = "EOFF";
 const std::string INTEGER = "INTEGER";
 const std::string STRING = "STRING";
+const std::string ID = "ID";
 
 // symbols
 const std::string LBRACK = "{";
