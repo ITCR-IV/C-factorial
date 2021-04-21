@@ -3,6 +3,19 @@
 
 class Lexer
 {
+
+private:
+    //Code string input
+    char *text;
+
+    //index of text
+    int pos;
+
+    char current_char;
+
+public:
+    Lexer();
+
     /*
     class Lexer(object):
     def __init__(self, text):

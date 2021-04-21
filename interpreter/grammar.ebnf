@@ -21,3 +21,5 @@ number = "0" | [ "-" ] , INTEGER , ["." , INTEGER] ;
 string = '"' , {CHARACTER} , '"' ;
 
 type = "int" | "long" | "char" | "float" | "double" | ("reference" , "<" , type , ">") , ID ; #ID has to refer to a previously defined struct
+
+# ID refers to a string of characters that just kind of shows up
