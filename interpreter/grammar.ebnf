@@ -1,8 +1,23 @@
 scope = "{" , loc , "}" ; 
 
-#loc = line of code
-loc = declaration | arithmetic | method_call | token , ";" ;
-declaration = ;
-arithmetic = ;
-method_call = ;
-token = ;
+loc = [ declaration | struct | print_call | return_expression ] , ";" , "\n"; #loc = line of code
+
+declaration = type , ID , [ "=" , return_expression ] ; #interpreter has to check that type on left == type on right
+
+struct = "struct" , scope , STRUCT_ID ; #struct_id is different from ID only in that it can count as a type 
+
+return_expression = arithmetic | method_call | token | string ;
+
+arithmetic = token , { "+" | "-" | "*" | "/" , token } ;
+
+method_call = "getAddr" | "getValue" , "(" , ID , ")" ;
+
+print_call = "print", "(" , string , ")" ;
+
+token = ID | number ; 
+
+number = "0" | [ "-" ] , INTEGER , ["." , INTEGER] ;
+
+string = '"' , {CHARACTER} , '"' ;
+
+type = "int" | "long" | "char" | "float" | "double" | ("reference" , "<" , type , ">") , STRUCT_ID ; 
