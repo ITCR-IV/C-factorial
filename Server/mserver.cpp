@@ -13,7 +13,7 @@ mserver::mserver(int PORT, int size)
     struct sockaddr_in address;
 
     int serverBind = 0;
-
+    int opt = 1;
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 
     // malloc of the size
@@ -38,6 +38,9 @@ mserver::mserver(int PORT, int size)
         // add to log
         printf("Successfully bind to local port\n");
     }
+
+    // set socket to an especific port
+    setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt));
 
     //listen
     serverBind = listen(serverSocket, 1);
