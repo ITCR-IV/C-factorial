@@ -2,6 +2,7 @@
 #define LEXER_H
 #include <exception>
 #include <string>
+#include "Token.h"
 
 using namespace std;
 
@@ -10,7 +11,7 @@ class Lexer
 
 private:
     //Code string input
-    char *text;
+    string text;
 
     //index of text
     int pos;
@@ -18,7 +19,7 @@ private:
     //index of line
     int line;
 
-    char current_char;
+    char *current_char;
 
     struct SyntaxException : public exception
     {
@@ -33,20 +34,21 @@ private:
     void error();
 
 public:
-    Lexer(char *text);
+    Lexer(string text);
+
+    void advance();
+
+    void skipWhitespace();
+
+    int findInteger();
+
+    string findId();
+
+    string findString();
+
+    Token getNextToken();
 
     /*
-
-    def error(self):
-        raise Exception('Invalid character')
-
-    def advance(self):
-        """Advance the `pos` pointer and set the `current_char` variable."""
-        self.pos += 1
-        if self.pos > len(self.text) - 1:
-            self.current_char = None  # Indicates end of input
-        else:
-            self.current_char = self.text[self.pos]
 
     def skip_whitespace(self):
         while self.current_char is not None and self.current_char.isspace():

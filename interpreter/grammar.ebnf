@@ -1,23 +1,27 @@
 scope = "{" , {loc | scope} , "}" ; 
 
-loc = [ declaration | struct | print_call | return_expression ] , ";" ; #loc = line of code
+loc = [ declaration | struct | print_call | return_expression | struct_access | struct_declaration ] , ";" ; #loc = line of code
 
 declaration = type , ID , [ "=" , return_expression ] ; #interpreter has to check that type on left == type on right
 
-struct = "struct" , scope , ID ; #struct_id is different from ID only in that it can count as a type 
+struct = "struct" , scope , ID ;
 
-return_expression = arithmetic | method_call | token | STRING ;
+struct_declaration = struct_access , "=" , return_expression ;
+
+struct_access = ID , "." , ID ;
+
+return_expression = arithmetic | method_call | token | STRING | struct_access ;
 
 arithmetic = token , { "+" | "-" | "*" | "/" , token } ;
 
-method_call = "getAddr" | "getValue" , "(" , ID , ")" ;
+method_call = "getAddr" | "getValue" , "(" , ID | struct_access, ")" ;
 
 print_call = "print", "(" , STRING , ")" ;
 
 token = ID | number ; 
 
-number = "0" | [ "-" ] , INTEGER , ["." , INTEGER] ;
+number = [ "-" ] , INTEGER , ["." , INTEGER] ;
 
-type = "int" | "long" | "char" | "float" | "double" | ("reference" , "<" , type , ">") , ID ; #ID has to refer to a previously defined struct
+type = "int" | "long" | "char" | "float" | "double" | ("reference" , "<" , type , ">") | ID ; #ID has to refer to a previously defined struct
 
 # all the predefined strings in here have to be found by the ID method

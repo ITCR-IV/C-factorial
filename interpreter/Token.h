@@ -1,19 +1,23 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
+#include <string>
+
+using namespace std;
+
 class Token
 {
 private:
-    char *type;
+    string type;
 
-    char *value;
+    string value;
 
 public:
-    Token(char *type, char *value);
+    Token(string type, string value);
 
-    char *getType();
+    string getType();
 
-    char *getValue();
+    string getValue();
 };
 
 #endif
