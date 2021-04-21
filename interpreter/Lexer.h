@@ -1,75 +1,59 @@
 #ifndef LEXER_H
 #define LEXER_H
+#include <exception>
+#include <string>
+#include "Token.h"
+#include "TokenConstants.h"
 
+using namespace std;
+
+/*!
+ * \brief Class that carries out the lexical analysis of the input code
+ * 
+ */
 class Lexer
 {
-    /*
-    class Lexer(object):
-    def __init__(self, text):
-        # client string input, e.g. "3 * 5", "12 / 3 * 4", etc
-        self.text = text
-        # self.pos is an index into self.text
-        self.pos = 0
-        self.current_char = self.text[self.pos]
 
-    def error(self):
-        raise Exception('Invalid character')
+private:
+    //Code string input
+    string text;
 
-    def advance(self):
-        """Advance the `pos` pointer and set the `current_char` variable."""
-        self.pos += 1
-        if self.pos > len(self.text) - 1:
-            self.current_char = None  # Indicates end of input
-        else:
-            self.current_char = self.text[self.pos]
+    //index of text
+    int pos;
 
-    def skip_whitespace(self):
-        while self.current_char is not None and self.current_char.isspace():
-            self.advance()
+    //index of line
+    int line;
 
-    def integer(self):
-        """Return a (multidigit) integer consumed from the input."""
-        result = ''
-        while self.current_char is not None and self.current_char.isdigit():
-            result += self.current_char
-            self.advance()
-        return int(result)
+    char *current_char;
 
-    def get_next_token(self):
-        """Lexical analyzer (also known as scanner or tokenizer)
+    struct SyntaxException : public exception
+    {
+        SyntaxException(const string &msg) : msg_(msg) {}
 
-        This method is responsible for breaking a sentence
-        apart into tokens. One token at a time.
-        """
-        while self.current_char is not None:
+        string getMessage() const { return (msg_); }
 
-            if self.current_char.isspace():
-                self.skip_whitespace()
-                continue
+    private:
+        string msg_;
+    };
 
-            if self.current_char.isdigit():
-                return Token(INTEGER, self.integer())
+    void error();
 
-            if self.current_char == '+':
-                self.advance()
-                return Token(PLUS, '+')
+public:
+    Lexer(string text);
 
-            if self.current_char == '-':
-                self.advance()
-                return Token(MINUS, '-')
+    void advance();
 
-            if self.current_char == '*':
-                self.advance()
-                return Token(MUL, '*')
+    char *peek();
 
-            if self.current_char == '/':
-                self.advance()
-                return Token(DIV, '/')
+    void skipWhitespace();
 
-            self.error()
+    string findInteger();
 
-        return Token(EOF, None)
-        */
+    Token findId();
+
+    string findString();
+
+    Token getNextToken();
 };
 
 #endif // LEXER_H
