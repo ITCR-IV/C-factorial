@@ -4,6 +4,7 @@
 #include "QFileDialog"
 #include "QFile"
 #include "QTextStream"
+#include "interpreter/Lexer.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -17,7 +18,6 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
 
 void MainWindow::on_actionOpen_triggered()
 {
@@ -81,11 +81,12 @@ void MainWindow::on_actionDelete_triggered()
 
 void MainWindow::on_actionRun_triggered()
 {
+    //Hacer lexer y parser
 }
 
 void MainWindow::on_actionNext_line_triggered()
 {
-
+    //Correr método de parser para avanzar una línea
 }
 
 void MainWindow::on_actionPrev_line_triggered()
