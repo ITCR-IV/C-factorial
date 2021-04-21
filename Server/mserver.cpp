@@ -63,13 +63,12 @@ mserver::mserver(int PORT, int size)
 
 void mserver::request(sockaddr_in address, int serverSocket) {
     int newSocket = 0;
-
     int addressLen = sizeof (address);
     char buffer[1024] = {0};
     char *hello = "Hello from server";
     int valread;
-
-    while (true)
+    bool listening = true;
+    while (listening)
     {
         // accept
 
@@ -89,10 +88,22 @@ void mserver::request(sockaddr_in address, int serverSocket) {
 
         valread = read( newSocket , buffer, 1024);
         printf("%s\n",buffer );
+        if (buffer == "off")
+        {
+            listening = false;
+        }
         send(newSocket , hello , strlen(hello) , 0 );
         printf("Hello message sent\n");
 
     }
 
+
+}
+
+void mserver::memoryRequest(int num) {
+
+}
+
+void mserver::memoryDeletion(int num) {
 
 }
