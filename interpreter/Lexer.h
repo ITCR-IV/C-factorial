@@ -45,7 +45,7 @@ public:
 
     int findInteger();
 
-    string findId();
+    Token findId();
 
     string findString();
 

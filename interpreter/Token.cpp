@@ -13,6 +13,7 @@ string Token::getType()
     return this->type;
 }
 
+
 string Token::getValue()
 {
     return this->value;

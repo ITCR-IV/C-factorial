@@ -95,8 +95,43 @@ int Lexer::findInteger()
     return stoi(result);
 }
 
-string Lexer::findId()
+Token Lexer::findId()
 {
+    string result = "";
+    while (this->current_char != nullptr && isalnum(*(this->current_char)))
+    {
+        result += *(this->current_char);
+        this->advance();
+    }
+    if (RESERVED_KEYWORDS.find(result) == RESERVED_KEYWORDS.end())
+    {
+        return Token(ID, result);
+    }
+    else
+    {
+        return Token(result, result);
+    }
+}
+
+string Lexer::findString()
+{
+    string result = "\"";
+    while (this->current_char != nullptr && *(this->current_char) != '\"')
+    {
+        if (*(this->current_char) == '\n') //Reached end of line without closing string
+        {
+            this->error();
+        }
+        result += *(this->current_char);
+        this->advance();
+    }
+
+    if (this->current_char == nullptr)
+    { // Reaching EOF without closing string
+        this->error();
+    }
+
+    return result;
 }
 
 Token Lexer::getNextToken()
