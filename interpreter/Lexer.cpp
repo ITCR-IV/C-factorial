@@ -6,9 +6,9 @@
 using namespace std;
 
 /*!
- * @brief Construct a new Lexer object
+ * \brief Construct a new Lexer object
  * 
- * @param text The entire code text
+ * \param text The entire code text
  */
 Lexer::Lexer(string text)
 {
@@ -19,7 +19,7 @@ Lexer::Lexer(string text)
 }
 
 /*!
- * @brief The lexer throws a SyntaxException if it can't tokenize properly
+ * \brief The lexer throws a SyntaxException if it can't tokenize properly
  * 
  */
 void Lexer::error()
@@ -33,7 +33,7 @@ void Lexer::error()
 }
 
 /*!
- * @brief moves the current_char pointer and adds 1 to pos counter
+ * \brief moves the current_char pointer and adds 1 to pos counter
  * 
  */
 void Lexer::advance()
@@ -50,9 +50,9 @@ void Lexer::advance()
 }
 
 /*!
- * @brief check the following char in the text string
+ * \brief check the following char in the text string
  * 
- * @return a char* to the character next to the current_char, if the file is over then it returns nullptr 
+ * \return a char* to the character next to the current_char, if the file is over then it returns nullptr 
  */
 char *Lexer::peek()
 {
@@ -68,23 +68,23 @@ char *Lexer::peek()
 }
 
 /**
- * @brief skips all spaces that appear together when called
+ * \brief skips all spaces that appear together when called
  * 
  */
 void Lexer::skipWhitespace()
 {
-    while (current_char != nullptr && *current_char == ' ')
+    while (this->current_char != nullptr && *(this->current_char) == ' ')
     {
         this->advance();
     }
 }
 
 /*!
- * @brief scans the text for an integer
+ * \brief scans the text for an integer
  * 
- * @return int that was found in the text
+ * \return string representing integer that was found in the text
  */
-int Lexer::findInteger()
+string Lexer::findInteger()
 {
     string result = "";
     while (this->current_char != nullptr && isdigit(*(this->current_char)))
@@ -92,9 +92,14 @@ int Lexer::findInteger()
         result += *(this->current_char);
         this->advance();
     }
-    return stoi(result);
+    return result;
 }
 
+/*!
+ * \brief scans the text for a complete identifier
+ * 
+ * \return Token token type is ID, unless the ID was a reserved word, in which case the type is the reserved word
+ */
 Token Lexer::findId()
 {
     string result = "";
@@ -113,27 +118,128 @@ Token Lexer::findId()
     }
 }
 
+/*!
+ * \brief scans the text for a full opened and closed string
+ * 
+ * \return string string that was found, if string isn't closed it'll throw an error
+ */
 string Lexer::findString()
 {
     string result = "\"";
-    while (this->current_char != nullptr && *(this->current_char) != '\"')
+    this->advance();
+    while (*(this->current_char) != '\"')
     {
-        if (*(this->current_char) == '\n') //Reached end of line without closing string
+        if (*(this->current_char) == '\n' || this->current_char != nullptr) //Reached end of line or EOF without closing string
         {
             this->error();
         }
         result += *(this->current_char);
         this->advance();
     }
-
-    if (this->current_char == nullptr)
-    { // Reaching EOF without closing string
-        this->error();
-    }
+    result += *(this->current_char);
+    this->advance();
 
     return result;
 }
 
+/*!
+ * \brief This is the lexical analyzer (tokenizer) method
+ * 
+ * \return Token The next token in the input code
+ */
 Token Lexer::getNextToken()
 {
+    while (this->current_char != nullptr)
+    {
+        if (*(this->current_char) == ' ')
+        {
+            this->skipWhitespace();
+            continue;
+        }
+        if (*(this->current_char) == '\n')
+        {
+            this->line++;
+            this->advance();
+            continue;
+        }
+        if (isalpha(*(this->current_char)))
+        {
+            return this->findId();
+        }
+        if (isdigit(*(this->current_char)))
+        {
+            return Token(INTEGER, this->findInteger());
+        }
+        if (*(this->current_char) == '"')
+        {
+            return Token(STRING, this->findString());
+        }
+        if (*(this->current_char) == '{')
+        {
+            this->advance();
+            return Token(LBRACK, LBRACK);
+        }
+        if (*(this->current_char) == '}')
+        {
+            this->advance();
+            return Token(RBRACK, RBRACK);
+        }
+        if (*(this->current_char) == '(')
+        {
+            this->advance();
+            return Token(LPAREN, LPAREN);
+        }
+        if (*(this->current_char) == ')')
+        {
+            this->advance();
+            return Token(RPAREN, RPAREN);
+        }
+        if (*(this->current_char) == '<')
+        {
+            this->advance();
+            return Token(LARROW, LARROW);
+        }
+        if (*(this->current_char) == '>')
+        {
+            this->advance();
+            return Token(RARROW, RARROW);
+        }
+        if (*(this->current_char) == '=')
+        {
+            this->advance();
+            return Token(EQUAL, EQUAL);
+        }
+        if (*(this->current_char) == '.')
+        {
+            this->advance();
+            return Token(DOT, DOT);
+        }
+        if (*(this->current_char) == ';')
+        {
+            this->advance();
+            return Token(SEMI, SEMI);
+        }
+        if (*(this->current_char) == '+')
+        {
+            this->advance();
+            return Token(PLUS, PLUS);
+        }
+        if (*(this->current_char) == '-')
+        {
+            this->advance();
+            return Token(MINUS, MINUS);
+        }
+        if (*(this->current_char) == '*')
+        {
+            this->advance();
+            return Token(MUL, MUL);
+        }
+        if (*(this->current_char) == '/')
+        {
+            this->advance();
+            return Token(DIV, DIV);
+        }
+        this->error();
+    }
+    return Token(EOFF, nullptr);
 }
