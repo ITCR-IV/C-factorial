@@ -5,7 +5,6 @@
 #include <cstring>
 #include "iostream"
 
-
 using namespace std;
 
 mserver::mserver(int PORT, int size)
@@ -25,7 +24,7 @@ mserver::mserver(int PORT, int size)
     address.sin_port = htons(PORT);
 
     //
-    serverBind = bind(serverSocket,(sockaddr *) &address, sizeof (sockaddr));
+    serverBind = bind(serverSocket, (sockaddr *)&address, sizeof(sockaddr));
 
     if (serverBind < 0)
     {
@@ -58,21 +57,21 @@ mserver::mserver(int PORT, int size)
     }
 
     this->request(address, serverSocket);
-
 }
 
-void mserver::request(sockaddr_in address, int serverSocket) {
+void mserver::request(sockaddr_in address, int serverSocket)
+{
     int newSocket = 0;
-    int addressLen = sizeof (address);
+    int addressLen = sizeof(address);
     char buffer[1024] = {0};
-    char *hello = "Hello from server";
+    const char *hello = "Hello from server";
     int valread;
     bool listening = true;
     while (listening)
     {
         // accept
 
-        newSocket = accept(serverSocket,(sockaddr *) &address, (socklen_t*)&addressLen);
+        newSocket = accept(serverSocket, (sockaddr *)&address, (socklen_t *)&addressLen);
 
         if (newSocket < 0)
         {
@@ -86,24 +85,21 @@ void mserver::request(sockaddr_in address, int serverSocket) {
             printf("accepted\n");
         }
 
-        valread = read( newSocket , buffer, 1024);
-        printf("%s\n",buffer );
+        valread = read(newSocket, buffer, 1024);
+        printf("%s\n", buffer);
         if (buffer == "off")
         {
             listening = false;
         }
-        send(newSocket , hello , strlen(hello) , 0 );
+        send(newSocket, hello, strlen(hello), 0);
         printf("Hello message sent\n");
-
     }
-
-
 }
 
-void mserver::memoryRequest(int num) {
-
+void mserver::memoryRequest(int num)
+{
 }
 
-void mserver::memoryDeletion(int num) {
-
+void mserver::memoryDeletion(int num)
+{
 }
