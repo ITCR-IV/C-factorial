@@ -5,11 +5,11 @@
 #include "QFile"
 #include "QTextStream"
 #include "interpreter/Lexer.h"
-
+#include <string>
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 }
@@ -24,11 +24,12 @@ void MainWindow::on_actionOpen_triggered()
     QFile file;
     QTextStream io;
     QString fileName;
-    fileName = QFileDialog::getOpenFileName(this,"Abrir");
+    fileName = QFileDialog::getOpenFileName(this, "Abrir");
     file.setFileName(fileName);
-    file.open(QIODevice::ReadOnly|QIODevice::Text);
-    if (!file.isOpen()){
-        QMessageBox::critical(this,"Error", file.errorString());
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    if (!file.isOpen())
+    {
+        QMessageBox::critical(this, "Error", file.errorString());
         return;
     }
     io.setDevice(&file);
@@ -42,15 +43,16 @@ void MainWindow::on_actionSave_triggered()
     QFile file;
     QTextStream io;
     QString fileName;
-    fileName = QFileDialog::getSaveFileName(this,"Guardar");
+    fileName = QFileDialog::getSaveFileName(this, "Guardar");
     file.setFileName(fileName);
-    file.open(QIODevice::WriteOnly|QIODevice::Text);
-    if (!file.isOpen()){
-        QMessageBox::critical(this,"Error", file.errorString());
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if (!file.isOpen())
+    {
+        QMessageBox::critical(this, "Error", file.errorString());
         return;
     }
     io.setDevice(&file);
-    io<<ui->plainTextEdit->toPlainText();
+    io << ui->plainTextEdit->toPlainText();
     file.close();
 }
 
@@ -76,11 +78,13 @@ void MainWindow::on_actionAboutQt_triggered()
 
 void MainWindow::on_actionDelete_triggered()
 {
-
 }
 
 void MainWindow::on_actionRun_triggered()
 {
+    QString code = (ui->plainTextEdit->toPlainText());
+    std::string plainCode = code.toUtf8().constData();
+    std::cout << plainCode + '\n';
     //Hacer lexer y parser
 }
 
@@ -91,5 +95,4 @@ void MainWindow::on_actionNext_line_triggered()
 
 void MainWindow::on_actionPrev_line_triggered()
 {
-
 }
