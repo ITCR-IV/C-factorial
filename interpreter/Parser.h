@@ -9,11 +9,13 @@ class Parser
 {
 
 private:
-    // Lexer stuff
+    //! Lexer employed by parser
     Lexer lexer;
+
+    //! token the parser is going over
     Token currentToken;
 
-    // Interpreter
+    //! Interpreter employed by parser
     Interpreter interpreter;
 
     //the type of exception thrown by the parser
@@ -26,75 +28,29 @@ private:
 public:
     Parser(Lexer inputLexer, const int PORT);
 
-    /*
-def __init__(self, lexer):
-        self.lexer = lexer
-        # set current token to the first token taken from the input
-        self.current_token = self.lexer.get_next_token()
+    void scope();
 
-    def error(self):
-        raise Exception('Invalid syntax')
+    void loc();
 
-    def eat(self, token_type):
-        # compare the current token type with the passed token
-        # type and if they match then "eat" the current token
-        # and assign the next token to the self.current_token,
-        # otherwise raise an exception.
-        if self.current_token.type == token_type:
-            self.current_token = self.lexer.get_next_token()
-        else:
-            self.error()
+    void declaration();
 
-    def factor(self):
-        """factor : INTEGER | LPAREN expr RPAREN"""
-        token = self.current_token
-        if token.type == INTEGER:
-            self.eat(INTEGER)
-            return token.value
-        elif token.type == LPAREN:
-            self.eat(LPAREN)
-            result = self.expr()
-            self.eat(RPAREN)
-            return result
+    Token return_expression();
 
-    def term(self):
-        """term : factor ((MUL | DIV) factor)*"""
-        result = self.factor()
+    void struct_definition();
 
-        while self.current_token.type in (MUL, DIV):
-            token = self.current_token
-            if token.type == MUL:
-                self.eat(MUL)
-                result = result * self.factor()
-            elif token.type == DIV:
-                self.eat(DIV)
-                result = result / self.factor()
+    void struct_loc();
 
-        return result
+    void struct_scope();
 
-    def expr(self):
-        """Arithmetic expression parser / interpreter.
+    void struct_declaration();
 
-        calc> 7 + 3 * (10 / (12 / (3 + 1) - 1))
-        22
+    Token struct_access();
 
-        expr   : term ((PLUS | MINUS) term)*
-        term   : factor ((MUL | DIV) factor)*
-        factor : INTEGER | LPAREN expr RPAREN
-        """
-        result = self.term()
+    Token arithmetic();
 
-        while self.current_token.type in (PLUS, MINUS):
-            token = self.current_token
-            if token.type == PLUS:
-                self.eat(PLUS)
-                result = result + self.term()
-            elif token.type == MINUS:
-                self.eat(MINUS)
-                result = result - self.term()
+    Token method_call();
 
-        return result
-*/
+    void print_call();
 };
 
 #endif

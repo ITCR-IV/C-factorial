@@ -7,24 +7,21 @@
 
 using namespace std;
 
-/*!
- * \brief Class that carries out the lexical analysis of the input code
- * 
- */
+//! Class that carries out the lexical analysis of the input code
 class Lexer
 {
 
 private:
-    //Code string input
+    //!Code string input
     string text;
 
-    //index of text
+    //!index of text
     int pos;
 
-    //a pointer that iterates through the whole text eventually
+    //!a pointer that iterates through the whole text eventually
     char *current_char;
 
-    //the type of exception thrown by the lexer
+    //!the type of exception thrown by the lexer
     struct SyntaxException;
 
     void error(const string extraDetails);
@@ -40,7 +37,7 @@ private:
     void advance();
 
 public:
-    //index of line
+    //!index of line
     int line;
 
     Lexer(string text);

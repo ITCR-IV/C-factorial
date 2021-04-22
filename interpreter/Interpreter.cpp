@@ -3,13 +3,9 @@
 
 using namespace std;
 
-/*!
- * \brief struct RuntimeException to define the exception thrown while interpreting
- * 
- */
+//! struct RuntimeException to define the exception thrown while interpreting
 struct Interpreter::RuntimeException : public exception
 {
-
     RuntimeException(const string &msg) : msg_(msg) {}
 
     string getMessage() const { return (msg_); }
