@@ -3,9 +3,7 @@
 
 using namespace std;
 
-Interpreter::Interpreter(int PORT)
-{
-}
+Interpreter::Interpreter() : manager(ServerManager::getInstance()) {}
 
 //! struct RuntimeException to define the exception thrown while interpreting
 struct Interpreter::RuntimeException : public exception

@@ -25,7 +25,7 @@ public:
     ServerManager(ServerManager &other) = delete;   //delete copy constructor (non-cloneable)
     void operator=(const ServerManager &) = delete; //delete assignment operator (non-assignable)
 
-    static ServerManager *getInstance(int PORT);
+    static ServerManager *getInstance(int PORT = 9999);
 };
 
 #endif

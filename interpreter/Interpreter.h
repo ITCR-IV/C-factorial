@@ -2,6 +2,7 @@
 #define INTERPRETER_H
 
 #include <string>
+#include "ServerManager.h"
 
 using namespace std;
 
@@ -10,6 +11,7 @@ class Interpreter
 
 private:
     //socket attribute and stuff
+    ServerManager *manager;
 
     //error stuff
     struct RuntimeException;
@@ -18,7 +20,7 @@ private:
 
 public:
     //methods to communicate with server and process stuff
-    Interpreter(int port);
+    Interpreter();
 
     void enter_scope();
 
