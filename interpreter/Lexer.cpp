@@ -37,12 +37,12 @@ private:
  * \brief The lexer throws a SyntaxException if it can't tokenize properly
  * 
  */
-void Lexer::error()
+void Lexer::error(const string extraDetails = "")
 {
     string msg = "Syntax error found in line: ";
     string lineNum = to_string(this->line);
 
-    string fullMsg = msg + lineNum;
+    string fullMsg = msg + lineNum + '\n' + extraDetails;
 
     throw SyntaxException(fullMsg);
 }
@@ -146,7 +146,7 @@ string Lexer::findString()
     {
         if (*(this->current_char) == '\n' || this->current_char != nullptr) //Reached end of line or EOF without closing string
         {
-            this->error();
+            this->error("Unclosed string");
         }
         result += *(this->current_char);
         this->advance();
@@ -254,7 +254,7 @@ Token Lexer::getNextToken()
             this->advance();
             return Token(DIV, DIV);
         }
-        this->error();
+        this->error("Invalid character");
     }
     return Token(EOFF, nullptr);
 }

@@ -28,7 +28,7 @@ private:
 
     struct SyntaxException;
 
-    void error();
+    void error(const string extraDetails);
 
 public:
     Lexer(string text);
