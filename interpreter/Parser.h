@@ -11,6 +11,11 @@ private:
     Lexer lexer;
     Token currentToken;
 
+    //the type of exception thrown by the parser
+    struct SemanticException;
+
+    void error(const string extraDetails);
+
 public:
     Parser(Lexer inputLexer);
 
