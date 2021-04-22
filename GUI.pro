@@ -11,7 +11,7 @@ CONFIG += c++11
 SOURCES += \
     CodeEditor.cpp \
     Mainwindow.cpp \
-    Server/mserver.cpp \
+    server/mserver.cpp \
     interpreter/Lexer.cpp \
     interpreter/Parser.cpp \
     interpreter/Token.cpp \
@@ -21,7 +21,7 @@ HEADERS += \
     CodeEditor.h \
     LineNumberArea.h \
     Mainwindow.h \
-    Server/mserver.h \
+    server/mserver.h \
     interpreter/Lexer.h \
     interpreter/Parser.h \
     interpreter/Token.h \

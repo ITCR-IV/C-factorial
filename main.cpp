@@ -1,9 +1,8 @@
 #include "Mainwindow.h"
 #include <QApplication>
-#include "Server/mserver.h"
+#include "server/mserver.h"
 #include "iostream"
 using namespace std;
-
 
 int main(int argc, char *argv[])
 {
