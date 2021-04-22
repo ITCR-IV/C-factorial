@@ -1,6 +1,5 @@
 #include "Mainwindow.h"
 #include <QApplication>
-#include "server/mserver.h"
 #include "iostream"
 using namespace std;
 
