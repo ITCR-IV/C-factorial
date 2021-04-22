@@ -51,6 +51,12 @@ public:
     Token method_call();
 
     void print_call();
+
+    Token factor();
+
+    Token number();
+
+    Token type();
 };
 
 #endif
