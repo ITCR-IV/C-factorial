@@ -19,6 +19,21 @@ Lexer::Lexer(string text)
 }
 
 /*!
+ * \brief struct SyntaxException to define the exception thrown by the lexer
+ * 
+ */
+struct Lexer::SyntaxException : public exception
+{
+
+    SyntaxException(const string &msg) : msg_(msg) {}
+
+    string getMessage() const { return (msg_); }
+
+private:
+    string msg_;
+};
+
+/*!
  * \brief The lexer throws a SyntaxException if it can't tokenize properly
  * 
  */

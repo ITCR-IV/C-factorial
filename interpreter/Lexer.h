@@ -26,15 +26,7 @@ private:
 
     char *current_char;
 
-    struct SyntaxException : public exception
-    {
-        SyntaxException(const string &msg) : msg_(msg) {}
-
-        string getMessage() const { return (msg_); }
-
-    private:
-        string msg_;
-    };
+    struct SyntaxException;
 
     void error();
 
