@@ -7,7 +7,7 @@
  * 
  * \param inputLexer must provide a fresh lexer to scan the code with
  */
-Parser::Parser(Lexer inputLexer, int PORT) : lexer(inputLexer), currentToken(this->lexer.getNextToken()), interpreter(Interpreter(PORT)) {}
+Parser::Parser(Lexer inputLexer) : lexer(inputLexer), currentToken(this->lexer.getNextToken()), interpreter(Interpreter()) {}
 
 /*!
  * \brief struct SemanticException to define the exception thrown by the parser

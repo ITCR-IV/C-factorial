@@ -26,7 +26,7 @@ private:
     void eat(string tokenType);
 
 public:
-    Parser(Lexer inputLexer, const int PORT);
+    Parser(Lexer inputLexer);
 
     void scope();
 

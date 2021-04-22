@@ -10,9 +10,6 @@ private:
 
     static ServerManager *singleton;
 
-    ServerManager(ServerManager &other) = delete;
-    void operator=(const ServerManager &) = delete;
-
     //aquí método para deserealizar json?
 
     //método general para comunicarse con server, tipo para mandar mensajes y que luego creamos métodos públicos para mandar mensajes específicos
