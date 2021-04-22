@@ -36,6 +36,7 @@ private:
 /*!
  * \brief The lexer throws a SyntaxException if it can't tokenize properly
  * 
+ * \param extraDetails Extra information relating to the error
  */
 void Lexer::error(const string extraDetails = "")
 {

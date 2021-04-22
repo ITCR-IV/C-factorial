@@ -21,16 +21,18 @@ private:
     //index of text
     int pos;
 
-    //index of line
-    int line;
-
+    //a pointer that iterates through the whole text eventually
     char *current_char;
 
+    //the type of exception thrown by the lexer
     struct SyntaxException;
 
     void error(const string extraDetails);
 
 public:
+    //index of line
+    int line;
+
     Lexer(string text);
 
     void advance();
