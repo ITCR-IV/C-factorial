@@ -55,7 +55,7 @@ void Lexer::error(const string extraDetails = "")
 void Lexer::advance()
 {
     this->pos++;
-    if (this->pos > this->text.length())
+    if ((unsigned int)this->pos > this->text.length())
     {
         this->current_char = nullptr;
     }
@@ -73,7 +73,7 @@ void Lexer::advance()
 char *Lexer::peek()
 {
     int peekPos = this->pos + 1;
-    if (peekPos > this->text.length())
+    if ((unsigned int)peekPos > this->text.length())
     {
         return nullptr;
     }

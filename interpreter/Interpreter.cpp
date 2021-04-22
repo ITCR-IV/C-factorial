@@ -3,6 +3,10 @@
 
 using namespace std;
 
+Interpreter::Interpreter(int PORT)
+{
+}
+
 //! struct RuntimeException to define the exception thrown while interpreting
 struct Interpreter::RuntimeException : public exception
 {

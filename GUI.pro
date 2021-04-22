@@ -14,6 +14,7 @@ SOURCES += \
     interpreter/Lexer.cpp \
     interpreter/Parser.cpp \
     interpreter/Token.cpp \
+    interpreter/Interpreter.cpp \
     main.cpp \
 
 HEADERS += \
@@ -23,6 +24,7 @@ HEADERS += \
     interpreter/Lexer.h \
     interpreter/Parser.h \
     interpreter/Token.h \
+    interpreter/Interpreter.h \
 
 FORMS += \
     Mainwindow.ui

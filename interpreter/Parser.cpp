@@ -1,5 +1,6 @@
 #include "Parser.h"
 #include "Lexer.h"
+#include "Interpreter.h"
 
 /*!
  * \brief Construct a new Parser object and initialize the first token and lexer

@@ -4,7 +4,7 @@
 #include "QFileDialog"
 #include "QFile"
 #include "QTextStream"
-#include "interpreter/Lexer.h"
+#include "interpreter/Parser.h"
 #include <string>
 #include <iostream>
 
