@@ -3,21 +3,28 @@
 
 #include "Lexer.h"
 #include "Token.h"
+#include "Interpreter.h"
 
 class Parser
 {
 
 private:
+    // Lexer stuff
     Lexer lexer;
     Token currentToken;
+
+    // Interpreter
+    Interpreter interpreter;
 
     //the type of exception thrown by the parser
     struct SemanticException;
 
     void error(const string extraDetails);
 
+    void eat(string tokenType);
+
 public:
-    Parser(Lexer inputLexer);
+    Parser(Lexer inputLexer, const int PORT);
 
     /*
 def __init__(self, lexer):

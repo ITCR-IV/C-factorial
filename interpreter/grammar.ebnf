@@ -1,16 +1,20 @@
 scope = "{" , {loc | scope} , "}" ; 
 
-loc = [ declaration | struct | print_call | return_expression | struct_access | struct_declaration ] , ";" ; #loc = line of code
+loc = [ declaration | struct | print_call | return_expression | struct_declaration ] , ";" ; #loc = line of code
 
 declaration = type , ID , [ "=" , return_expression ] ; #interpreter has to check that type on left == type on right
 
-struct = "struct" , scope , ID ;
+return_expression = arithmetic | method_call | token | STRING | struct_access ;
+
+struct = "struct" , struct_scope , ID ;
+
+struct_loc = [ declaration ] , ";"
+
+struct_scope = "{" , {struct_loc} , "}" ; 
 
 struct_declaration = struct_access , "=" , return_expression ;
 
-struct_access = ID , "." , ID ;
-
-return_expression = arithmetic | method_call | token | STRING | struct_access ;
+struct_access = ID , "." , ID ; # struct_access acceses an attribute of a struct
 
 arithmetic = token , { "+" | "-" | "*" | "/" , token } ;
 
