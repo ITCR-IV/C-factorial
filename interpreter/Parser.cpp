@@ -36,3 +36,21 @@ void Parser::error(const string extraDetails = "")
 
     throw SemanticException(fullMsg);
 }
+
+/*!
+ * \brief compare the current token type with the passed token type and if they match then "eat" the current token and assign the next token to the current_token, otherwise raise an exception.
+ * 
+ * \param tokenType expected token type
+ */
+void Parser::eat(string tokenType)
+{
+    if (this->currentToken.getType() == tokenType)
+    {
+        this->currentToken = this->lexer.getNextToken();
+    }
+    else
+    {
+        string errormsg = "Expected a(n) '" + tokenType + "' and instead got '" + this->currentToken.getType() + "'";
+        this->error();
+    }
+}
