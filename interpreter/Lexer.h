@@ -28,7 +28,7 @@ private:
 
     void skipWhitespace();
 
-    string findInteger();
+    Token findNumber();
 
     Token findId();
 

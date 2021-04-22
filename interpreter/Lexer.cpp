@@ -100,7 +100,7 @@ void Lexer::skipWhitespace()
  * 
  * \return string representing integer that was found in the text
  */
-string Lexer::findInteger()
+Token Lexer::findNumber()
 {
     string result = "";
     while (this->current_char != nullptr && isdigit(*(this->current_char)))
@@ -108,7 +108,21 @@ string Lexer::findInteger()
         result += *(this->current_char);
         this->advance();
     }
-    return result;
+    if (*(this->current_char) == '.')
+    {
+        result += *(this->current_char);
+        this->advance();
+        while (this->current_char != nullptr && isdigit(*(this->current_char)))
+        {
+            result += *(this->current_char);
+            this->advance();
+        }
+        return Token(DECIMAL, result);
+    }
+    else
+    {
+        return Token(INTEGER, result);
+    }
 }
 
 /*!
@@ -124,9 +138,14 @@ Token Lexer::findId()
         result += *(this->current_char);
         this->advance();
     }
+
     if (RESERVED_KEYWORDS.find(result) == RESERVED_KEYWORDS.end())
     {
         return Token(ID, result);
+    }
+    else if (*(this->current_char) == '.')
+    {
+        return Token(STRUCTACCESS, result + "." + this->findId().getValue());
     }
     else
     {
@@ -184,7 +203,7 @@ Token Lexer::getNextToken()
         }
         if (isdigit(*(this->current_char)))
         {
-            return Token(INTEGER, this->findInteger());
+            return this->findNumber();
         }
         if (*(this->current_char) == '"')
         {
