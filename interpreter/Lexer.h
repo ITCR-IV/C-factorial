@@ -29,16 +29,6 @@ private:
 
     void error(const string extraDetails);
 
-public:
-    //index of line
-    int line;
-
-    Lexer(string text);
-
-    void advance();
-
-    char *peek();
-
     void skipWhitespace();
 
     string findInteger();
@@ -46,6 +36,16 @@ public:
     Token findId();
 
     string findString();
+
+    void advance();
+
+public:
+    //index of line
+    int line;
+
+    Lexer(string text);
+
+    char *peek();
 
     Token getNextToken();
 };
