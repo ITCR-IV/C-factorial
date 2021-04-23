@@ -1,4 +1,4 @@
-scope = "{" , {loc | scope} , "}" ; 
+scope = "{", [EOL] , {loc | scope} , "}" , [EOL]; 
 
 loc = [ declaration | struct_definition | print_call | struct_declaration ] , ";", EOL; #loc = line of code, #EOL = end of line
 
@@ -8,9 +8,9 @@ return_expression = arithmetic | method_call | STRING | STRUCTACCESS | ID ; #che
 
 struct_definition = "struct" , struct_scope , ID ;
 
-struct_loc = [ declaration ] , ";" ;
+struct_loc = [ declaration ] , ";" , EOL;
 
-struct_scope = "{" , {struct_loc} , "}" ; 
+struct_scope = "{", [EOL] , {struct_loc} , "}" ; 
 
 struct_declaration = STRUCTACCESS , "=" , return_expression ; #STRUCTACCESS has the format "ID.ID"
 
