@@ -3,6 +3,7 @@
 
 #include <string>
 #include "ServerManager.h"
+#include "Token.h"
 
 using namespace std;
 
