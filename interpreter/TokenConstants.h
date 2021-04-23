@@ -37,6 +37,8 @@ const std::string CHAR = "char";
 const std::string FLOAT = "float";
 const std::string DOUBLE = "double";
 const std::string REFERENCE = "reference";
+
+// reserved words for methods
 const std::string GETADDR = "getAddr";
 const std::string GETVALUE = "getValue";
 const std::string PRINT = "print";

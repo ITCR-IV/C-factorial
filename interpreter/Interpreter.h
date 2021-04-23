@@ -30,15 +30,19 @@ public:
 
     void reference_declaration(string ptrType, string id, string assignValue = nullptr, string value = nullptr);
 
+    void struct_declaration(string id, string assignValue, string value);
+
     void enter_struct();
 
     void exit_struct(string id);
 
-    string arithmetic(char operation, string op1, string op2);
+    Token arithmetic(char operation, Token op1, Token op2);
 
-    void *getAddr(string id);
+    string getAddr(string id); //make sure a reference isn't being passed
 
-    string getValue(string id);
+    string getValue(string id); //has to handle regular ids AND struct accesses
+
+    string getRefValue(string id); //same as getValue but it has to make sure a reference is being passed and return the value it's pointing to, this is the interpreter equivalente to the grammar's getValue
 
     string getType(string id);
 

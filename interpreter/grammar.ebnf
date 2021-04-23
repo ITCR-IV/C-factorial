@@ -8,17 +8,17 @@ return_expression = arithmetic | method_call | STRING | STRUCTACCESS | ID ; #che
 
 struct_definition = "struct" , struct_scope , ID ;
 
-struct_loc = [ declaration ] , ";" , EOL;
-
 struct_scope = "{", [EOL] , {struct_loc} , "}" ; 
+
+struct_loc = [ declaration ] , ";" , EOL;
 
 struct_declaration = STRUCTACCESS , "=" , return_expression ; #STRUCTACCESS has the format "ID.ID"
 
 arithmetic = factor , { "+" | "-" | "*" | "/" , factor } ;
 
-method_call = "getAddr" | "getValue" , "(" , ID | STRUCTACCESS, ")" ;
+method_call = "getAddr" | "getValue" , "(" , ID | STRUCTACCESS, ")" ; #the variable passed has to be a refernce type
 
-print_call = "print", "(" , STRING , ")" ;
+print_call = "print", "(" , return_expression ")" ;
 
 factor = ID | number ; #ID has to refer to a previously defined int/float/double/long
 
