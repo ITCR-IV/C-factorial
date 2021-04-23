@@ -32,13 +32,15 @@ public:
 
     void enter_struct();
 
-    void exit_struct();
+    void exit_struct(string id);
 
     int arithmetic(char operation, int op1, int op2);
 
     void *getAddr(string id);
 
     string getValue(string id);
+
+    string getType(string id);
 
     void print_call(string msg);
 
