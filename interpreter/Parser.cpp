@@ -61,6 +61,10 @@ void Parser::eat(string tokenType)
     }
 }
 
+/*!
+ * \brief Evaluates an entire scope (don't use it if you plan on going line by line)
+ * 
+ */
 void Parser::scope()
 {
     eat(LBRACK);
@@ -81,6 +85,10 @@ void Parser::scope()
     this->interpreter.exit_scope();
 }
 
+/*!
+ * \brief Evaluates a line of code (again, don't use this for going line by line because it can't handle scopes itself and will skip over struct declarations)
+ * 
+ */
 void Parser::loc()
 {
     if (this->currentToken.getType() == SEMI)
@@ -109,18 +117,12 @@ void Parser::loc()
     eat(SEMI);
     eat(EOL);
     return;
-
-    /*
-        else if (this->currentToken.getValue() == "getAddr" || this->currentToken.getValue() == "getValue")
-        {
-            return_expression();
-        }
-        else if (this->currentToken.getType() == MINUS)
-        {
-            return_expression();
-        }*/
 }
 
+/*!
+ * \brief Handles the declaration of a new variable (not struct)
+ * 
+ */
 void Parser::declaration()
 {
     string type_ = type().getValue();
@@ -128,18 +130,26 @@ void Parser::declaration()
     string id_ = this->currentToken.getValue();
     eat(ID);
 
-    string value_ = nullptr;
+    string assignmentType_ = nullptr;
+    string assignmentValue_ = nullptr;
 
     if (this->currentToken.getType() == EQUAL)
     {
         eat(EQUAL);
-        value_ = return_expression().getValue();
+        Token token_ = return_expression();
+        string assignmentType_ = token_.getType();
+        string assignmentValue_ = token_.getValue();
     }
 
-    this->interpreter.declaration(type_, id_, value_);
+    this->interpreter.declaration(type_, id_, assignmentType_, assignmentValue_);
     return;
 }
 
+/*!
+ * \brief evaluates an expression that returns a value
+ * 
+ * \return Token with type and value of return
+ */
 Token Parser::return_expression()
 {
     if (this->currentToken.getType() == MINUS || this->currentToken.getType() == INTEGER || this->currentToken.getType() == DECIMAL)
@@ -182,6 +192,10 @@ Token Parser::return_expression()
     }
 }
 
+/*!
+ * \brief Evaluates the definition of a struct (don't use in line by line for same reason as scope())
+ * 
+ */
 void Parser::struct_definition()
 {
     eat(STRUCT);

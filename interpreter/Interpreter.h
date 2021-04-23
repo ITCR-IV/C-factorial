@@ -26,15 +26,15 @@ public:
 
     void exit_scope();
 
-    void declaration(string type, string id, string value = nullptr);
+    void declaration(string type, string id, string assignValue = nullptr, string value = nullptr);
 
-    void reference_declaration(string ptrType, string id, string value = nullptr);
+    void reference_declaration(string ptrType, string id, string assignValue = nullptr, string value = nullptr);
 
     void enter_struct();
 
     void exit_struct(string id);
 
-    int arithmetic(char operation, int op1, int op2);
+    string arithmetic(char operation, string op1, string op2);
 
     void *getAddr(string id);
 
