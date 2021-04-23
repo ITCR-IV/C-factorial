@@ -1,10 +1,10 @@
 scope = "{" , {loc | scope} , "}" ; 
 
-loc = [ declaration | struct_definition | print_call | struct_declaration ] , ";" ; #loc = line of code
+loc = [ declaration | struct_definition | print_call | struct_declaration ] , ";", EOL; #loc = line of code, #EOL = end of line
 
 declaration = type , ID , [ "=" , return_expression ] ; #interpreter has to check that type on left == type on right
 
-return_expression = arithmetic | method_call | number | STRING | struct_access | ID ; #can't use factor here because this ID can be anything previously defined
+return_expression = arithmetic | method_call | STRING | STRUCTACCESS | ID ; #check if ID is a number and if it is jump to arithmetic
 
 struct_definition = "struct" , struct_scope , ID ;
 
@@ -16,14 +16,14 @@ struct_declaration = STRUCTACCESS , "=" , return_expression ; #STRUCTACCESS has 
 
 arithmetic = factor , { "+" | "-" | "*" | "/" , factor } ;
 
-method_call = "getAddr" | "getValue" , "(" , ID | struct_access, ")" ;
+method_call = "getAddr" | "getValue" , "(" , ID | STRUCTACCESS, ")" ;
 
 print_call = "print", "(" , STRING , ")" ;
 
 factor = ID | number ; #ID has to refer to a previously defined int/float/double/long
 
 number = [ "-" ] , INTEGER | DECIMAL ;
-`
+
 type = "int" | "long" | "char" | "float" | "double" | ("reference" , "<" , type , ">") | ID ; #ID has to refer to a previously defined struct
 
 # all the predefined strings in here have to be found by the ID method
