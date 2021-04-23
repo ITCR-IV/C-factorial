@@ -348,6 +348,10 @@ Token Parser::method_call()
     }
 }
 
+/*!
+ * \brief Deals with print() function, calls the interpreter print_call() method
+ * 
+ */
 void Parser::print_call()
 {
     eat(PRINT);
@@ -358,6 +362,11 @@ void Parser::print_call()
     this->interpreter.print_call(printString_);
 }
 
+/*!
+ * \brief Evaluates tokens to return a straight number or a number stored in a variable
+ * 
+ * \return Token where type is the type of number (int,long,double,float) and value is... the value...
+ */
 Token Parser::factor()
 {
     if (this->currentToken.getType() == MINUS || this->currentToken.getType() == INTEGER || this->currentToken.getType() == DECIMAL)
@@ -376,6 +385,11 @@ Token Parser::factor()
     }
 }
 
+/*!
+ * \brief Evaluates expressions that are numbers and returns a token representing the number
+ * 
+ * \return Token where type is the type of number (int,long,double,float) and value is... the value...
+ */
 Token Parser::number()
 {
     string result = "";
@@ -402,7 +416,11 @@ Token Parser::number()
     }
 }
 
-// type = "int" | "long" | "char" | "float" | "double" | ("reference" , "<" , type , ">") | ID
+/*!
+ * \brief It evaluates a type id that may be a keyword or a struct id, also references get evaluated as a special case due to being succeeded by <type>
+ * 
+ * \return string of the type
+ */
 string Parser::type()
 {
     string type_ = this->currentToken.getType();
