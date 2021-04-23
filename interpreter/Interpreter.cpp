@@ -1,5 +1,6 @@
 #include "Interpreter.h"
 #include <string>
+#include "Token.h"
 
 using namespace std;
 
@@ -33,15 +34,15 @@ void Interpreter::enter_scope() {}
 
 void Interpreter::exit_scope() {}
 
-void Interpreter::declaration(string type, string id, string value /*= nullptr*/) {}
+void Interpreter::declaration(string type, string id, string assignValue /*= nullptr*/, string value /*= nullptr*/) {}
 
-void Interpreter::reference_declaration(string ptrType, string id, string value /*= nullptr*/) {}
+void Interpreter::reference_declaration(string ptrType, string id, string assignValue /*= nullptr*/, string value /*= nullptr*/) {}
 
 void Interpreter::enter_struct() {}
 
 void Interpreter::exit_struct(string id) {}
 
-int Interpreter::arithmetic(char operation, int op1, int op2) {}
+string Interpreter::arithmetic(char operation, string op1, string op2) {}
 
 void *Interpreter::getAddr(string id) {}
 
