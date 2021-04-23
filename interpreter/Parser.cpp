@@ -12,7 +12,7 @@
  * 
  * \param inputLexer must provide a fresh lexer to scan the code with
  */
-Parser::Parser(Lexer inputLexer) : lexer(inputLexer), currentToken(this->lexer.getNextToken()), interpreter(Interpreter()) {}
+Parser::Parser(Lexer inputLexer) : lexer(inputLexer), currentToken(this->lexer.getNextToken()), interpreter(Interpreter()), insideStruct(false), scopeLevel(0) {}
 
 /*!
  * \brief struct SemanticException to define the exception thrown by the parser
@@ -102,6 +102,7 @@ void Parser::loc()
     if (this->currentToken.getType() == SEMI)
     {
         eat(SEMI);
+        eat(EOL);
         return;
     }
 
@@ -235,7 +236,7 @@ void Parser::struct_scope()
 }
 
 /*!
- * \brief Evaluate a line of code inside a struct, unlike regular loc this _can_ be used to go line by line (because it doesn't accept structs or anything scoped)
+ * \brief Evaluate a line of code inside a struct, also can't be used for iterating 1 at a time, but it's because it doesn't support the other 1 at a time stuff
  * 
  */
 void Parser::struct_loc()
@@ -445,5 +446,144 @@ string Parser::type()
     {
         printf("Something wrong in Parser::type()\n");
         error();
+    }
+}
+
+///////////////////////
+/// Methods for going line by line
+///////////////////////
+
+/*!
+ * \brief Method for handling a loc that isn't inside the struct while going line by line
+ * 
+ */
+void Parser::loc1()
+{
+    if (this->currentToken.getType() == STRUCT)
+    {
+        struct_definition_open1();
+    }
+    else if (this->currentToken.getType() == LBRACK)
+    {
+        eat(LBRACK);
+        this->interpreter.enter_scope();
+        this->scopeLevel++;
+
+        eat(EOL);
+    }
+    else if (this->currentToken.getType() == RBRACK)
+    {
+        eat(RBRACK);
+        this->interpreter.exit_scope();
+        this->scopeLevel--;
+
+        eat(EOL);
+    }
+    else if (this->currentToken.getType() == EOFF)
+    {
+        if (this->insideStruct)
+        {
+            error("Reached EOF while defining struct");
+        }
+        if (this->scopeLevel > 0)
+        {
+            error("Reached EOF with unclosed scope");
+        }
+        else if (this->scopeLevel < 0)
+        {
+            printf("Reached EOF with negative scope ._.");
+        }
+        eat(EOFF);
+    }
+    else
+    {
+        if (this->currentToken.getType() == SEMI)
+        {
+            eat(SEMI);
+            eat(EOL);
+            return;
+        }
+        if (this->currentToken.getType() == PRINT)
+        {
+            print_call();
+        }
+        else if (this->currentToken.getType() == STRUCTACCESS)
+        {
+            struct_declaration();
+        }
+        else
+        {
+            declaration();
+        }
+
+        eat(SEMI);
+        eat(EOL);
+        return;
+    }
+    return;
+}
+
+/*!
+ * \brief Method for handling a loc while inside a struct while going line by line, the difference is that it can accept a struct_definition_close1 rule
+ * 
+ */
+void Parser::struct_loc1()
+{
+    if (this->currentToken.getType() != SEMI)
+    {
+        if (this->currentToken.getType() == RBRACK)
+        {
+            struct_definition_close1();
+        }
+        else
+        {
+            declaration();
+        }
+    }
+
+    eat(SEMI);
+    eat(EOL);
+    return;
+}
+
+/*!
+ * \brief Method for starting a struct definition when going line by line
+ * 
+ */
+void Parser::struct_definition_open1()
+{
+    eat(STRUCT);
+
+    eat(LBRACK);
+    eat(EOL);
+    this->interpreter.enter_struct();
+}
+
+/*!
+ * \brief Method for closing a struct definition when going line by line
+ * 
+ */
+void Parser::struct_definition_close1()
+{
+    eat(RBRACK);
+
+    string id_ = this->currentToken.getValue();
+    eat(ID);
+    this->interpreter.exit_struct(id_);
+}
+
+/*!
+ * \brief Call this method to advance just one line of code when in line by line mode
+ * 
+ */
+void Parser::advance_1loc()
+{
+    if (this->insideStruct)
+    {
+        struct_loc1();
+    }
+    else
+    {
+        loc1();
     }
 }
