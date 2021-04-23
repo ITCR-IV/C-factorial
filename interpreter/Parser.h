@@ -38,13 +38,11 @@ public:
 
     void struct_definition();
 
-    void struct_loc();
-
     void struct_scope();
 
-    void struct_declaration();
+    void struct_loc();
 
-    Token struct_access();
+    void struct_declaration();
 
     Token arithmetic();
 
@@ -56,7 +54,7 @@ public:
 
     Token number();
 
-    Token type();
+    string type();
 };
 
 #endif

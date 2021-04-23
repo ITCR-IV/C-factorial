@@ -38,15 +38,19 @@ void Interpreter::declaration(string type, string id, string assignValue /*= nul
 
 void Interpreter::reference_declaration(string ptrType, string id, string assignValue /*= nullptr*/, string value /*= nullptr*/) {}
 
+void Interpreter::struct_declaration(string id, string assignValue, string value) {}
+
 void Interpreter::enter_struct() {}
 
 void Interpreter::exit_struct(string id) {}
 
-string Interpreter::arithmetic(char operation, string op1, string op2) {}
+Token Interpreter::arithmetic(char operation, Token op1, Token op2) {}
 
-void *Interpreter::getAddr(string id) {}
+string Interpreter::getAddr(string id) {}
 
 string Interpreter::getValue(string id) {}
+
+string Interpreter::getRefValue(string id) {}
 
 string Interpreter::getType(string id) {}
 
