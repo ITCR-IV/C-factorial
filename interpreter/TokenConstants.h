@@ -14,6 +14,7 @@ const std::string ID = "ID";
 const std::string STRUCTACCESS = "STRUCTACCESS";
 
 // symbols (also token types)
+const std::string EOL = "\n";
 const std::string LBRACK = "{";
 const std::string RBRACK = "}";
 const std::string LPAREN = "(";

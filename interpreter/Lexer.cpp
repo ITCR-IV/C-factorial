@@ -195,7 +195,7 @@ Token Lexer::getNextToken()
         {
             this->line++;
             this->advance();
-            continue;
+            return Token(EOL, EOL);
         }
         if (isalpha(*(this->current_char)))
         {
