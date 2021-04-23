@@ -1,4 +1,4 @@
-scope = "{", [EOL] , {loc | scope} , "}" , [EOL]; 
+scope = "{", [EOL] , {loc | scope} , "}" , [EOL]; # When using this rule, it doesn't need to reach EOFF because it just evaluates everything inside global scope
 
 loc = [ declaration | struct_definition | print_call | struct_declaration ] , ";", EOL; #loc = line of code, #EOL = end of line
 
@@ -27,3 +27,14 @@ number = [ "-" ] , INTEGER | DECIMAL ;
 type = "int" | "long" | "char" | "float" | "double" | ("reference" , "<" , type , ">") | ID ; #ID has to refer to a previously defined struct
 
 # all the predefined strings in here have to be found by the ID method
+
+#These are the rules for interpreting one line at a time:
+
+loc1 = ([ declaration | print_call | struct_declaration ] , ";", EOL) | ("{", EOL) | ("}", EOL) | struct_definition_open1 | EOFF; #Here it does reach EOFF because we never know when it's coming 
+
+struct_loc1 = [ declaration | struct_definition_close1] , ";" , EOL ;
+
+#struct_definition1  opens the struct definition and struct_definition2 closes it, the latter must only happen if inside a struct
+struct_definition_open1 = "struct" , "{" ,  EOL ;
+
+struct_definition_close1 = "}" , ID ;
