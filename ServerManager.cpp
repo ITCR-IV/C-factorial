@@ -1,4 +1,5 @@
 #include "ServerManager.h"
+#include "UpdateInfo.h"
 
 ServerManager *ServerManager::singleton = nullptr;
 

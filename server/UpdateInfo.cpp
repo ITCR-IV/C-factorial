@@ -2,7 +2,6 @@
 #include <string>
 using namespace std;
 
-UpdateInfo *UpdateInfo::singleton = nullptr;
 
 /*!
  * \brief Constructor for UpdateInfo, should only be called once due to being a singleton
@@ -22,19 +21,6 @@ UpdateInfo::UpdateInfo() {
  * \param
  * \return UpdateInfo* singleton instance
  */
-UpdateInfo *UpdateInfo::getInstance()
-{
-    /**
-     * This is a safer way to create an instance. instance = new Singleton is
-     * dangeruous in case two instance threads wants to access at the same time
-     */
-    if (singleton == nullptr)
-    {
-        singleton = new UpdateInfo();
-    }
-    return singleton;
-}
-
 void UpdateInfo::setDataType(string type) {
     this->dataType = type;
 }

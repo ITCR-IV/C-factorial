@@ -1,6 +1,8 @@
 #ifndef SERVER_MANAGER_H
 #define SERVER_MANAGER_H
 
+#include "UpdateInfo.h"
+
 class ServerManager
 {
 
@@ -9,6 +11,8 @@ private:
     ServerManager(int PORT);
 
     static ServerManager *singleton;
+
+    UpdateInfo info = new UpdateInfo();
 
     //aquí método para deserealizar json?
 

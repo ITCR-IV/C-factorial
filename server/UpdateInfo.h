@@ -12,18 +12,9 @@ private:
     string dataName;
     int dataCount;
 //    T *dataValue;
-    UpdateInfo();
-
-    static UpdateInfo *singleton;
 
 public:
-
-    //public singleton stuff
-    UpdateInfo(UpdateInfo &other) = delete;   //delete copy constructor (non-cloneable)
-    void operator=(const UpdateInfo &) = delete; //delete assignment operator (non-assignable)
-
-    static UpdateInfo *getInstance();
-
+    UpdateInfo();
     void setDataType(string type);
     string getDataType();
 
