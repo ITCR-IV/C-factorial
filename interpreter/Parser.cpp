@@ -155,9 +155,9 @@ void Parser::declaration()
 }
 
 /*!
- * \brief evaluates an expression that returns a value
+ * \brief evaluates an expression that returns a value, the types of the tokens returned by this method are the actual types that variables can be stored as (int, float, char, ...) instead of the Lexer token types
  * 
- * \return Token with type and value of return
+ * \return Token with type and value of the variable's or expression real types and values
  */
 Token Parser::return_expression()
 {
@@ -174,7 +174,7 @@ Token Parser::return_expression()
         }
         else
         {
-            Token token_ = this->currentToken;
+            Token token_ = Token(this->interpreter.getType(id_), this->interpreter.getValue(id_));
             eat(ID);
             return token_;
         }
@@ -185,13 +185,14 @@ Token Parser::return_expression()
     }
     else if (this->currentToken.getType() == STRING)
     {
-        Token token_ = this->currentToken;
+        Token token_ = Token(CHAR, this->currentToken.getValue());
         eat(STRING);
         return token_;
     }
     else if (this->currentToken.getType() == STRUCTACCESS)
     {
-        Token token_ = this->currentToken;
+        string id_ = this->currentToken.getValue();
+        Token token_ = Token(this->interpreter.getType(id_), this->interpreter.getValue(id_));
         eat(STRUCTACCESS);
         return token_;
     }
