@@ -282,7 +282,7 @@ void Parser::struct_declaration()
     return;
 }
 
-/*!
+/*!S
  * \brief Evaluates an arithmetic expression calling the interpreter arithmetic() method in case there's an operator
  * 
  * \return Token with type and value of the result of the expression;
