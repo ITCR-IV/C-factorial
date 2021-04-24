@@ -1,6 +1,7 @@
 #include "Interpreter.h"
 #include <string>
 #include "Token.h"
+#include "TokenConstants.h"
 
 using namespace std;
 
@@ -96,7 +97,108 @@ void Interpreter::exit_struct(string id) {}
  * \param op2 Token object with type INT, FLOAT, DOUBLE, LONG and value is it's numerical value
  * \return Token where type is either INT, FLOAT, DOUBLE, LONG and value is it's numerical value as a string
  */
-Token Interpreter::arithmetic(char operation, Token op1, Token op2) {}
+Token Interpreter::arithmetic(char operation, Token op1, Token op2)
+{
+    // The order of casting is Long > Double > Float > int
+    // Long before double because there's no bigger data type to handle long floats/doubles, so precision has to be removed
+    string num1 = op1.getValue();
+    string num2 = op2.getValue();
+    if (op1.getType() == LONG || op2.getType() == LONG)
+    {
+        //strip numbers from their decimals
+        num1 = num1.substr(0, num1.find('.'));
+        num2 = num2.substr(0, num2.find('.'));
+        long factor1 = stol(num1);
+        long factor2 = stol(num2);
+        long resultValue;
+        if (operation == '+')
+        {
+            resultValue = factor1 + factor2;
+        }
+        else if (operation == '-')
+        {
+            resultValue = factor1 - factor2;
+        }
+        else if (operation == '*')
+        {
+            resultValue = factor1 * factor2;
+        }
+        else if (operation == '/')
+        {
+            resultValue = factor1 / factor2;
+        }
+        return Token(LONG, to_string(resultValue));
+    }
+    else if (op1.getType() == DOUBLE || op2.getType() == DOUBLE)
+    {
+        double factor1 = stod(num1);
+        double factor2 = stod(num2);
+        double resultValue;
+        if (operation == '+')
+        {
+            resultValue = factor1 + factor2;
+        }
+        else if (operation == '-')
+        {
+            resultValue = factor1 - factor2;
+        }
+        else if (operation == '*')
+        {
+            resultValue = factor1 * factor2;
+        }
+        else if (operation == '/')
+        {
+            resultValue = factor1 / factor2;
+        }
+        return Token(DOUBLE, to_string(resultValue));
+    }
+    else if (op1.getType() == FLOAT || op2.getType() == FLOAT)
+    {
+        float factor1 = stof(num1);
+        float factor2 = stof(num2);
+        float resultValue;
+        if (operation == '+')
+        {
+            resultValue = factor1 + factor2;
+        }
+        else if (operation == '-')
+        {
+            resultValue = factor1 - factor2;
+        }
+        else if (operation == '*')
+        {
+            resultValue = factor1 * factor2;
+        }
+        else if (operation == '/')
+        {
+            resultValue = factor1 / factor2;
+        }
+        return Token(FLOAT, to_string(resultValue));
+    }
+    else
+    {
+        int factor1 = stoi(num1);
+        int factor2 = stoi(num2);
+        int resultValue;
+        if (operation == '+')
+        {
+            resultValue = factor1 + factor2;
+        }
+        else if (operation == '-')
+        {
+            resultValue = factor1 - factor2;
+        }
+        else if (operation == '*')
+        {
+            resultValue = factor1 * factor2;
+        }
+        else if (operation == '/')
+        {
+            resultValue = factor1 / factor2;
+        }
+        return Token(INT, to_string(resultValue));
+    }
+}
 
 /*!
  * \brief Requests the memory server for the offset address of a variable
