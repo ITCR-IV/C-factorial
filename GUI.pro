@@ -16,7 +16,8 @@ SOURCES += \
     interpreter/Token.cpp \
     interpreter/Interpreter.cpp \
     main.cpp \
-    ServerManager.cpp
+    ServerManager.cpp \
+    server/UpdateInfo.cpp 
 
 HEADERS += \
     CodeEditor.h \
@@ -26,7 +27,8 @@ HEADERS += \
     interpreter/Parser.h \
     interpreter/Token.h \
     interpreter/Interpreter.h \
-    ServerManager.h
+    ServerManager.h \
+    server/UpdateInfo.h
 
 FORMS += \
     Mainwindow.ui

@@ -43,34 +43,6 @@ void Interpreter::enter_scope() {}
 void Interpreter::exit_scope() {}
 
 /*!
-<<<<<<< HEAD
- * \brief Tell the memory server to allocate a variable defined by the parameters of this method
- * 
- */
-void Interpreter::declaration(string type, string id, string assignType /*= nullptr*/, string value /*= nullptr*/) {}
-
-void Interpreter::reference_declaration(string ptrType, string id, string assignType /*= nullptr*/, string value /*= nullptr*/) {}
-
-void Interpreter::struct_declaration(string id, string assignType, string value) {}
-
-void Interpreter::enter_struct() {}
-
-void Interpreter::exit_struct(string id) {}
-
-Token Interpreter::arithmetic(char operation, Token op1, Token op2) {}
-
-string Interpreter::getAddr(string id) {}
-
-string Interpreter::getValue(string id) {}
-
-string Interpreter::getRefValue(string id) {}
-
-string Interpreter::getType(string id) {}
-
-void Interpreter::print_call(string msg) {}
-
-string Interpreter::struct_access(string id) {}
-=======
 * \brief  Tell the memory server to allocate a variable defined by the parameters of this method
 * 
 * \param type the type that is being declared
@@ -176,4 +148,3 @@ string extract_refType(string reference)
     string ptrType = reference.substr(reference.find('<') + 1, reference.find('>') - reference.find('<') - 1); //extract the type inside <>
     return reference;
 }
->>>>>>> interpreter
