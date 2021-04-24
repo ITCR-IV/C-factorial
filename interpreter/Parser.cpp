@@ -207,6 +207,7 @@ Token Parser::return_expression()
     {
         error("Unrecognized expression");
     }
+    return Token("Error in Parser.cpp::return_expression()", "Error in Parser.cpp::return_expression()");
 }
 
 /*!
@@ -359,6 +360,7 @@ Token Parser::method_call()
         printf("Something wrong in Parser::method_call()\n");
         error();
     }
+    return Token("Error in Parser.cpp::method_call()", "Error in Parser.cpp::method_call()");
 }
 
 /*!
@@ -396,6 +398,7 @@ Token Parser::factor()
         printf("Something wrong in Parser::factor()\n");
         error();
     }
+    return Token("Error in Parser.cpp::factor()", "Error in Parser.cpp::factor()");
 }
 
 /*!
@@ -427,6 +430,7 @@ Token Parser::number()
         printf("Something wrong in Parser::number()\n");
         error();
     }
+    return Token("Error in Parser.cpp::number()", "Error in Parser.cpp::number()");
 }
 
 /*!
@@ -459,6 +463,7 @@ string Parser::type()
         printf("Something wrong in Parser::type()\n");
         error();
     }
+    return "Error in Parser.cpp::type()";
 }
 
 ///////////////////////
