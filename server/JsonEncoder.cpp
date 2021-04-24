@@ -8,7 +8,7 @@ using json = nlohmann::json;
 JsonEncoder::JsonEncoder() {
 }
 
-string JsonEncoder::Encode(UpdateInfo data) {
+string JsonEncoder::encode(UpdateInfo data) {
     this->jFile["dataName"] = data.getDataName();
     //this->jFile["dataValue"] = data.getDataValue();
     this->jFile["dataType"] = data.getDataType();
