@@ -1,19 +1,17 @@
-//
-// Created by ignacio on 22/4/21.
-//
-
 #ifndef C_FACTORIAL_UPDATEINFO_H
 #define C_FACTORIAL_UPDATEINFO_H
 
+#include <string>
+using namespace std;
 
 class UpdateInfo {
-    template<typename T>
+ //   template<typename T>;
 private:
+    // data that is going to be send
     string dataType;
     string dataName;
     int dataCount;
-    T dataValue;
-
+//    T *dataValue;
     UpdateInfo();
 
     static UpdateInfo *singleton;
@@ -32,9 +30,12 @@ public:
     void setDataName(string name);
     string getDataName();
 
-    void setDataType(string type);
-    string getDataType();
+    void setDataCount(int num);
+    int getDataCount();
+
+//    void setDataValue(T num);
+//    T getDataValue();
 };
 
 
-#endif //C_FACTORIAL_UPDATEINFO_H
+#endif

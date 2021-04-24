@@ -1,9 +1,6 @@
-//
-// Created by ignacio on 22/4/21.
-//
-
 #include "UpdateInfo.h"
-
+#include <string>
+using namespace std;
 
 UpdateInfo *UpdateInfo::singleton = nullptr;
 
@@ -13,7 +10,10 @@ UpdateInfo *UpdateInfo::singleton = nullptr;
  * \param
  */
 UpdateInfo::UpdateInfo() {
-
+    this->dataCount = 0;
+    this->dataName;
+    //this->dataValue = 0;
+    this->dataType;
 }
 
 /*!
@@ -22,7 +22,7 @@ UpdateInfo::UpdateInfo() {
  * \param
  * \return UpdateInfo* singleton instance
  */
-UpdateInfo *UpdateInfo::UpdateInfo()
+UpdateInfo *UpdateInfo::getInstance()
 {
     /**
      * This is a safer way to create an instance. instance = new Singleton is
@@ -34,3 +34,37 @@ UpdateInfo *UpdateInfo::UpdateInfo()
     }
     return singleton;
 }
+
+void UpdateInfo::setDataType(string type) {
+    this->dataType = type;
+}
+
+string UpdateInfo::getDataType() {
+    return this->dataType;
+}
+
+void UpdateInfo::setDataName(string name) {
+    this->dataName = name;
+}
+
+string UpdateInfo::getDataName() {
+    return this->dataName;
+}
+
+void UpdateInfo::setDataCount(int num) {
+    this->dataCount = num;
+}
+
+int UpdateInfo::getDataCount() {
+    return this->dataCount;
+}
+
+//void UpdateInfo::setDataValue(T num) {
+//    this->dataCount = num;
+//}
+
+//T UpdateInfo::getDataValue() {
+//    return this->dataValue;
+//}
+
+
