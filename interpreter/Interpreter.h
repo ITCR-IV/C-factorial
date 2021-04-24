@@ -27,11 +27,11 @@ public:
 
     void exit_scope();
 
-    void declaration(string type, string id, string assignValue = nullptr, string value = nullptr);
+    void declaration(string type, string id, string assignType = nullptr, string value = nullptr);
 
-    void reference_declaration(string ptrType, string id, string assignValue = nullptr, string value = nullptr);
+    void reference_declaration(string ptrType, string id, string assignType = nullptr, string value = nullptr);
 
-    void struct_declaration(string id, string assignValue, string value);
+    void struct_declaration(string id, string assignType, string value);
 
     void enter_struct();
 

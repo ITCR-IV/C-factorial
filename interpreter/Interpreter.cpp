@@ -30,15 +30,27 @@ void Interpreter::error(const string extraDetails = "")
     throw RuntimeException(fullMsg);
 }
 
+/*!
+ * \brief Tell the memory server to increment the scope stack so that it can assign new variables in the new scope
+ * 
+ */
 void Interpreter::enter_scope() {}
 
+/*!
+ * \brief Tell the memory server to descrease scope stack and release all memory pertaining to the exited scope
+ * 
+ */
 void Interpreter::exit_scope() {}
 
-void Interpreter::declaration(string type, string id, string assignValue /*= nullptr*/, string value /*= nullptr*/) {}
+/*!
+ * \brief Tell the memory server to allocate a variable defined by the parameters of this method
+ * 
+ */
+void Interpreter::declaration(string type, string id, string assignType /*= nullptr*/, string value /*= nullptr*/) {}
 
-void Interpreter::reference_declaration(string ptrType, string id, string assignValue /*= nullptr*/, string value /*= nullptr*/) {}
+void Interpreter::reference_declaration(string ptrType, string id, string assignType /*= nullptr*/, string value /*= nullptr*/) {}
 
-void Interpreter::struct_declaration(string id, string assignValue, string value) {}
+void Interpreter::struct_declaration(string id, string assignType, string value) {}
 
 void Interpreter::enter_struct() {}
 
