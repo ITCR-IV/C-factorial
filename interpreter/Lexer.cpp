@@ -160,18 +160,21 @@ Token Lexer::findId()
  */
 string Lexer::findString()
 {
-    string result = "\"";
+    string result = "";
     this->advance();
-    while (*(this->current_char) != '\"')
+    if (*(this->current_char) != '\'')
     {
         if (*(this->current_char) == '\n' || this->current_char != nullptr) //Reached end of line or EOF without closing string
         {
-            this->error("Unclosed string");
+            this->error("Unclosed char");
         }
         result += *(this->current_char);
         this->advance();
+        if (*(this->current_char) != '\'')
+        {
+            this->error("Char too long");
+        }
     }
-    result += *(this->current_char);
     this->advance();
 
     return result;
@@ -205,7 +208,7 @@ Token Lexer::getNextToken()
         {
             return this->findNumber();
         }
-        if (*(this->current_char) == '"')
+        if (*(this->current_char) == '\'')
         {
             return Token(STRING, this->findString());
         }
