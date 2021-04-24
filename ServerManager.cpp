@@ -1,5 +1,5 @@
 #include "ServerManager.h"
-#include "UpdateInfo.h"
+#include "server/UpdateInfo.h"
 
 ServerManager *ServerManager::singleton = nullptr;
 
@@ -11,7 +11,7 @@ ServerManager *ServerManager::singleton = nullptr;
 ServerManager::ServerManager(int PORT)
 {
     this->PORT = PORT;
-
+    this->info = UpdateInfo();
     // connect to server here
 }
 

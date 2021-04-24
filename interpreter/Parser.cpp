@@ -150,6 +150,13 @@ void Parser::declaration()
         string assignmentValue_ = token_.getValue();
     }
 
+    if (type_.find('<') != string::npos)
+    { //So if it's a reference
+        string ptrType_ = this->interpreter.extract_refType(type_);
+        this->interpreter.reference_declaration(ptrType_, id_, assignmentType_, assignmentValue_);
+        return;
+    }
+
     this->interpreter.declaration(type_, id_, assignmentType_, assignmentValue_);
     return;
 }
@@ -219,6 +226,10 @@ void Parser::struct_definition()
     this->interpreter.exit_struct(id_);
 }
 
+/*!
+ * \brief Evaluates everything inside the scope of a struct definition
+ * 
+ */
 void Parser::struct_scope()
 {
     eat(LBRACK);
@@ -313,7 +324,7 @@ Token Parser::arithmetic()
 /*!
  * \brief Deals with the getAddr and getValue functions
  * 
- * \return Token of type and value, if getAddr gets called the type is a reference and value is the address
+ * \return Token of type and value, if getAddr gets called the type is a reference (format: "reference<type>") and value is the address
  */
 Token Parser::method_call()
 {

@@ -49,7 +49,7 @@ public:
 
     void print_call(string msg);
 
-    string struct_access(string id);
+    string extract_refType(string reference);
 };
 
 #endif

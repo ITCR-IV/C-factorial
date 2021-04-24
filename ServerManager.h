@@ -1,7 +1,7 @@
 #ifndef SERVER_MANAGER_H
 #define SERVER_MANAGER_H
 
-#include "UpdateInfo.h"
+#include "server/UpdateInfo.h"
 
 class ServerManager
 {
@@ -12,7 +12,7 @@ private:
 
     static ServerManager *singleton;
 
-    UpdateInfo info = new UpdateInfo();
+    UpdateInfo info;
 
     //aquí método para deserealizar json?
 
