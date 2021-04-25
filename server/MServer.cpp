@@ -1,4 +1,4 @@
-#include "mserver.h"
+#include "MServer.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
@@ -7,7 +7,7 @@
 
 using namespace std;
 
-mserver::mserver(int PORT, int size)
+MServer::MServer(int PORT, int size)
 {
     struct sockaddr_in address;
 
@@ -57,9 +57,14 @@ mserver::mserver(int PORT, int size)
     }
 
     this->request(address, serverSocket);
+
+    //Interpreting stuff
+
+    this->scopeLevel = 0;
+    this->insideStruct = false;
 }
 
-void mserver::request(sockaddr_in address, int serverSocket)
+void MServer::request(sockaddr_in address, int serverSocket)
 {
     int newSocket = 0;
     int addressLen = sizeof(address);
@@ -96,10 +101,21 @@ void mserver::request(sockaddr_in address, int serverSocket)
     }
 }
 
-void mserver::memoryRequest(int num)
-{
-}
+void MServer::enter_scope() {}
 
-void mserver::memoryDeletion(int num)
+void MServer::exit_scope() {}
+
+void MServer::declaration(string type, string id, string assignType /* = nullptr*/, string value /* = nullptr*/) {}
+
+void MServer::reference_declaration(string ptrType, string id, string assignType /* = nullptr*/, string value /* = nullptr*/) {}
+
+void MServer::struct_declaration(string id, string assignType, string value) {}
+
+void MServer::enter_struct() {}
+
+void MServer::exit_struct(string id) {}
+
+string getInfo(string id) //send a variable with type, value, and adress info packaged, if it doesn't exist send it with empty fields
 {
+    return "aa";
 }

@@ -7,15 +7,30 @@
 #include <vector>
 #include "StructAttribute.h"
 
-class mserver
+class MServer
 {
 public:
-    mserver(int PORT, int size);
+    MServer(int PORT, int size);
     void request(sockaddr_in address, int serverSocket);
     // receiveClass deserializer(JSON file);
     // Json serializer(receiveClass Object);
-    void memoryRequest(int num);
-    void memoryDeletion(int num);
+
+    //methods called by interpreter
+    void enter_scope();
+
+    void exit_scope();
+
+    void declaration(std::string type, std::string id, std::string assignType = nullptr, std::string value = nullptr);
+
+    void reference_declaration(std::string ptrType, std::string id, std::string assignType = nullptr, std::string value = nullptr);
+
+    void struct_declaration(std::string id, std::string assignType, std::string value);
+
+    void enter_struct();
+
+    void exit_struct(std::string id);
+
+    std::string getInfo(std::string id); //send the variable with type, value, and adress info packaged
 
 private:
     //! points to the start of the memory, is char so that getting to an address through arithmetic is easy
@@ -29,6 +44,10 @@ private:
 
     //! The keys are the names of structs previously defined and the the values are StructAttributes which hold the info to build the structs attributes
     std::map<std::string, std::vector<StructAttribute>> structDefinitions;
+
+    int scopeLevel;
+
+    bool insideStruct;
 };
 
 #endif // MSERVER_H

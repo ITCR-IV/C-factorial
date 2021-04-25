@@ -39,7 +39,7 @@ public:
 
     Token arithmetic(char operation, Token op1, Token op2);
 
-    string getAddr(string id); //make sure a reference isn't being passed
+    string getAddr(string id); //make sure a reference isn't being passed, this returns the address of a variable, turn the int value to a hex string for added coolness
 
     string getValue(string id); //has to handle regular ids AND struct accesses
 
