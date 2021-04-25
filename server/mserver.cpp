@@ -16,7 +16,7 @@ mserver::mserver(int PORT, int size)
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 
     // malloc of the size
-    serverMemory = malloc(size);
+    this->serverMemory = static_cast<char *>(malloc(size));
 
     // configurar el ambiente para el sockaddr structure
     address.sin_family = AF_INET;
