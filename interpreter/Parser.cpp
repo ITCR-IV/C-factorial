@@ -136,6 +136,29 @@ void Parser::declaration()
 {
     string type_ = type();
 
+    if (this->currentToken.getType() == EQUAL) //this means that an existing variable is being changed, rather than a new variable being created
+    {
+        string id_ = type_;
+        type_ = this->interpreter.getType(id_);
+        eat(EQUAL);
+        Token token_ = return_expression();
+        string assignmentType_ = token_.getType();
+        string assignmentValue_ = token_.getValue();
+        if (type_.find('<') != string::npos)
+        { //So if it's a reference
+            string ptrType_ = this->interpreter.extract_refType(type_);
+            this->interpreter.reference_declaration(ptrType_, id_, assignmentType_, assignmentValue_);
+            return;
+        }
+        this->interpreter.declaration(type_, id_, assignmentType_, assignmentValue_);
+        return;
+    }
+
+    if (this->currentToken.getType() != ID)
+    {
+        return;
+    }
+
     string id_ = this->currentToken.getValue();
     eat(ID);
 
@@ -456,7 +479,9 @@ string Parser::type()
     }
     else if (this->currentToken.getType() == ID)
     {
-        return this->currentToken.getValue();
+        type_ = this->currentToken.getValue();
+        eat(ID);
+        return type_;
     }
     else
     {

@@ -44,7 +44,7 @@ void Interpreter::enter_scope() {}
 void Interpreter::exit_scope() {}
 
 /*!
-* \brief  Tell the memory server to allocate a variable defined by the parameters of this method
+* \brief  Tell the memory server to allocate a variable defined by the parameters of this method , or if the id is already defined then change it's value
 * 
 * \param type the type that is being declared
 * \param id the id of the new variable
@@ -54,7 +54,7 @@ void Interpreter::exit_scope() {}
 void Interpreter::declaration(string type, string id, string assignType /*= nullptr*/, string value /*= nullptr*/) {}
 
 /*!
-* \brief 
+* \brief Tell the memory server to allocate a variable defined by the parameters of this method, or if the id is already defined then change it's value
 * 
 * \param ptrType the type that the reference points to, this is just to check that the type it points to matches the type of reference assigned (the type inside <>, without the <>); Example: int
 * \param id the id of the new reference variable

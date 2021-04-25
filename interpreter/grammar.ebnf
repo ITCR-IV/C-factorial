@@ -2,7 +2,7 @@ scope = "{", [EOL] , {loc | scope} , "}" , [EOL]; # When using this rule, it doe
 
 loc = [ declaration | struct_definition | print_call | struct_declaration ] , ";", EOL; #loc = line of code, #EOL = end of line
 
-declaration = type , ID , [ "=" , return_expression ] ; #interpreter has to check that type on left == type on right
+declaration = [ type ] , ID , [ "=" , return_expression ] ; #interpreter has to check that type on left == type on right
 
 return_expression = arithmetic | method_call | STRING | STRUCTACCESS | ID ; #check if ID is a number and if it is jump to arithmetic
 
