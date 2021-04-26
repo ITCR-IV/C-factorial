@@ -7,13 +7,14 @@
 #include <vector>
 #include "StructAttribute.h"
 
+//! Class that creates the server socket and listen the client
 class MServer
 {
+
 public:
+
     MServer(int PORT, int size);
     void request(sockaddr_in address, int serverSocket);
-    // receiveClass deserializer(JSON file);
-    // Json serializer(receiveClass Object);
 
     //methods called by interpreter
     void enter_scope();
@@ -33,6 +34,7 @@ public:
     std::string getInfo(std::string id); //send the variable with type, value, and adress info packaged
 
 private:
+
     //! points to the start of the memory, is char so that getting to an address through arithmetic is easy
     char *serverMemory;
 

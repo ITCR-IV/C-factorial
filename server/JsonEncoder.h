@@ -20,7 +20,7 @@ private:
 public:
     //! Constructor of the JsonEncoder Class
     JsonEncoder(UpdateInfo data);
-    
+
     encode();
 };
 

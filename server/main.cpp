@@ -1,8 +1,4 @@
-
 #include "MServer.h"
-#include "UpdateInfo.h"
-#include "iostream"
-
 
 using namespace std;
 

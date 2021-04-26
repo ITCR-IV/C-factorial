@@ -7,6 +7,12 @@
 
 using namespace std;
 
+/*!
+ * \brief Construct a new MServer object, and configures the socket
+ *
+ * \param PORT int that indicates de port number
+ * \param size int that indicates how much memory the server is going to reserve
+ */
 MServer::MServer(int PORT, int size)
 {
     struct sockaddr_in address;
@@ -64,6 +70,12 @@ MServer::MServer(int PORT, int size)
     this->insideStruct = false;
 }
 
+/*!
+ * \brief accepts and reads all the incoming messages from the client
+ *
+ * \param address indicates de IP address
+ * \param serverSocket indicates the serverSocket
+ */
 void MServer::request(sockaddr_in address, int serverSocket)
 {
     int newSocket = 0;
