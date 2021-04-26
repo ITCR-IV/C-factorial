@@ -1,6 +1,6 @@
 #include "Mainwindow.h"
 #include <QApplication>
-#include "iostream"
+#include <iostream>
 #include "ServerManager.h"
 
 #include <fstream>
@@ -18,29 +18,29 @@ int main(int argc, char *argv[])
     //MainWindow w;
     //w.show();
     //return a.exec();
-    std::string empty = "";
 
     std::ifstream ifs("test.txt");
     std::string plainCode((std::istreambuf_iterator<char>(ifs)),
                           (std::istreambuf_iterator<char>()));
 
-    //std::string plainCode = code.toUtf8().constData();
     //cout << plainCode;
-    //string plainCode = "int x = 55;";
-    try
-    {
-        std::cout << '"' << plainCode << '"' << '\n';
-        string fullCode = "{ " + plainCode + "\n}";
-        Lexer lexer = Lexer(fullCode);
-        Parser parser = Parser(lexer);
-        parser.scope();
-    }
-    catch (Lexer::SyntaxException e)
+    //string plainCode = "int x = getAddr(x);";
+    //try
+    //{
+    std::cout << '"' << plainCode << '"' << '\n';
+    string fullCode = "{ " + plainCode + "\n}";
+    std::cout << "\n"
+              << &fullCode << "\n";
+    Lexer lexer = Lexer(fullCode);
+    Parser parser = Parser(lexer);
+    parser.scope();
+    //}
+    /*catch (Lexer::SyntaxException e)
     {
         cout << e.what();
     }
     catch (Parser::SemanticException e2)
     {
         cout << e2.what();
-    }
+    }*/
 }

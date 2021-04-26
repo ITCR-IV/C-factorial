@@ -12,12 +12,12 @@ using namespace std;
  * 
  * \param text The entire code text
  */
-Lexer::Lexer(string text)
+Lexer::Lexer(string stringText)
 {
-    this->text = text;
+    this->text = stringText;
     this->pos = 0;
-    this->current_char = &text[this->pos];
-    //cout << "Length: " << this->text.length() << endl;
+    this->current_char = text[this->pos];
+    cout << "Length: " << this->text.length() << endl;
     this->line = 1;
 }
 
@@ -59,15 +59,17 @@ void Lexer::advance()
 {
     this->pos++;
     cout << "Position: " << this->pos << endl;
-    cout << "Current char: " << *(this->current_char) << endl;
     if ((unsigned int)this->pos >= this->text.length())
     {
-        *(this->current_char) = '\0';
+        printf("___DANGER!! ASSIGNING NULL____");
+        this->current_char = '\0';
     }
     else
     {
-        this->current_char++;
+        this->current_char = this->text[pos];
     }
+    cout << "Current char: " << this->current_char << endl;
+    return;
 }
 
 /*!
@@ -78,7 +80,7 @@ void Lexer::advance()
 char *Lexer::peek()
 {
     int peekPos = this->pos + 1;
-    if ((unsigned int)peekPos >= this->text.length())
+    if ((unsigned int)peekPos >= strlen(this->text))
     {
         return '\0';
     }
@@ -94,7 +96,7 @@ char *Lexer::peek()
  */
 void Lexer::skipWhitespace()
 {
-    while (*(this->current_char) != '\0' && *(this->current_char) == ' ')
+    while (this->current_char != '\0' && this->current_char == ' ')
     {
         this->advance();
     }
@@ -108,18 +110,18 @@ void Lexer::skipWhitespace()
 Token Lexer::findNumber()
 {
     string result = "";
-    while (*(this->current_char) != '\0' && isdigit(*(this->current_char)))
+    while (this->current_char != '\0' && isdigit(this->current_char))
     {
-        result += *(this->current_char);
+        result += this->current_char;
         this->advance();
     }
-    if (*(this->current_char) == '.')
+    if (this->current_char == '.')
     {
-        result += *(this->current_char);
+        result += this->current_char;
         this->advance();
-        while (*(this->current_char) != '\0' && isdigit(*(this->current_char)))
+        while (this->current_char != '\0' && isdigit(this->current_char))
         {
-            result += *(this->current_char);
+            result += this->current_char;
             this->advance();
         }
         return Token(DECIMAL, result);
@@ -138,9 +140,9 @@ Token Lexer::findNumber()
 Token Lexer::findId()
 {
     string result = "";
-    while (*(this->current_char) != '\0' && isalnum(*(this->current_char)))
+    while (this->current_char != '\0' && isalnum(this->current_char))
     {
-        result += *(this->current_char);
+        result += this->current_char;
         this->advance();
     }
 
@@ -148,7 +150,7 @@ Token Lexer::findId()
     {
         return Token(ID, result);
     }
-    else if (*(this->current_char) == '.')
+    else if (this->current_char == '.')
     {
         return Token(STRUCTACCESS, result + "." + this->findId().getValue());
     }
@@ -167,15 +169,15 @@ string Lexer::findString()
 {
     string result = "";
     this->advance();
-    if (*(this->current_char) != '\'')
+    if (this->current_char != '\'')
     {
-        if (*(this->current_char) == '\n' || *(this->current_char) == '\0') //Reached end of line or EOF without closing string
+        if (this->current_char == '\n' || this->current_char == '\0') //Reached end of line or EOF without closing string
         {
             this->error("Unclosed char");
         }
-        result += *(this->current_char);
+        result += this->current_char;
         this->advance();
-        if (*(this->current_char) != '\'')
+        if (this->current_char != '\'')
         {
             this->error("Char too long");
         }
@@ -192,99 +194,100 @@ string Lexer::findString()
  */
 Token Lexer::getNextToken()
 {
-    while (*(this->current_char) != '\0')
+    //cout << "<<getNextToken Called!!>>\n   Current char rn: '" << *(current_char) << "'\n";
+    while (this->current_char != '\0')
     {
-        //cout << "Current char: " << *(this->current_char) << endl;
-        if (*(this->current_char) == ' ')
+        if (this->current_char == ' ')
         {
             this->skipWhitespace();
             continue;
         }
-        if (*(this->current_char) == '\n')
+        if (this->current_char == '\n')
         {
             this->line++;
             this->advance();
             return Token(EOL, EOL);
         }
-        if (isalpha(*(this->current_char)))
+        if (isalpha(this->current_char))
         {
             return this->findId();
         }
-        if (isdigit(*(this->current_char)))
+        if (isdigit(this->current_char))
         {
             return this->findNumber();
         }
-        if (*(this->current_char) == '\'')
+        if (this->current_char == '\'')
         {
             return Token(STRING, this->findString());
         }
-        if (*(this->current_char) == '{')
+        if (this->current_char == '{')
         {
             this->advance();
             return Token(LBRACK, LBRACK);
         }
-        if (*(this->current_char) == '}')
+        if (this->current_char == '}')
         {
             this->advance();
             return Token(RBRACK, RBRACK);
         }
-        if (*(this->current_char) == '(')
+        if (this->current_char == '(')
         {
             this->advance();
             return Token(LPAREN, LPAREN);
         }
-        if (*(this->current_char) == ')')
+        if (this->current_char == ')')
         {
             this->advance();
             return Token(RPAREN, RPAREN);
         }
-        if (*(this->current_char) == '<')
+        if (this->current_char == '<')
         {
             this->advance();
             return Token(LARROW, LARROW);
         }
-        if (*(this->current_char) == '>')
+        if (this->current_char == '>')
         {
             this->advance();
             return Token(RARROW, RARROW);
         }
-        if (*(this->current_char) == '=')
+        if (this->current_char == '=')
         {
             this->advance();
             return Token(EQUAL, EQUAL);
         }
-        if (*(this->current_char) == '.')
+        if (this->current_char == '.')
         {
             this->advance();
             return Token(DOT, DOT);
         }
-        if (*(this->current_char) == ';')
+        if (this->current_char == ';')
         {
             this->advance();
             return Token(SEMI, SEMI);
         }
-        if (*(this->current_char) == '+')
+        if (this->current_char == '+')
         {
             this->advance();
             return Token(PLUS, PLUS);
         }
-        if (*(this->current_char) == '-')
+        if (this->current_char == '-')
         {
             this->advance();
             return Token(MINUS, MINUS);
         }
-        if (*(this->current_char) == '*')
+        if (this->current_char == '*')
         {
             this->advance();
             return Token(MUL, MUL);
         }
-        if (*(this->current_char) == '/')
+        if (this->current_char == '/')
         {
             this->advance();
             return Token(DIV, DIV);
         }
-        string errorMsg = "Invalid character '" + *(this->current_char);
+        string errorMsg = "Invalid character '" + this->current_char;
         this->error(errorMsg + "'");
+        return Token("ERROR", "ERROR");
     }
     return Token(EOFF, EOFF);
 }
