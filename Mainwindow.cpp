@@ -8,17 +8,29 @@
 #include <string>
 #include <iostream>
 
+/*!
+ * \brief Construct a new MainWindow object
+ *
+ * \param parent
+ */
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 }
 
+/*!
+ * \brief deletes the mainWindow
+ */
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
+/*!
+ * \brief open a file into the IDE
+ *
+ */
 void MainWindow::on_actionOpen_triggered()
 {
     QFile file;
@@ -38,6 +50,10 @@ void MainWindow::on_actionOpen_triggered()
     file.close();
 }
 
+/*!
+ * \brief Saves the code into a txt
+ *
+ */
 void MainWindow::on_actionSave_triggered()
 {
     QFile file;
@@ -56,30 +72,54 @@ void MainWindow::on_actionSave_triggered()
     file.close();
 }
 
+/*!
+ * \brief Copy text
+ *
+ */
 void MainWindow::on_actionCopy_triggered()
 {
     ui->plainTextEdit->copy();
 }
 
+/*!
+ * \brief cut text
+ *
+ */
 void MainWindow::on_actionCut_triggered()
 {
     ui->plainTextEdit->cut();
 }
 
+/*!
+ * \brief Paste text
+ *
+ */
 void MainWindow::on_actionPaste_triggered()
 {
     ui->plainTextEdit->paste();
 }
 
+/*!
+ * \brief shows information about Qt
+ *
+ */
 void MainWindow::on_actionAboutQt_triggered()
 {
     QMessageBox::aboutQt(this, "Qt");
 }
 
+/*!
+ * \brief
+ *
+ */
 void MainWindow::on_actionDelete_triggered()
 {
 }
 
+/*!
+ * \brief Run the first line of code
+ *
+ */
 void MainWindow::on_actionRun_triggered()
 {
     QString code = (ui->plainTextEdit->toPlainText());
@@ -91,11 +131,19 @@ void MainWindow::on_actionRun_triggered()
     //Hacer lexer y parser
 }
 
+/*!
+ * \brief
+ *
+ */
 void MainWindow::on_actionNext_line_triggered()
 {
     //Correr método de parser para avanzar una línea
 }
 
+/*!
+ * \brief
+ *
+ */
 void MainWindow::on_actionPrev_line_triggered()
 {
 }

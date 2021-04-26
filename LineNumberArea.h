@@ -3,8 +3,7 @@
 #include <QPlainTextEdit>
 #include "CodeEditor.h"
 
-#endif // QWidget
-
+//! Class
 class LineNumberArea : public QWidget
 {
 public:
@@ -25,3 +24,5 @@ protected:
 private:
     CodeEditor *codeEditor;
 };
+
+#endif // QWidget
