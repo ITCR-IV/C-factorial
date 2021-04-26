@@ -15,14 +15,21 @@ using namespace std;
  */
 MServer::MServer(int PORT, int size)
 {
+    //Interpreting stuff
+
+    this->scopeLevel = 0;
+    this->insideStruct = false;
+
+    // malloc of the size
+    this->serverMemory = static_cast<char *>(malloc(size));
+
+    //Socket stuff
+
     struct sockaddr_in address;
 
     int serverBind = 0;
     int opt = 1;
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-
-    // malloc of the size
-    this->serverMemory = static_cast<char *>(malloc(size));
 
     // configurar el ambiente para el sockaddr structure
     address.sin_family = AF_INET;
@@ -41,7 +48,7 @@ MServer::MServer(int PORT, int size)
     else
     {
         // add to log
-        printf("Successfully bind to local port\n");
+        printf("Successfully bind to local port\nPort number: %d\n", PORT);
     }
 
     // set socket to an especific port
@@ -63,11 +70,6 @@ MServer::MServer(int PORT, int size)
     }
 
     this->request(address, serverSocket);
-
-    //Interpreting stuff
-
-    this->scopeLevel = 0;
-    this->insideStruct = false;
 }
 
 /*!
