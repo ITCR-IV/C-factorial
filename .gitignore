@@ -179,6 +179,9 @@ $RECYCLE.BIN/
 #output
 *.out
 
+#testing
+test.txt
+
 ### Qt ###
 # C++ objects and libs
 *.slo

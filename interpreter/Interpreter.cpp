@@ -63,7 +63,6 @@ void Interpreter::declaration(string type, string id, string assignType /*= ""*/
 */
 void Interpreter::reference_declaration(string ptrType, string id, string assignType /*= ""*/, string value /*= ""*/)
 {
-    id = id + "a";
     return;
 }
 
@@ -206,7 +205,10 @@ Token Interpreter::arithmetic(char operation, Token op1, Token op2)
  * \param id id of a variable
  * \return offset address of the variable as string
  */
-string Interpreter::getAddr(string id) {}
+string Interpreter::getAddr(string id)
+{
+    return id;
+}
 
 /*!
  * \brief Returns the value of a given variable, if no such variable hsa been defined throws error
@@ -214,7 +216,10 @@ string Interpreter::getAddr(string id) {}
  * \param id is a variable and can be a plain variable or a struct access refering to a variable inside a struct
  * \return string identifier of the variable
  */
-string Interpreter::getValue(string id) {}
+string Interpreter::getValue(string id)
+{
+    return id;
+}
 
 /*!
  * \brief do rereference the reference type variables
@@ -222,7 +227,10 @@ string Interpreter::getValue(string id) {}
  * \param id the id of the reference variable
  * \return string containing the value of the variable the reference points to
  */
-string Interpreter::getRefValue(string id) {}
+string Interpreter::getRefValue(string id)
+{
+    return id;
+}
 
 /*!
  * \brief Asks the memory server for the type of a variable
@@ -230,7 +238,10 @@ string Interpreter::getRefValue(string id) {}
  * \param id variable id
  * \return string with type, must correspond to one of the types defined in TokenConstants.h
  */
-string Interpreter::getType(string id) {}
+string Interpreter::getType(string id)
+{
+    return id;
+}
 
 /*!
  * \brief Prints to Stdout whatever is passed to it
