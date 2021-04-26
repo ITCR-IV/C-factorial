@@ -9,11 +9,10 @@ using namespace std;
 using json = nlohmann::json;
 
 //! Class that decode the string form of the Json
-class JsonDecode
+class JsonDecoder
 {
 
 private:
-
     //! String form of the Json
     string jsonString;
 
@@ -21,12 +20,10 @@ private:
     json jFile;
 
 public:
-
     //! Constructor of the JsonDecoder Class
     JsonDecoder(string jsonString);
 
-    decode();
+    UpdateInfo decode();
 };
-
 
 #endif //JSONDECODER_H

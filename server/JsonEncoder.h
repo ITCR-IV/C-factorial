@@ -3,6 +3,7 @@
 
 #include <nlohmann/json.hpp>
 #include "UpdateInfo.h"
+#include <string>
 
 using json = nlohmann::json;
 
@@ -21,8 +22,7 @@ public:
     //! Constructor of the JsonEncoder Class
     JsonEncoder(UpdateInfo data);
 
-    encode();
+    std::string encode();
 };
-
 
 #endif //JSONENCODER_H

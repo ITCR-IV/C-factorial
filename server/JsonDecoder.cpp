@@ -8,7 +8,8 @@ using json = nlohmann::json;
  *
  * \param string form of the json
  */
-JsonDecoder::JsonDecoder(string jsonString) {
+JsonDecoder::JsonDecoder(string jsonString)
+{
     this->jsonString = jsonString;
 }
 /*!
@@ -16,6 +17,7 @@ JsonDecoder::JsonDecoder(string jsonString) {
  *
  * \return A UpdateInfo object with the information from the json
  */
-UpdateInfo JsonDecoder::decode(){
+UpdateInfo JsonDecoder::decode()
+{
     //this->jFile = jsonString._json;
 }
