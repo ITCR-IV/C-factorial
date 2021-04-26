@@ -1,20 +1,31 @@
-#ifndef C_FACTORIAL_UPDATEINFO_H
-#define C_FACTORIAL_UPDATEINFO_H
+#ifndef UPDATEINFO_H
+#define UPDATEINFO_H
 
 #include <string>
 using namespace std;
 
-class UpdateInfo {
- //   template<typename T>;
+//! Class that stores all the info on each line
+class UpdateInfo
+{
+
 private:
-    // data that is going to be send
+
+    //! string that indicates de type of variable
     string dataType;
+
+    //! string with the name of the variable
     string dataName;
+
+    //! string that stores the value of the variable
+    //string dataValue;
+
+    //! integer with the number of pointers of an specific variable
     int dataCount;
-//    T *dataValue;
 
 public:
+
     UpdateInfo();
+
     void setDataType(string type);
     string getDataType();
 
@@ -29,4 +40,4 @@ public:
 };
 
 
-#endif
+#endif //UPDATEINFO_H
