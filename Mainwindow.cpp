@@ -82,11 +82,8 @@ void MainWindow::on_actionDelete_triggered()
 
 void MainWindow::on_actionRun_triggered()
 {
-    printf("hi?");
-
     QString code = (ui->plainTextEdit->toPlainText());
     std::string plainCode = code.toUtf8().constData();
-    //std::cout << plainCode + '\n';
     Lexer lexer = Lexer("{" + plainCode + "\n}");
     Parser parser = Parser(lexer);
 
