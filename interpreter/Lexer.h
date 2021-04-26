@@ -19,7 +19,7 @@ private:
     int pos;
 
     //!a pointer that iterates through the whole text eventually
-    char *current_char;
+    char current_char;
 
     void error(const string extraDetails);
 
@@ -42,7 +42,7 @@ public:
 
     Lexer(string text);
 
-    char *peek();
+    //char *peek();
 
     Token getNextToken();
 };

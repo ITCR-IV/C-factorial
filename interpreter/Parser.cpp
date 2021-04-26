@@ -53,8 +53,8 @@ void Parser::eat(string tokenType)
 {
     if (this->currentToken.getType() == tokenType)
     {
-        cout << "Expected: \"" << tokenType << "\"" << endl
-             << "Got: \"" << this->currentToken.getType() << "\"\n\n\n";
+        cout << "\n\n\nExpected: \"" << tokenType << "\"" << endl
+             << "Got: \"" << this->currentToken.getType() << "\"\n";
         this->currentToken = this->lexer.getNextToken();
     }
     else
@@ -72,6 +72,11 @@ void Parser::scope()
 {
     printf("Entering scope \n");
     eat(LBRACK);
+    if (this->currentToken.getType() == EOL)
+    {
+        eat(EOL);
+    }
+
     this->interpreter.enter_scope();
 
     while (this->currentToken.getType() != RBRACK)
@@ -125,9 +130,7 @@ void Parser::loc()
     }
     else
     {
-        cout << ">>>>>>GETTING INTO A DECLARATION<<<<<\n";
         declaration();
-        cout << "getting out of it\n";
     }
 
     eat(SEMI);
@@ -141,13 +144,10 @@ void Parser::loc()
  */
 void Parser::declaration()
 {
-    cout << "CURRENT VALUE: " << this->currentToken.getValue();
     string type_ = type();
-    cout << "AFTER CALLING TYPE(): " << this->currentToken.getValue() << " THAT WAS THE VALUE";
 
     if (this->currentToken.getType() == EQUAL) //this means that an existing variable is being changed, rather than a new variable being created
     {
-        cout << "CHANGING A VALUE\n";
         string id_ = type_;
         type_ = this->interpreter.getType(id_);
         eat(EQUAL);
@@ -176,18 +176,31 @@ void Parser::declaration()
     string assignmentType_ = "";
     string assignmentValue_ = "";
 
-    if (this->currentToken.getType() == EQUAL)
-    {
-        eat(EQUAL);
-        Token token_ = return_expression();
-        string assignmentType_ = token_.getType();
-        string assignmentValue_ = token_.getValue();
-    }
-
     if (type_.find('<') != string::npos)
     { //So if it's a reference
         string ptrType_ = this->interpreter.extract_refType(type_);
+        if (this->currentToken.getType() == EQUAL)
+        {
+            eat(EQUAL);
+
+            Token token_ = return_expression();
+            string assignmentType_ = token_.getType();
+            string assignmentValue_ = token_.getValue();
+            this->interpreter.reference_declaration(ptrType_, id_, assignmentType_, assignmentValue_);
+            return;
+        }
         this->interpreter.reference_declaration(ptrType_, id_, assignmentType_, assignmentValue_);
+        return;
+    }
+
+    if (this->currentToken.getType() == EQUAL)
+    {
+        eat(EQUAL);
+
+        Token token_ = return_expression();
+        string assignmentType_ = token_.getType();
+        string assignmentValue_ = token_.getValue();
+        this->interpreter.declaration(type_, id_, assignmentType_, assignmentValue_);
         return;
     }
 
@@ -369,7 +382,10 @@ Token Parser::method_call()
         eat(LPAREN);
         if (this->currentToken.getType() == STRUCTACCESS || this->currentToken.getType() == ID)
         {
-            return Token(this->interpreter.getType(this->currentToken.getValue()), this->interpreter.getRefValue(this->currentToken.getValue()));
+            Token token_ = this->currentToken;
+            eat(ID);
+            eat(RPAREN);
+            return Token(this->interpreter.getType(token_.getValue()), this->interpreter.getRefValue(token_.getValue()));
         }
         else
         {
@@ -382,7 +398,10 @@ Token Parser::method_call()
         eat(LPAREN);
         if (this->currentToken.getType() == STRUCTACCESS || this->currentToken.getType() == ID)
         {
-            return Token(REFERENCE + "<" + this->interpreter.getType(this->currentToken.getValue()) + ">", this->interpreter.getAddr(this->currentToken.getValue()));
+            Token token_ = this->currentToken;
+            eat(ID);
+            eat(RPAREN);
+            return Token(REFERENCE + "<" + this->interpreter.getType(token_.getValue()) + ">", this->interpreter.getAddr(token_.getValue()));
         }
         else
         {
@@ -477,7 +496,6 @@ Token Parser::number()
 string Parser::type()
 {
     string type_ = this->currentToken.getType();
-    cout << "Type identified: " + type_ << endl;
     if (type_ == INT || type_ == LONG || type_ == CHAR || type_ == FLOAT || type_ == FLOAT || type_ == DOUBLE)
     {
         eat(type_);
@@ -500,6 +518,7 @@ string Parser::type()
     else
     {
         printf("Something wrong in Parser::type()\n");
+        cout << "TYPE: " << this->currentToken.getType();
         error("Something wrong in Parser::type()\n");
     }
     return "Error in Parser.cpp::type()";
