@@ -1,17 +1,28 @@
-#ifndef C_FACTORIAL_JSONENCODER_H
-#define C_FACTORIAL_JSONENCODER_H
+#ifndef JSONENCODER_H
+#define JSONENCODER_H
 
 #include <nlohmann/json.hpp>
 #include "UpdateInfo.h"
+
 using json = nlohmann::json;
 
-class JsonEncoder {
+//! Class that encode a UpdateInfo object to a jsonString
+class JsonEncoder
+{
+
 private:
+    //! json file
     json jFile;
+
+    //! UpdateInfo object
+    UpdateInfo data;
+
 public:
-    JsonEncoder();
-    encode(UpdateInfo data);
+    //! Constructor of the JsonEncoder Class
+    JsonEncoder(UpdateInfo data);
+    
+    encode();
 };
 
 
-#endif
+#endif //JSONENCODER_H

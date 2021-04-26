@@ -1,5 +1,5 @@
-#ifndef C_FACTORIAL_JSONDECODER_H
-#define C_FACTORIAL_JSONDECODER_H
+#ifndef JSONDECODER_H
+#define JSONDECODER_H
 
 #include <nlohmann/json.hpp>
 #include "UpdateInfo.h"
@@ -8,15 +8,25 @@
 using namespace std;
 using json = nlohmann::json;
 
-class JsonDecoder {
+//! Class that decode the string form of the Json
+class JsonDecode
+{
+
 private:
+
+    //! String form of the Json
     string jsonString;
+
+    //! Json file
     json jFile;
 
 public:
+
+    //! Constructor of the JsonDecoder Class
     JsonDecoder(string jsonString);
+
     decode();
 };
 
 
-#endif
+#endif //JSONDECODER_H

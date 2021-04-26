@@ -5,15 +5,26 @@
 using namespace std;
 using json = nlohmann::json;
 
-JsonEncoder::JsonEncoder() {
+/*!
+ * \brief Construct a new JsonEncoder object
+ *
+ * \param text The entire code text
+ */
+JsonEncoder::JsonEncoder(UpdateInfo data) {
+    this->data = data;
 }
 
-string JsonEncoder::encode(UpdateInfo data) {
-    this->jFile["dataName"] = data.getDataName();
-    //this->jFile["dataValue"] = data.getDataValue();
-    this->jFile["dataType"] = data.getDataType();
-    this->jFile["dataCount"] = data.getDataCount();
+/*!
+ * \brief translates the UpdateInfo object to a jsonString
+ *
+ * \return A string form of the a json
+ */
+string JsonEncoder::encode() {
+    this->jFile["dataName"] = this->data.getDataName();
+    //this->jFile["dataValue"] = this->data.getDataValue();
+    this->jFile["dataType"] = this->data.getDataType();
+    this->jFile["dataCount"] = this->data.getDataCount();
 
-    string jString = jFile.dump();
+    string jString = this->jFile.dump();
     return jString;
 }
