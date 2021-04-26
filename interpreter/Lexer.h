@@ -21,9 +21,6 @@ private:
     //!a pointer that iterates through the whole text eventually
     char *current_char;
 
-    //!the type of exception thrown by the lexer
-    struct SyntaxException;
-
     void error(const string extraDetails);
 
     void skipWhitespace();
@@ -37,6 +34,9 @@ private:
     void advance();
 
 public:
+    //!the type of exception thrown by the lexer
+    struct SyntaxException;
+
     //!index of line
     int line;
 

@@ -12,7 +12,7 @@ struct Interpreter::RuntimeException : public exception
 {
     RuntimeException(const string &msg) : msg_(msg) {}
 
-    string getMessage() const { return (msg_); }
+    const char *what() const noexcept { return (&msg_[0]); }
 
 private:
     string msg_;
@@ -51,7 +51,7 @@ void Interpreter::exit_scope() {}
 * \param assignType the type of the value being assigned
 * \param value the value being assigned
 */
-void Interpreter::declaration(string type, string id, string assignType /*= nullptr*/, string value /*= nullptr*/) {}
+void Interpreter::declaration(string type, string id, string assignType /*= ""*/, string value /*= ""*/) {}
 
 /*!
 * \brief Tell the memory server to allocate a variable defined by the parameters of this method, or if the id is already defined then change it's value
@@ -61,7 +61,7 @@ void Interpreter::declaration(string type, string id, string assignType /*= null
 * \param assignType the type of the value being assigned, this is to check that it IS a reference and that the type inside <> matches the ptrType; Example: reference<int>
 * \param value the value being assigned
 */
-void Interpreter::reference_declaration(string ptrType, string id, string assignType /*= nullptr*/, string value /*= nullptr*/)
+void Interpreter::reference_declaration(string ptrType, string id, string assignType /*= ""*/, string value /*= ""*/)
 {
     id = id + "a";
     return;
@@ -237,7 +237,10 @@ string Interpreter::getType(string id) {}
  * 
  * \param msg msg that is to be printed
  */
-void Interpreter::print_call(string msg) {}
+void Interpreter::print_call(string msg)
+{
+    printf(&msg[0]);
+}
 
 /*!
  * \brief This method applies a regex to "reference<$type>" strings to extract the $type from it
@@ -245,8 +248,8 @@ void Interpreter::print_call(string msg) {}
  * \param reference a string of format "reference<$type>" where $type is the type it points to 
  * \return returns the type it points to as a string
  */
-string extract_refType(string reference)
+string Interpreter::extract_refType(string reference)
 {
     string ptrType = reference.substr(reference.find('<') + 1, reference.find('>') - reference.find('<') - 1); //extract the type inside <>
-    return reference;
+    return ptrType;
 }

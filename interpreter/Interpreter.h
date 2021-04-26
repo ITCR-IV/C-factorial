@@ -14,12 +14,12 @@ private:
     //socket attribute and stuff
     ServerManager *manager;
 
-    //error stuff
-    struct RuntimeException;
-
     void error(const string extraDetails);
 
 public:
+    //error stuff
+    struct RuntimeException;
+
     //methods to communicate with server and process stuff
     Interpreter();
 
@@ -27,9 +27,9 @@ public:
 
     void exit_scope();
 
-    void declaration(string type, string id, string assignType = nullptr, string value = nullptr);
+    void declaration(string type, string id, string assignType = "", string value = "");
 
-    void reference_declaration(string ptrType, string id, string assignType = nullptr, string value = nullptr);
+    void reference_declaration(string ptrType, string id, string assignType = "", string value = "");
 
     void struct_declaration(string id, string assignType, string value);
 

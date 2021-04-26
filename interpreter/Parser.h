@@ -24,15 +24,15 @@ private:
     //! Value so when going line by line the parser knows how deep it is and when it gets to end if all scopes were closed
     int scopeLevel;
 
-    //the type of exception thrown by the parser
-    struct SemanticException;
-
     void error(const string extraDetails);
 
     void eat(string tokenType);
 
 public:
     Parser(Lexer inputLexer);
+
+    //the type of exception thrown by the parser
+    struct SemanticException;
 
     void scope();
 

@@ -105,9 +105,9 @@ void MServer::enter_scope() {}
 
 void MServer::exit_scope() {}
 
-void MServer::declaration(string type, string id, string assignType /* = nullptr*/, string value /* = nullptr*/) {}
+void MServer::declaration(string type, string id, string assignType /* = ""*/, string value /* = ""*/) {}
 
-void MServer::reference_declaration(string ptrType, string id, string assignType /* = nullptr*/, string value /* = nullptr*/) {}
+void MServer::reference_declaration(string ptrType, string id, string assignType /* = ""*/, string value /* = ""*/) {}
 
 void MServer::struct_declaration(string id, string assignType, string value) {}
 

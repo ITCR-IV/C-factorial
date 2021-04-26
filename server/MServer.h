@@ -20,9 +20,9 @@ public:
 
     void exit_scope();
 
-    void declaration(std::string type, std::string id, std::string assignType = nullptr, std::string value = nullptr);
+    void declaration(std::string type, std::string id, std::string assignType = "", std::string value = "");
 
-    void reference_declaration(std::string ptrType, std::string id, std::string assignType = nullptr, std::string value = nullptr);
+    void reference_declaration(std::string ptrType, std::string id, std::string assignType = "", std::string value = "");
 
     void struct_declaration(std::string id, std::string assignType, std::string value);
 

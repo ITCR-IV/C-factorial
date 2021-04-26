@@ -3,6 +3,8 @@
 #include <string>
 #include <ctype.h>
 
+#include <iostream>
+
 using namespace std;
 
 /*!
@@ -15,6 +17,7 @@ Lexer::Lexer(string text)
     this->text = text;
     this->pos = 0;
     this->current_char = &text[this->pos];
+    //cout << "Length: " << this->text.length() << endl;
     this->line = 1;
 }
 
@@ -27,7 +30,7 @@ struct Lexer::SyntaxException : public exception
 
     SyntaxException(const string &msg) : msg_(msg) {}
 
-    string getMessage() const { return (msg_); }
+    const char *what() const noexcept { return (&msg_[0]); }
 
 private:
     string msg_;
@@ -55,9 +58,11 @@ void Lexer::error(const string extraDetails = "")
 void Lexer::advance()
 {
     this->pos++;
-    if ((unsigned int)this->pos > this->text.length())
+    cout << "Position: " << this->pos << endl;
+    cout << "Current char: " << *(this->current_char) << endl;
+    if ((unsigned int)this->pos >= this->text.length())
     {
-        this->current_char = nullptr;
+        *(this->current_char) = '\0';
     }
     else
     {
@@ -68,20 +73,20 @@ void Lexer::advance()
 /*!
  * \brief check the following char in the text string
  * 
- * \return a char* to the character next to the current_char, if the file is over then it returns nullptr 
- */
+ * \return a char* to the character next to the current_char, if the file is over then it assigns '\0' to the char 
+ *
 char *Lexer::peek()
 {
     int peekPos = this->pos + 1;
-    if ((unsigned int)peekPos > this->text.length())
+    if ((unsigned int)peekPos >= this->text.length())
     {
-        return nullptr;
+        return '\0';
     }
     else
     {
         return this->current_char + 1;
     }
-}
+}*/
 
 /**
  * \brief skips all spaces that appear together when called
@@ -89,7 +94,7 @@ char *Lexer::peek()
  */
 void Lexer::skipWhitespace()
 {
-    while (this->current_char != nullptr && *(this->current_char) == ' ')
+    while (*(this->current_char) != '\0' && *(this->current_char) == ' ')
     {
         this->advance();
     }
@@ -103,7 +108,7 @@ void Lexer::skipWhitespace()
 Token Lexer::findNumber()
 {
     string result = "";
-    while (this->current_char != nullptr && isdigit(*(this->current_char)))
+    while (*(this->current_char) != '\0' && isdigit(*(this->current_char)))
     {
         result += *(this->current_char);
         this->advance();
@@ -112,7 +117,7 @@ Token Lexer::findNumber()
     {
         result += *(this->current_char);
         this->advance();
-        while (this->current_char != nullptr && isdigit(*(this->current_char)))
+        while (*(this->current_char) != '\0' && isdigit(*(this->current_char)))
         {
             result += *(this->current_char);
             this->advance();
@@ -133,7 +138,7 @@ Token Lexer::findNumber()
 Token Lexer::findId()
 {
     string result = "";
-    while (this->current_char != nullptr && isalnum(*(this->current_char)))
+    while (*(this->current_char) != '\0' && isalnum(*(this->current_char)))
     {
         result += *(this->current_char);
         this->advance();
@@ -164,7 +169,7 @@ string Lexer::findString()
     this->advance();
     if (*(this->current_char) != '\'')
     {
-        if (*(this->current_char) == '\n' || this->current_char != nullptr) //Reached end of line or EOF without closing string
+        if (*(this->current_char) == '\n' || *(this->current_char) == '\0') //Reached end of line or EOF without closing string
         {
             this->error("Unclosed char");
         }
@@ -187,8 +192,9 @@ string Lexer::findString()
  */
 Token Lexer::getNextToken()
 {
-    while (this->current_char != nullptr)
+    while (*(this->current_char) != '\0')
     {
+        //cout << "Current char: " << *(this->current_char) << endl;
         if (*(this->current_char) == ' ')
         {
             this->skipWhitespace();
@@ -277,7 +283,8 @@ Token Lexer::getNextToken()
             this->advance();
             return Token(DIV, DIV);
         }
-        this->error("Invalid character");
+        string errorMsg = "Invalid character '" + *(this->current_char);
+        this->error(errorMsg + "'");
     }
-    return Token(EOFF, nullptr);
+    return Token(EOFF, EOFF);
 }

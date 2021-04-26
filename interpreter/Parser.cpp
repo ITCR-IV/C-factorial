@@ -1,6 +1,7 @@
 #include "Parser.h"
 #include "Lexer.h"
 #include "Interpreter.h"
+#include <iostream>
 
 //////////
 /// For this parser I use this-> to reference attribute members but not for method calls
@@ -23,7 +24,7 @@ struct Parser::SemanticException : public exception
 
     SemanticException(const string &msg) : msg_(msg) {}
 
-    string getMessage() const { return (msg_); }
+    const char *what() const noexcept { return (&msg_[0]); }
 
 private:
     string msg_;
@@ -52,12 +53,14 @@ void Parser::eat(string tokenType)
 {
     if (this->currentToken.getType() == tokenType)
     {
+        cout << "Expected: \"" << tokenType << "\"" << endl
+             << "Got: \"" << this->currentToken.getType() << "\"\n\n\n";
         this->currentToken = this->lexer.getNextToken();
     }
     else
     {
         string errormsg = "Expected a(n) '" + tokenType + "' and instead got '" + this->currentToken.getType() + "'";
-        this->error();
+        this->error(errormsg);
     }
 }
 
@@ -67,6 +70,7 @@ void Parser::eat(string tokenType)
  */
 void Parser::scope()
 {
+    printf("Entering scope \n");
     eat(LBRACK);
     this->interpreter.enter_scope();
 
@@ -83,6 +87,7 @@ void Parser::scope()
     }
 
     eat(RBRACK);
+    printf("Exiting scope\n");
 
     this->interpreter.exit_scope();
     if (this->currentToken.getType() == EOL)
@@ -120,7 +125,9 @@ void Parser::loc()
     }
     else
     {
+        cout << ">>>>>>GETTING INTO A DECLARATION<<<<<\n";
         declaration();
+        cout << "getting out of it\n";
     }
 
     eat(SEMI);
@@ -134,10 +141,13 @@ void Parser::loc()
  */
 void Parser::declaration()
 {
+    cout << "CURRENT VALUE: " << this->currentToken.getValue();
     string type_ = type();
+    cout << "AFTER CALLING TYPE(): " << this->currentToken.getValue() << " THAT WAS THE VALUE";
 
     if (this->currentToken.getType() == EQUAL) //this means that an existing variable is being changed, rather than a new variable being created
     {
+        cout << "CHANGING A VALUE\n";
         string id_ = type_;
         type_ = this->interpreter.getType(id_);
         eat(EQUAL);
@@ -156,14 +166,15 @@ void Parser::declaration()
 
     if (this->currentToken.getType() != ID)
     {
+        cout << "Exiting because nothing's going on........";
         return;
     }
 
     string id_ = this->currentToken.getValue();
     eat(ID);
 
-    string assignmentType_ = nullptr;
-    string assignmentValue_ = nullptr;
+    string assignmentType_ = "";
+    string assignmentValue_ = "";
 
     if (this->currentToken.getType() == EQUAL)
     {
@@ -228,7 +239,7 @@ Token Parser::return_expression()
     }
     else
     {
-        error("Unrecognized expression");
+        error("Unrecognized return expression");
     }
     return Token("Error in Parser.cpp::return_expression()", "Error in Parser.cpp::return_expression()");
 }
@@ -381,7 +392,7 @@ Token Parser::method_call()
     else
     {
         printf("Something wrong in Parser::method_call()\n");
-        error();
+        error("Something wrong in Parser::method_call()\n");
     }
     return Token("Error in Parser.cpp::method_call()", "Error in Parser.cpp::method_call()");
 }
@@ -419,7 +430,7 @@ Token Parser::factor()
     else
     {
         printf("Something wrong in Parser::factor()\n");
-        error();
+        error("Something wrong in Parser::factor()\n");
     }
     return Token("Error in Parser.cpp::factor()", "Error in Parser.cpp::factor()");
 }
@@ -441,17 +452,19 @@ Token Parser::number()
     if (this->currentToken.getType() == INTEGER)
     {
         result += this->currentToken.getValue();
+        eat(INTEGER);
         return Token(INT, result);
     }
     else if (this->currentToken.getType() == DECIMAL)
     {
         result += this->currentToken.getValue();
+        eat(DECIMAL);
         return Token(FLOAT, result);
     }
     else
     {
         printf("Something wrong in Parser::number()\n");
-        error();
+        error("Something wrong in Parser::number()\n");
     }
     return Token("Error in Parser.cpp::number()", "Error in Parser.cpp::number()");
 }
@@ -464,6 +477,7 @@ Token Parser::number()
 string Parser::type()
 {
     string type_ = this->currentToken.getType();
+    cout << "Type identified: " + type_ << endl;
     if (type_ == INT || type_ == LONG || type_ == CHAR || type_ == FLOAT || type_ == FLOAT || type_ == DOUBLE)
     {
         eat(type_);
@@ -486,7 +500,7 @@ string Parser::type()
     else
     {
         printf("Something wrong in Parser::type()\n");
-        error();
+        error("Something wrong in Parser::type()\n");
     }
     return "Error in Parser.cpp::type()";
 }
