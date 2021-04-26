@@ -11,9 +11,9 @@ JsonEncoder::JsonEncoder() {
 string JsonEncoder::encode(UpdateInfo data) {
     this->jFile["dataName"] = data.getDataName();
     //this->jFile["dataValue"] = data.getDataValue();
-    this->jFile["dataType"] = data.getDataType();
-    this->jFile["dataCount"] = data.getDataCount();
+    //this->jFile["dataType"] = data.getDataType();
+    //this->jFile["dataCount"] = data.getDataCount();
 
-    string jString = jFile.dump();
-    return jString;
+    //string jString = jFile.dump();
+    return "jString";
 }

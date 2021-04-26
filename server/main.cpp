@@ -1,6 +1,7 @@
 
 #include "MServer.h"
 #include "UpdateInfo.h"
+#include "JsonEncoder.h"
 #include "iostream"
 
 

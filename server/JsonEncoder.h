@@ -10,7 +10,7 @@ private:
     json jFile;
 public:
     JsonEncoder();
-    encode(UpdateInfo data);
+    string encode(UpdateInfo data);
 };
 
 
