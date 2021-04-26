@@ -3,9 +3,13 @@
 
 #include <QPlainTextEdit>
 
+//! Class that handles the behaviour of the code editor
 class CodeEditor : public QPlainTextEdit
 {
     Q_OBJECT
+
+private:
+    QWidget *lineNumberArea;
 
 public:
     CodeEditor(QWidget *parent = nullptr);
@@ -20,8 +24,6 @@ private slots:
     void updateLineNumberAreaWidth(int newBlockCount);
     void updateLineNumberArea(const QRect &rect, int dy);
 
-private:
-    QWidget *lineNumberArea;
 };
 
 #endif // CODEEDITOR_H

@@ -3,17 +3,27 @@
 #include "QPainter"
 #include "QTextBlock"
 
-
+/*!
+ * \brief Construct a new CodeEditor object
+ *
+ * \param parent
+ */
 CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
 {
     lineNumberArea = new LineNumberArea(this);
 
+    // connect the new slots
     connect(this, &CodeEditor::blockCountChanged, this, &CodeEditor::updateLineNumberAreaWidth);
     connect(this, &CodeEditor::updateRequest, this, &CodeEditor::updateLineNumberArea);
 
     updateLineNumberAreaWidth(0);
 }
 
+/*!
+ * \brief Calculates the width of the lineNumberArea
+ *
+ * \return int that indicates the width
+ */
 int CodeEditor::lineNumberAreaWidth()
 {
     int digits = 1;
@@ -28,11 +38,22 @@ int CodeEditor::lineNumberAreaWidth()
     return space;
 }
 
+/*!
+ * \brief Update the with of the number area
+ *
+ * \param
+ */
 void CodeEditor::updateLineNumberAreaWidth(int /* newBlockCount */)
 {
     setViewportMargins(lineNumberAreaWidth(), 0, 0, 0);
 }
 
+/*!
+ * \brief Updates the area of numbers when is scrolled
+ *
+ * \param rect part of the code editor
+ * \param dy number of pixels that have been scrolled vertically
+ */
 void CodeEditor::updateLineNumberArea(const QRect &rect, int dy)
 {
     if (dy)
@@ -44,6 +65,11 @@ void CodeEditor::updateLineNumberArea(const QRect &rect, int dy)
         updateLineNumberAreaWidth(0);
 }
 
+/*!
+ * \brief resize the number area when the size of the IDE changes
+ *
+ * \param e event of the IDE
+ */
 void CodeEditor::resizeEvent(QResizeEvent *e)
 {
     QPlainTextEdit::resizeEvent(e);
@@ -52,7 +78,11 @@ void CodeEditor::resizeEvent(QResizeEvent *e)
     lineNumberArea->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
 }
 
-
+/*!
+ * \brief paint all the numbers and gray area on the editor
+ *
+ * \param event paint event
+ */
 void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event)
 {
     QPainter painter(lineNumberArea);
