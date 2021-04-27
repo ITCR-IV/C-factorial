@@ -68,6 +68,8 @@ private:
     std::vector<int> declarationsCounter;
 
     std::string getLastVariable();
+
+    int getAvailableAddress();
 };
 
 #endif // MSERVER_H

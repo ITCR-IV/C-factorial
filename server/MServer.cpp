@@ -6,6 +6,8 @@
 #include <iostream>
 #include "RequestConstants.h"
 #include "JsonDecoder.h"
+#include "TypeConstants.h"
+#include "StructAttribute.h"
 
 /*!
  * \brief Construct a new MServer object, and configures the socket
@@ -252,6 +254,68 @@ void MServer::exit_scope()
  */
 int MServer::declaration(UpdateInfo declarationInfo)
 {
+    std::string type = declarationInfo.getDataType();
+    std::string name = declarationInfo.getDataName();
+    std::string value = declarationInfo.getDataValue();
+
+    if (insideStruct)
+    {
+        //add to vector a StructAttribute
+        this->currentStruct.push_back(StructAttribute(type, name, value));
+    }
+    else
+    {
+        if (this->varAddresses.find(name) == this->varAddresses.end())
+        {
+            printf("Attempted to allocate an existing variable as a new one");
+            return ERROR;
+        }
+        int newAddress = getAvailableAddress();
+        if (type == CHAR)
+        {
+            char *c = this->serverMemory + newAddress;
+            *c = value[0];
+            this->varAddresses.insert({name, newAddress});
+            this->varTypes.insert({name, type});
+        }
+        else if (type == INT || type.find('<') != std::string::npos) //references are stored in memory with int*
+        {
+            int *i = reinterpret_cast<int *>(this->serverMemory + newAddress);
+            *i = stoi(value);
+            this->varAddresses.insert({name, newAddress});
+
+            if (type == INT)
+            {
+                this->varTypes.insert({name, type});
+            }
+            else
+            {
+                std::string refType = "reference<" + type + ">";
+                this->varTypes.insert({name, refType});
+            }
+        }
+        else if (type == FLOAT)
+        {
+            float *f = reinterpret_cast<float *>(this->serverMemory + newAddress);
+            *f = stof(value);
+            this->varAddresses.insert({name, newAddress});
+            this->varTypes.insert({name, type});
+        }
+        else if (type == DOUBLE)
+        {
+            double *i = reinterpret_cast<double *>(this->serverMemory + newAddress);
+            *i = stod(value);
+            this->varAddresses.insert({name, newAddress});
+            this->varTypes.insert({name, type});
+        }
+        else if (type == LONG)
+        {
+            long *i = reinterpret_cast<long *>(this->serverMemory + newAddress);
+            *i = stol(value);
+            this->varAddresses.insert({name, newAddress});
+            this->varTypes.insert({name, type});
+        }
+    }
     return SUCCESS;
 }
 
@@ -300,4 +364,37 @@ std::string MServer::getLastVariable()
                     return p1.second < p2.second;
                 }))->first;
     return lastVarId;
+}
+
+int MServer::getAvailableAddress()
+{
+    int lastVarAddress = (std::max_element(this->varAddresses.begin(), this->varAddresses.end(), [](const std::pair<std::string, int> &p1, const std::pair<std::string, int> &p2) {
+                             return p1.second < p2.second;
+                         }))->second;
+
+    int availAddress;
+
+    if (lastVarAddress > 0)
+    {
+        std::string lastVarId = getLastVariable();
+        std::string type = this->varTypes.at(lastVarId);
+        if (type == CHAR)
+        {
+            availAddress = lastVarAddress + 1;
+        }
+        else if (type == INT || type == FLOAT || type.find('<') != std::string::npos)
+        {
+            availAddress = lastVarAddress + 4;
+        }
+        else if (type == LONG || type == DOUBLE)
+        {
+            availAddress = lastVarAddress + 8;
+        }
+    }
+    else
+    {
+        availAddress = 0;
+    }
+
+    return availAddress;
 }
