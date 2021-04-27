@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "string"
+
+using namespace std;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,6 +18,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    void add_row(string dir, string label, string value, string count);
+    void delete_row();
 
 private slots:
 
@@ -40,5 +46,10 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    enum Column
+    {
+        DIR, LABEL, VALUE, COUNT
+    };
 };
 #endif // MAINWINDOW_H

@@ -150,3 +150,18 @@ void MainWindow::on_actionNext_line_triggered()
 void MainWindow::on_actionPrev_line_triggered()
 {
 }
+
+void MainWindow::add_row(string dir, string label, string value, string count)
+{
+    int row = ui->tableWidget->rowCount();
+    ui->tableWidget->insertRow(ui->tableWidget->rowCount());
+    ui->tableWidget->setItem(row, DIR, new QTableWidgetItem(QString::fromStdString(dir)));
+    ui->tableWidget->setItem(row, LABEL, new QTableWidgetItem(QString::fromStdString(label)));
+    ui->tableWidget->setItem(row, VALUE, new QTableWidgetItem(QString::fromStdString(value)));
+    ui->tableWidget->setItem(row, COUNT, new QTableWidgetItem(QString::fromStdString(count)));
+}
+
+void MainWindow::delete_row()
+{
+    ui->tableWidget->setRowCount(0);
+}
