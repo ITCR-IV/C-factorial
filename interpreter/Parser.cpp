@@ -625,6 +625,8 @@ void Parser::struct_definition_open1()
 
     eat(LBRACK);
     eat(EOL);
+
+    this->insideStruct = true;
     this->interpreter.enter_struct();
 }
 
@@ -638,6 +640,7 @@ void Parser::struct_definition_close1()
 
     string id_ = this->currentToken.getValue();
     eat(ID);
+    this->insideStruct = false;
     this->interpreter.exit_struct(id_);
 }
 
