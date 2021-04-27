@@ -70,6 +70,8 @@ private:
     std::string getLastVariable();
 
     int getAvailableAddress();
+
+    string extract_refType(string reference);
 };
 
 #endif // MSERVER_H

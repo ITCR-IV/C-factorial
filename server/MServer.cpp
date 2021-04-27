@@ -265,12 +265,14 @@ int MServer::declaration(UpdateInfo declarationInfo)
     }
     else
     {
-        if (this->varAddresses.find(name) == this->varAddresses.end())
+        if (this->varAddresses.find(name) != this->varAddresses.end())
         {
             printf("Attempted to allocate an existing variable as a new one");
             return ERROR;
         }
-        int newAddress = getAvailableAddress();
+
+        int newAddress = getAvailableAddress(); //Get the first available address
+
         if (type == CHAR)
         {
             char *c = this->serverMemory + newAddress;
@@ -278,21 +280,12 @@ int MServer::declaration(UpdateInfo declarationInfo)
             this->varAddresses.insert({name, newAddress});
             this->varTypes.insert({name, type});
         }
-        else if (type == INT || type.find('<') != std::string::npos) //references are stored in memory with int*
+        else if (type == INT)
         {
             int *i = reinterpret_cast<int *>(this->serverMemory + newAddress);
             *i = stoi(value);
             this->varAddresses.insert({name, newAddress});
-
-            if (type == INT)
-            {
-                this->varTypes.insert({name, type});
-            }
-            else
-            {
-                std::string refType = "reference<" + type + ">";
-                this->varTypes.insert({name, refType});
-            }
+            this->varTypes.insert({name, type});
         }
         else if (type == FLOAT)
         {
@@ -315,6 +308,32 @@ int MServer::declaration(UpdateInfo declarationInfo)
             this->varAddresses.insert({name, newAddress});
             this->varTypes.insert({name, type});
         }
+        else
+        { // Declaring a defined struct
+            // Note about structs: their size by themselves is just 1 byte pointing to the struct start, the total size would be the size of their attributes + 1
+            if (this->structDefinitions.find(type) == this->structDefinitions.end())
+            {
+                printf("Attempted declaration with unrecognized type");
+                return ERROR;
+            }
+            //now declare all of the struct attributes and a struct variable pointing to the start of the struct with the size of 1
+            this->varAddresses.insert({name, newAddress});
+            this->varTypes.insert({name, type});
+            std::vector<StructAttribute> definition = this->structDefinitions.at(type);
+            std::vector<StructAttribute>::iterator attribute;
+            for (attribute = definition.begin(); attribute < definition.end(); attribute++)
+            {
+                std::string fullName = name + "." + attribute->name;
+                if (attribute->type.find('<') == std::string::npos) // it's a reference
+                {
+                    this->reference_declaration(UpdateInfo(extract_refType(attribute->type), fullName, attribute->defaultValue));
+                }
+                else // it's anything else
+                {
+                    this->declaration(UpdateInfo(attribute->type, fullName, attribute->defaultValue));
+                }
+            }
+        }
     }
     return SUCCESS;
 }
@@ -325,7 +344,35 @@ int MServer::declaration(UpdateInfo declarationInfo)
  * \param declarationInfo UpdateInfo where the counter value is ignored and the rest is used to store a new variable in memory, the type is the type the reference points to and has "reference<$type>" wrapped around it when stored
  * \return int -1 for error (most likely the variable is already stored) and 0 for success
  */
-int MServer::reference_declaration(UpdateInfo declarationInfo) { return SUCCESS; }
+int MServer::reference_declaration(UpdateInfo declarationInfo)
+{
+    std::string type = declarationInfo.getDataType();
+    std::string name = declarationInfo.getDataName();
+    std::string value = declarationInfo.getDataValue();
+
+    if (insideStruct)
+    {
+        //add to vector a StructAttribute
+        this->currentStruct.push_back(StructAttribute(type, name, value));
+    }
+    else
+    {
+        if (this->varAddresses.find(name) != this->varAddresses.end())
+        {
+            printf("Attempted to allocate an existing variable as a new one");
+            return ERROR;
+        }
+        int newAddress = getAvailableAddress();
+
+        int *i = reinterpret_cast<int *>(this->serverMemory + newAddress); //references are stored in memory with int*
+        *i = stoi(value);
+        this->varAddresses.insert({name, newAddress});
+
+        std::string refType = "reference<" + type + ">";
+        this->varTypes.insert({name, refType});
+    }
+    return SUCCESS;
+}
 
 /*!
  * \brief Changes the value of a stored variable
@@ -390,6 +437,10 @@ int MServer::getAvailableAddress()
         {
             availAddress = lastVarAddress + 8;
         }
+        else
+        { //The last address is an empty struct
+            availAddress = lastVarAddress + 1;
+        }
     }
     else
     {
@@ -397,4 +448,16 @@ int MServer::getAvailableAddress()
     }
 
     return availAddress;
+}
+
+/*!
+ * \brief This method applies a regex to "reference<$type>" strings to extract the $type from it
+ * 
+ * \param reference a string of format "reference<$type>" where $type is the type it points to 
+ * \return returns the type it points to as a string
+ */
+string MServer::extract_refType(string reference)
+{
+    string ptrType = reference.substr(reference.find('<') + 1, reference.find('>') - reference.find('<') - 1); //extract the type inside <>
+    return ptrType;
 }
