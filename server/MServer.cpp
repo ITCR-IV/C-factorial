@@ -315,7 +315,7 @@ int MServer::declaration(UpdateInfo declarationInfo)
             {
                 printf("Attempted declaration with unrecognized type");
                 return ERROR;
-            }
+            } // todo find a way to check if an existing struct is being assigned to this one and instead of creating a new one in memory just create new variables in the map pointing to same addresses
             //now declare all of the struct attributes and a struct variable pointing to the start of the struct with the size of 1
             this->varAddresses.insert({name, newAddress});
             this->varTypes.insert({name, type});
@@ -335,6 +335,7 @@ int MServer::declaration(UpdateInfo declarationInfo)
             }
         }
     }
+    declarationsCounter.back()++;
     return SUCCESS;
 }
 
@@ -364,13 +365,14 @@ int MServer::reference_declaration(UpdateInfo declarationInfo)
         }
         int newAddress = getAvailableAddress();
 
-        int *i = reinterpret_cast<int *>(this->serverMemory + newAddress); //references are stored in memory with int*
+        int *i = reinterpret_cast<int *>(this->serverMemory + newAddress); //references are stored in memory with int* because addresses are just that
         *i = stoi(value);
         this->varAddresses.insert({name, newAddress});
 
         std::string refType = "reference<" + type + ">";
         this->varTypes.insert({name, refType});
     }
+    declarationsCounter.back()++;
     return SUCCESS;
 }
 
@@ -380,18 +382,78 @@ int MServer::reference_declaration(UpdateInfo declarationInfo)
  * \param declarationInfo the name and value are extracted
  * \return int -1 for error (most likely the variable hasn't been previously defined) and 0 for success
  */
-int MServer::update_value(UpdateInfo declarationInfo) { return SUCCESS; }
+int MServer::update_value(UpdateInfo declarationInfo)
+{
+    std::string name = declarationInfo.getDataName();
+    std::string newValue = declarationInfo.getDataValue();
+
+    if (this->varAddresses.find(name) == this->varAddresses.end())
+    {
+        printf("Attempted to change the value of a variable that wasn't previously defined");
+        return ERROR;
+    }
+    std::string type = this->varTypes.at(name);
+    int currentAddress = this->varAddresses.at(name);
+
+    if (type == CHAR)
+    {
+        char *c = this->serverMemory + currentAddress;
+        *c = newValue[0];
+    }
+    else if (type == INT)
+    {
+        int *i = reinterpret_cast<int *>(this->serverMemory + currentAddress);
+        *i = stoi(newValue);
+    }
+    else if (type == FLOAT)
+    {
+        float *f = reinterpret_cast<float *>(this->serverMemory + currentAddress);
+        *f = stof(newValue);
+    }
+    else if (type == DOUBLE)
+    {
+        double *d = reinterpret_cast<double *>(this->serverMemory + currentAddress);
+        *d = stod(newValue);
+    }
+    else if (type == LONG)
+    {
+        long *l = reinterpret_cast<long *>(this->serverMemory + currentAddress);
+        *l = stol(newValue);
+    }
+    else
+    {
+        //If a struct object is being changed then it's addresses need to be updated to whatever object's being assigned addresses
+    }
+
+    return SUCCESS;
+}
 
 //! Changes the insideStruct flag to true so the next declarations go to the currentStruct vector instead of being stored in memory
-void MServer::enter_struct() {}
+void MServer::enter_struct()
+{
+    this->insideStruct = true;
+}
 
 /*!
- * \brief Changes the insideStruct flag to false and assigns the struct name along with the currentStruct vector (which gets flushed) to the structDefinitions vector, also increments the structDefs counter for the last element so when exiting the scope the definition can be erased
+ * \brief Changes the insideStruct flag to false and assigns the struct name along with the currentStruct vector (which gets flushed) to the structDefinitions map and also adds the id to the structDefinitionsOrder vector, also increments the structDefs counter for the last element so when exiting the scope the definition can be erased
  * 
  * \param id name of the new struct class
  * \return int -1 for error (most likely the struct has been previously defined) and 0 for success
  */
-int MServer::exit_struct(std::string id) { return SUCCESS; }
+int MServer::exit_struct(std::string id)
+{
+    if (this->structDefinitions.find(id) != this->structDefinitions.end())
+    {
+        printf("Attempted to redefine a struct that was previously defined");
+        return ERROR;
+    }
+    this->structDefinitions.insert({id, this->currentStruct});
+    this->structDefinitionsOrder.push_back(id);
+    this->currentStruct.clear();
+    this->insideStruct = false;
+    this->structDefsCounter.back()++;
+    return SUCCESS;
+}
 
 /*!
  * \brief Send a variable with type, value, address, and counters info packaged as an UpdateInfo, if it doesn't exist send it with empty fields

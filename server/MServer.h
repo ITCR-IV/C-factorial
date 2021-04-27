@@ -58,7 +58,7 @@ private:
     //! This vector holds the declarations made for a struct being defined until it gets finished
     std::vector<StructAttribute> currentStruct;
 
-    //! This vector holds a counter for each scope level as to ho wmany structs have been defined so that they can be undefined when exiting scopes
+    //! This vector holds a counter for each scope level as to how many structs have been defined so that they can be undefined when exiting scopes
     std::vector<int> structDefsCounter;
 
     //! Vector used to keep track of the insertion order of the structDefinitions map in order to get rid of them when exiting a scope
