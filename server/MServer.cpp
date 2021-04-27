@@ -169,9 +169,34 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 break;
             }
             case REQUESTMEMORYSTATE:
+            {
                 printf("Sending memory state...\n");
-                //Add method for this
+
+                std::vector<std::pair<std::string, int>> addressVector; //we copy the map values into a vector so that we may then sort the vector and send the variables in address order
+
+                std::string info;
+                map<std::string, int>::iterator p;
+
+                for (p = this->varAddresses.begin(); p != this->varAddresses.end(); p++)
+                {
+                    addressVector.push_back(std::make_pair(p->first, p->second));
+                }
+
+                sort(addressVector.begin(), addressVector.end(), [](const std::pair<std::string, int> &a, const std::pair<std::string, int> &b) {
+                    return a.second < b.second;
+                }); // sort the vector by the values of it's keys in ascending order (from low to high) so we get the keys in order of their address
+
+                std::vector<std::pair<std::string, int>>::iterator vp;
+                for (vp = addressVector.begin(); vp != addressVector.end(); vp++)
+                {
+                    info = getInfo(vp->first);
+                    send(newSocket, info.c_str(), info.length(), 0);
+                }
+
+                std::string exitStatus = std::to_string(SUCCESS);
+                send(newSocket, info.c_str(), info.length(), 0);
                 break;
+            }
             default:
                 printf("Undefined request '%d'\n", req);
             }
