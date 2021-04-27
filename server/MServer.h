@@ -61,8 +61,13 @@ private:
     //! This vector holds a counter for each scope level as to ho wmany structs have been defined so that they can be undefined when exiting scopes
     std::vector<int> structDefsCounter;
 
+    //! Vector used to keep track of the insertion order of the structDefinitions map in order to get rid of them when exiting a scope
+    std::vector<std::string> structDefinitionsOrder;
+
     //! This vector holds a counter for each variable that has been declared (including structs and their attributes) so that when exiting a scope they can be freed from memory
     std::vector<int> declarationsCounter;
+
+    std::string getLastVariable();
 };
 
 #endif // MSERVER_H

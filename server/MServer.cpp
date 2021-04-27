@@ -223,7 +223,26 @@ void MServer::enter_scope()
 }
 
 //! Decrease the scope counter and release the amount of variables equal to the last entry in declarationsCounter while popping it, also removes the last entry in structDefsCounter and removes the amount of struct definitions equal to the counter
-void MServer::exit_scope() {}
+void MServer::exit_scope()
+{
+    int declarationNum = this->declarationsCounter.back();
+    int structDefNum = this->structDefsCounter.back();
+    this->declarationsCounter.pop_back();
+    this->structDefsCounter.pop_back();
+    for (declarationNum; declarationNum > 0; declarationNum--)
+    {
+        std::string last = getLastVariable();
+        this->varAddresses.erase(last);
+        this->varTypes.erase(last);
+    }
+    for (structDefNum; structDefNum > 0; structDefNum--)
+    {
+        std::string last = this->structDefinitionsOrder.back();
+        this->structDefinitionsOrder.pop_back();
+        this->structDefinitions.erase(last);
+    }
+    this->scopeLevel--;
+}
 
 /*!
  * \brief Add to memory the variable described by declarationInfo and increase the last entry in declarationsCounter, if inside struct then they don't get stored but assigned to the currentStruct vector as StructAttribute objects and no counter is increased. Lastly, if a defined struct object is being declared the declarationCounter must be increased by as many attributes the struct has +1 (because a variable is stored for the struct itself + its attributes)
@@ -272,4 +291,13 @@ int MServer::exit_struct(std::string id) { return SUCCESS; }
 std::string MServer::getInfo(std::string id)
 {
     return "aa";
+}
+
+std::string MServer::getLastVariable()
+{
+    std::string lastVarId;
+    lastVarId = (std::max_element(this->varAddresses.begin(), this->varAddresses.end(), [](const std::pair<std::string, int> &p1, const std::pair<std::string, int> &p2) {
+                    return p1.second < p2.second;
+                }))->first;
+    return lastVarId;
 }
