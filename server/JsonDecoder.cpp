@@ -24,7 +24,8 @@ UpdateInfo JsonDecoder::decode()
     std::string type = this->jFile["dataType"].get<std::string>();
     std::string name = this->jFile["dataName"].get<std::string>();
     std::string value = this->jFile["dataValue"].get<std::string>();
+    int address = stoi(this->jFile["dataAddress"].get<std::string>());
     int count = stoi(this->jFile["dataCount"].get<std::string>());
-    UpdateInfo returnInfo = UpdateInfo(type, name, value, count);
+    UpdateInfo returnInfo = UpdateInfo(type, name, value, address, count);
     return returnInfo;
 }

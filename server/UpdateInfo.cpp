@@ -10,11 +10,12 @@ using namespace std;
  * \param value the value of the variable
  * \param count the amount of references pointing to it
  */
-UpdateInfo::UpdateInfo(string type, string name, string value, int count)
+UpdateInfo::UpdateInfo(string type, string name, string value, int count, int address)
 {
     setDataType(type);
     setDataName(name);
     setDataValue(value);
+    setDataAddress(address);
     setDataCount(count);
 }
 
@@ -23,6 +24,7 @@ UpdateInfo::UpdateInfo(const UpdateInfo &obj)
     setDataType(obj.getDataType());
     setDataName(obj.getDataName());
     setDataValue(obj.getDataValue());
+    setDataAddress(obj.getDataAddress());
     setDataCount(obj.getDataCount());
 }
 
@@ -64,6 +66,26 @@ void UpdateInfo::setDataName(string name)
 string UpdateInfo::getDataName() const
 {
     return this->dataName;
+}
+
+/*!
+ * \brief set the count of the data
+ *
+ * \param num int with the number of the pointers
+ */
+void UpdateInfo::setDataAddress(int num)
+{
+    this->dataAddress = num;
+}
+
+/*!
+ * \brief get the address of the variable
+ *
+ * \return int with the address (offset)
+ */
+int UpdateInfo::getDataAddress() const
+{
+    return this->dataAddress;
 }
 
 /*!

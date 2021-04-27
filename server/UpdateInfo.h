@@ -21,8 +21,11 @@ private:
     //! integer with the number of pointers of an specific variable
     int dataCount;
 
+    //! integer with the address where the variable is stored
+    int dataAddress;
+
 public:
-    UpdateInfo(string type, string name, string value, int count = 0);
+    UpdateInfo(string type, string name, string value, int address = 0, int count = 0);
 
     UpdateInfo(const UpdateInfo &obj);
 
@@ -37,6 +40,9 @@ public:
 
     void setDataValue(string value);
     string getDataValue() const;
+
+    void setDataAddress(int num);
+    int getDataAddress() const;
 };
 
 #endif //UPDATEINFO_H

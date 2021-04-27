@@ -23,6 +23,7 @@ string JsonEncoder::encode()
     this->jFile["dataName"] = this->data.getDataName();
     this->jFile["dataValue"] = this->data.getDataValue();
     this->jFile["dataType"] = this->data.getDataType();
+    this->jFile["dataAddress"] = this->data.getDataAddress();
     this->jFile["dataCount"] = this->data.getDataCount();
 
     string jString = this->jFile.dump();
