@@ -47,6 +47,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
+    //! emun to facilitate the column location with the label of the column
     enum Column
     {
         DIR, LABEL, VALUE, COUNT
