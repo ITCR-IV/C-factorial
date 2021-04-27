@@ -9,7 +9,6 @@ class UpdateInfo
 {
 
 private:
-
     //! string that indicates de type of variable
     string dataType;
 
@@ -17,27 +16,27 @@ private:
     string dataName;
 
     //! string that stores the value of the variable
-    //string dataValue;
+    string dataValue;
 
     //! integer with the number of pointers of an specific variable
     int dataCount;
 
 public:
+    UpdateInfo(string type, string name, string value, int count = 0);
 
-    UpdateInfo();
+    UpdateInfo(const UpdateInfo &obj);
 
     void setDataType(string type);
-    string getDataType();
+    string getDataType() const;
 
     void setDataName(string name);
-    string getDataName();
+    string getDataName() const;
 
     void setDataCount(int num);
-    int getDataCount();
+    int getDataCount() const;
 
-//    void setDataValue(T num);
-//    T getDataValue();
+    void setDataValue(string value);
+    string getDataValue() const;
 };
-
 
 #endif //UPDATEINFO_H

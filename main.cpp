@@ -9,6 +9,8 @@
 #include "interpreter/Parser.h"
 #include "interpreter/Lexer.cpp"
 #include "interpreter/Parser.cpp"
+#include "server/JsonEncoder.h"
+#include "unistd.h"
 
 using namespace std;
 
@@ -18,6 +20,24 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     return a.exec();
+
+    // //Server testing
+
+    // ServerManager *man = ServerManager::getInstance();
+
+    // string req;
+
+    // //cin >> req;
+
+    // //int ireq = stoi(req);
+
+    // //int ireq = 3;
+    // man->sendRequest(ireq);
+    // UpdateInfo var = UpdateInfo("int", "x", "55");
+    // JsonEncoder encoder = JsonEncoder(var);
+
+    // man->sendJson(encoder.encode());
+    // man->listenServer();
 
     //Parser testing
 

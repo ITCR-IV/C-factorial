@@ -17,7 +17,9 @@ SOURCES += \
     interpreter/Interpreter.cpp \
     main.cpp \
     ServerManager.cpp \
-    server/UpdateInfo.cpp 
+    server/UpdateInfo.cpp \
+    server/JsonDecoder.cpp \
+    server/JsonEncoder.cpp
 
 HEADERS += \
     CodeEditor.h \
@@ -28,7 +30,9 @@ HEADERS += \
     interpreter/Token.h \
     interpreter/Interpreter.h \
     ServerManager.h \
-    server/UpdateInfo.h
+    server/UpdateInfo.h \
+    server/JsonDecoder.h \
+    server/JsonEncoder.h
 
 FORMS += \
     Mainwindow.ui

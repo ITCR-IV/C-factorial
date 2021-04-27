@@ -53,8 +53,8 @@ void Parser::eat(string tokenType)
 {
     if (this->currentToken.getType() == tokenType)
     {
-        cout << "\n\n\nExpected: \"" << tokenType << "\"" << endl
-             << "Got: \"" << this->currentToken.getType() << "\"\n";
+        // cout << "\n\n\nExpected: \"" << tokenType << "\"" << endl
+        //      << "Got: \"" << this->currentToken.getType() << "\"\n";
         this->currentToken = this->lexer.getNextToken();
     }
     else
@@ -154,13 +154,7 @@ void Parser::declaration()
         Token token_ = return_expression();
         string assignmentType_ = token_.getType();
         string assignmentValue_ = token_.getValue();
-        if (type_.find('<') != string::npos)
-        { //So if it's a reference
-            string ptrType_ = this->interpreter.extract_refType(type_);
-            this->interpreter.reference_declaration(ptrType_, id_, assignmentType_, assignmentValue_);
-            return;
-        }
-        this->interpreter.declaration(type_, id_, assignmentType_, assignmentValue_);
+        this->interpreter.update_value(id_, assignmentType_, assignmentValue_);
         return;
     }
 
@@ -326,7 +320,7 @@ void Parser::struct_declaration()
     string assignmentType_ = token_.getType();
     string assignmentValue_ = token_.getValue();
 
-    this->interpreter.struct_declaration(structAccess_, assignmentType_, assignmentValue_);
+    this->interpreter.update_value(structAccess_, assignmentType_, assignmentValue_);
     return;
 }
 
@@ -518,7 +512,7 @@ string Parser::type()
     else
     {
         printf("Something wrong in Parser::type()\n");
-        cout << "TYPE: " << this->currentToken.getType();
+        //cout << "TYPE: " << this->currentToken.getType();
         error("Something wrong in Parser::type()\n");
     }
     return "Error in Parser.cpp::type()";

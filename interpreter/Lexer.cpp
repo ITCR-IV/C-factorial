@@ -17,7 +17,7 @@ Lexer::Lexer(string stringText)
     this->text = stringText;
     this->pos = 0;
     this->current_char = text[this->pos];
-    cout << "Length: " << this->text.length() << endl;
+    //cout << "Length: " << this->text.length() << endl;
     this->line = 1;
 }
 
@@ -58,17 +58,17 @@ void Lexer::error(const string extraDetails = "")
 void Lexer::advance()
 {
     this->pos++;
-    cout << "Position: " << this->pos << endl;
+    //cout << "Position: " << this->pos << endl;
     if ((unsigned int)this->pos >= this->text.length())
     {
-        printf("___DANGER!! ASSIGNING NULL____");
+        //printf("___DANGER!! ASSIGNING NULL____");
         this->current_char = '\0';
     }
     else
     {
         this->current_char = this->text[pos];
     }
-    cout << "Current char: " << this->current_char << endl;
+    //cout << "Current char: " << this->current_char << endl;
     return;
 }
 

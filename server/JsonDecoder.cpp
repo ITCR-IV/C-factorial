@@ -1,5 +1,6 @@
 #include "JsonDecoder.h"
 #include <nlohmann/json.hpp>
+#include <string>
 
 using json = nlohmann::json;
 
@@ -19,5 +20,11 @@ JsonDecoder::JsonDecoder(string jsonString)
  */
 UpdateInfo JsonDecoder::decode()
 {
-    //this->jFile = jsonString._json;
+    this->jFile = json::parse(this->jsonString);
+    std::string type = this->jFile["dataType"].get<std::string>();
+    std::string name = this->jFile["dataName"].get<std::string>();
+    std::string value = this->jFile["dataValue"].get<std::string>();
+    int count = stoi(this->jFile["dataCount"].get<std::string>());
+    UpdateInfo returnInfo = UpdateInfo(type, name, value, count);
+    return returnInfo;
 }

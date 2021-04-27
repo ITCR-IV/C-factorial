@@ -3,7 +3,8 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <cstring>
-#include "iostream"
+#include <iostream>
+#include "RequestConstants.h"
 
 using namespace std;
 
@@ -36,7 +37,7 @@ MServer::MServer(int PORT, int size)
     address.sin_addr.s_addr = INADDR_ANY; //assinging the address of local machine
     address.sin_port = htons(PORT);
 
-    //
+    // binding to port
     serverBind = bind(serverSocket, (sockaddr *)&address, sizeof(sockaddr));
 
     if (serverBind < 0)
@@ -81,38 +82,81 @@ MServer::MServer(int PORT, int size)
 void MServer::request(sockaddr_in address, int serverSocket)
 {
     int newSocket = 0;
-    int addressLen = sizeof(address);
     char buffer[1024] = {0};
     const char *hello = "Hello from server";
-    int valread;
     bool listening = true;
     while (listening)
     {
-        // accept
+        readSocket(buffer, address, serverSocket, newSocket);
 
-        newSocket = accept(serverSocket, (sockaddr *)&address, (socklen_t *)&addressLen);
-
-        if (newSocket < 0)
-        {
-            // add to log
-            printf("Fail to accept\n");
-        }
-        else
-
-        {
-            // add to log
-            printf("accepted\n");
-        }
-
-        valread = read(newSocket, buffer, 1024);
-        printf("%s\n", buffer);
-        if (buffer == "off")
+        if (strcmp(buffer, "OFF") == 0)
         {
             listening = false;
+            return;
+        }
+        if (strlen(buffer) == 1 && isdigit(buffer[0]))
+        {
+            int req = buffer[0] - '0';
+            //////////////////////////// Here starts switch to evaluate types of requests
+            switch (req)
+            {
+            case ENTERSCOPE:
+                printf("Entering scope");
+                break;
+            case EXITSCOPE:
+                printf("Exiting scope");
+                break;
+            case DECLARE:
+                printf("Getting ready for a declaration\n");
+                printf("Waiting...\n");
+                readSocket(buffer, address, serverSocket, newSocket);
+                break;
+            case DECLAREREF:
+                printf("Okay I'm not doing any others...");
+                break;
+            case CHANGEVALUE:
+                break;
+            case ENTERSTRUCT:
+                break;
+            case EXITSTRUCT:
+                break;
+            case REQUESTMEMORYSTATE:
+                break;
+            default:
+                printf("Undefined request '%d'\n", req);
+            }
+            /////////////////////////// Switch end
+        }
+        else
+        {
+            cout << "Couldn't understand request: \"" << buffer << "\". Make sure to send a single integer to indicate the type of request being made.";
         }
         send(newSocket, hello, strlen(hello), 0);
-        printf("Hello message sent\n");
     }
+}
+
+void MServer::readSocket(char *buffer, sockaddr_in address, int serverSocket, int &newSocket)
+{
+    int addressLen = sizeof(address);
+
+    // accept
+    newSocket = accept(serverSocket, (sockaddr *)&address, (socklen_t *)&addressLen);
+
+    if (newSocket < 0)
+    {
+        // add to log
+        printf("Fail to accept\n");
+    }
+    else
+
+    {
+        // add to log
+        printf("accepted\n");
+    }
+
+    read(newSocket, buffer, 1024);
+
+    printf("Received: '%s'\n", buffer);
 }
 
 void MServer::enter_scope() {}
@@ -123,13 +167,13 @@ void MServer::declaration(string type, string id, string assignType /* = ""*/, s
 
 void MServer::reference_declaration(string ptrType, string id, string assignType /* = ""*/, string value /* = ""*/) {}
 
-void MServer::struct_declaration(string id, string assignType, string value) {}
+void MServer::update_value(string id, string assignType, string value) {}
 
 void MServer::enter_struct() {}
 
 void MServer::exit_struct(string id) {}
 
-string getInfo(string id) //send a variable with type, value, and adress info packaged, if it doesn't exist send it with empty fields
+string getInfo(string id) //send a variable with type, value, and address info packaged, if it doesn't exist send it with empty fields
 {
     return "aa";
 }
