@@ -20,6 +20,10 @@ private:
 
     char buffer[1024];
 
+    void listenServer();
+
+    void connectSocket();
+
 public:
     //! port number to which it connects
     int PORT;
@@ -34,10 +38,6 @@ public:
     void sendRequest(int request);
 
     void sendJson(std::string jsonStr);
-
-    void connectSocket();
-
-    void listenServer();
 };
 
 #endif

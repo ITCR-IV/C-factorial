@@ -16,28 +16,28 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    // QApplication a(argc, argv);
-    // MainWindow w;
-    // w.show();
-    // return a.exec();
+    QApplication a(argc, argv);
+    MainWindow w;
+    w.show();
+    return a.exec();
 
-    //Server testing
+    // //Server testing
 
-    ServerManager *man = ServerManager::getInstance();
+    // ServerManager *man = ServerManager::getInstance();
 
-    string req;
+    // string req;
 
-    //cin >> req;
+    // //cin >> req;
 
-    //int ireq = stoi(req);
+    // //int ireq = stoi(req);
 
-    int ireq = 3;
-    man->sendRequest(ireq);
-    UpdateInfo var = UpdateInfo("int", "x", "55");
-    JsonEncoder encoder = JsonEncoder(var);
+    // //int ireq = 3;
+    // man->sendRequest(ireq);
+    // UpdateInfo var = UpdateInfo("int", "x", "55");
+    // JsonEncoder encoder = JsonEncoder(var);
 
-    man->sendJson(encoder.encode());
-    man->listenServer();
+    // man->sendJson(encoder.encode());
+    // man->listenServer();
 
     //Parser testing
 
