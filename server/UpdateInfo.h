@@ -22,7 +22,7 @@ private:
     int dataCount;
 
 public:
-    UpdateInfo(string type, string name, string value, int count);
+    UpdateInfo(string type, string name, string value, int count = 0);
 
     UpdateInfo(const UpdateInfo &obj);
 

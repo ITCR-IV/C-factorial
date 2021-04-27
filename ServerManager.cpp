@@ -15,35 +15,6 @@ ServerManager *ServerManager::singleton = nullptr;
 ServerManager::ServerManager(int PORT)
 {
     this->PORT = PORT;
-    // connect to server here
-    this->serverSocket = 0;
-    struct sockaddr_in address;
-
-    this->serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-
-    if ((serverSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-    {
-        printf("\n Socket creation error \n");
-        return;
-    }
-
-    //Configure environment for sockaddr struct
-    address.sin_family = AF_INET;
-    address.sin_port = htons(PORT);
-
-    // Convert IPv4 and IPv6 addresses from text to binary form
-    if (inet_pton(AF_INET, "127.0.0.1", &address.sin_addr) <= 0)
-    {
-        printf("\nInvalid address/ Address not supported \n");
-        return;
-    }
-
-    // Connect to the server's socket
-    if (connect(serverSocket, (struct sockaddr *)&address, sizeof(address)) < 0)
-    {
-        printf("\nConnection Failed \n");
-        return;
-    }
 }
 
 /*!
@@ -61,28 +32,67 @@ ServerManager *ServerManager::getInstance(int PORT /*= 9999*/) //Default port so
     return singleton;
 }
 
+/*!
+ * \brief Create a new socket connection to server in order to be able to send a new message
+ * 
+ */
+void ServerManager::connectSocket()
+{
+    //Create new socket
+    this->serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+
+    if ((serverSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    {
+        printf("\n Socket creation error \n");
+        return;
+    }
+
+    //Configure environment for address
+    struct sockaddr_in address;
+
+    address.sin_family = AF_INET;
+    address.sin_port = htons(this->PORT);
+
+    // Convert IPv4 and IPv6 addresses from text to binary form
+    if (inet_pton(AF_INET, "127.0.0.1", &address.sin_addr) <= 0)
+    {
+        printf("\nInvalid address/ Address not supported \n");
+        return;
+    }
+
+    // Connect to the server's socket
+    if (connect(serverSocket, (struct sockaddr *)&address, sizeof(address)) < 0)
+    {
+        printf("\nConnection Failed \n");
+        return;
+    }
+
+    // Clear buffer
+    this->buffer[0] = '\0';
+}
+
 void ServerManager::sendRequest(int request)
 {
-    int valread;
-
-    char buffer[1024] = {0};
+    connectSocket();
+    printf("Sending: %d\n", request);
 
     std::string msg = std::to_string(request);
 
     send(this->serverSocket, msg.c_str(), msg.length(), 0);
-    valread = read(serverSocket, buffer, 1024);
-    printf("%s\n", buffer);
 }
 
 void ServerManager::sendJson(std::string jsonStr)
 {
-    int valread;
-
-    char buffer[1024] = {0};
+    connectSocket();
+    printf("Sending: %s\n", jsonStr.c_str());
 
     std::string msg = jsonStr;
 
     send(this->serverSocket, msg.c_str(), msg.length(), 0);
-    valread = read(serverSocket, buffer, 1024);
-    printf("%s\n", buffer);
+}
+
+void ServerManager::listenServer()
+{
+    read(this->serverSocket, this->buffer, 1024);
+    printf("Received: '%s'\n", this->buffer);
 }

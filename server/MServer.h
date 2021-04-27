@@ -14,6 +14,7 @@ class MServer
 public:
     MServer(int PORT, int size);
     void request(sockaddr_in address, int serverSocket);
+    void readSocket(char *bufferOut, sockaddr_in address, int serverSocket, int &newSocket);
 
     //methods called by interpreter
     void enter_scope();

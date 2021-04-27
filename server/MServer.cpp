@@ -82,30 +82,13 @@ MServer::MServer(int PORT, int size)
 void MServer::request(sockaddr_in address, int serverSocket)
 {
     int newSocket = 0;
-    int addressLen = sizeof(address);
     char buffer[1024] = {0};
     const char *hello = "Hello from server";
-    int valread;
     bool listening = true;
     while (listening)
     {
-        // accept
-        newSocket = accept(serverSocket, (sockaddr *)&address, (socklen_t *)&addressLen);
+        readSocket(buffer, address, serverSocket, newSocket);
 
-        if (newSocket < 0)
-        {
-            // add to log
-            printf("Fail to accept\n");
-        }
-        else
-
-        {
-            // add to log
-            printf("accepted\n");
-        }
-
-        valread = read(newSocket, buffer, 1024);
-        printf("%s\n", buffer);
         if (strcmp(buffer, "OFF") == 0)
         {
             listening = false;
@@ -124,7 +107,9 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 printf("Exiting scope");
                 break;
             case DECLARE:
-                printf("Getting ready for a declaration");
+                printf("Getting ready for a declaration\n");
+                printf("Waiting...\n");
+                readSocket(buffer, address, serverSocket, newSocket);
                 break;
             case DECLAREREF:
                 printf("Okay I'm not doing any others...");
@@ -138,7 +123,7 @@ void MServer::request(sockaddr_in address, int serverSocket)
             case REQUESTMEMORYSTATE:
                 break;
             default:
-                printf("Undefined request '%d'", req);
+                printf("Undefined request '%d'\n", req);
             }
             /////////////////////////// Switch end
         }
@@ -147,8 +132,31 @@ void MServer::request(sockaddr_in address, int serverSocket)
             cout << "Couldn't understand request: \"" << buffer << "\". Make sure to send a single integer to indicate the type of request being made.";
         }
         send(newSocket, hello, strlen(hello), 0);
-        printf("Hello message sent\n");
     }
+}
+
+void MServer::readSocket(char *buffer, sockaddr_in address, int serverSocket, int &newSocket)
+{
+    int addressLen = sizeof(address);
+
+    // accept
+    newSocket = accept(serverSocket, (sockaddr *)&address, (socklen_t *)&addressLen);
+
+    if (newSocket < 0)
+    {
+        // add to log
+        printf("Fail to accept\n");
+    }
+    else
+
+    {
+        // add to log
+        printf("accepted\n");
+    }
+
+    read(newSocket, buffer, 1024);
+
+    printf("Received: '%s'\n", buffer);
 }
 
 void MServer::enter_scope() {}
