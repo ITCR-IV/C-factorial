@@ -2,17 +2,28 @@
 #include <string>
 using namespace std;
 
-
 /*!
- * \brief Constructor for UpdateInfo, should only be called once due to being a singleton
- *
- * \param
+ * \brief Construct a new UpdateInfo object
+ * 
+ * \param type the type of the variable
+ * \param name the identifier of the variable
+ * \param value the value of the variable
+ * \param count the amount of references pointing to it
  */
-UpdateInfo::UpdateInfo() {
-    this->dataCount = 0;
-    this->dataName;
-    //this->dataValue = 0;
-    this->dataType;
+UpdateInfo::UpdateInfo(string type, string name, string value, int count)
+{
+    setDataType(type);
+    setDataName(name);
+    setDataValue(value);
+    setDataCount(count);
+}
+
+UpdateInfo::UpdateInfo(const UpdateInfo &obj)
+{
+    setDataType(obj.getDataType());
+    setDataName(obj.getDataName());
+    setDataValue(obj.getDataValue());
+    setDataCount(obj.getDataCount());
 }
 
 /*!
@@ -20,7 +31,8 @@ UpdateInfo::UpdateInfo() {
  *
  * \param type string that identifies the type of data
  */
-void UpdateInfo::setDataType(string type) {
+void UpdateInfo::setDataType(string type)
+{
     this->dataType = type;
 }
 
@@ -29,7 +41,8 @@ void UpdateInfo::setDataType(string type) {
  *
  * \return returns a string with the type
  */
-string UpdateInfo::getDataType() {
+string UpdateInfo::getDataType() const
+{
     return this->dataType;
 }
 
@@ -38,7 +51,8 @@ string UpdateInfo::getDataType() {
  *
  * \param name string with the name
  */
-void UpdateInfo::setDataName(string name) {
+void UpdateInfo::setDataName(string name)
+{
     this->dataName = name;
 }
 
@@ -47,7 +61,8 @@ void UpdateInfo::setDataName(string name) {
  *
  * \return string with the name
  */
-string UpdateInfo::getDataName() {
+string UpdateInfo::getDataName() const
+{
     return this->dataName;
 }
 
@@ -56,7 +71,8 @@ string UpdateInfo::getDataName() {
  *
  * \param num int with the number of the pointers
  */
-void UpdateInfo::setDataCount(int num) {
+void UpdateInfo::setDataCount(int num)
+{
     this->dataCount = num;
 }
 
@@ -65,27 +81,27 @@ void UpdateInfo::setDataCount(int num) {
  *
  * \return int with the counter
  */
-int UpdateInfo::getDataCount() {
+int UpdateInfo::getDataCount() const
+{
     return this->dataCount;
 }
 
 /*!
  * \brief set the value of the data
- *
- * \param
+ * 
+ * \param value string representation of the value
  */
-//void UpdateInfo::setDataValue(T num) {
-//    this->dataCount = num;
-//}
+void UpdateInfo::setDataValue(string value)
+{
+    this->dataValue = value;
+}
 
 /*!
  * \brief get the value of the data
- *
- * \param
- * \return
+ * 
+ * \return string representation of the data
  */
-//T UpdateInfo::getDataValue() {
-//    return this->dataValue;
-//}
-
-
+string UpdateInfo::getDataValue() const
+{
+    return this->dataValue;
+}

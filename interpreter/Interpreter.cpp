@@ -44,7 +44,7 @@ void Interpreter::enter_scope() {}
 void Interpreter::exit_scope() {}
 
 /*!
-* \brief  Tell the memory server to allocate a variable defined by the parameters of this method , or if the id is already defined then change it's value
+* \brief  Tell the memory server to allocate a variable defined by the parameters of this method, if the id is already defined then throw an exception
 * 
 * \param type the type that is being declared
 * \param id the id of the new variable
@@ -54,7 +54,18 @@ void Interpreter::exit_scope() {}
 void Interpreter::declaration(string type, string id, string assignType /*= ""*/, string value /*= ""*/) {}
 
 /*!
-* \brief Tell the memory server to allocate a variable defined by the parameters of this method, or if the id is already defined then change it's value
+* \brief  Tell the memory server to change the value of an existing variable, if the id isn't already defined then throw an exception
+* 
+* \param id the id of the variable
+* \param assignType the type of the value being assigned
+* \param value the value being assigned
+ */
+void Interpreter::update_value(string id, string assignType, string value)
+{
+}
+
+/*!
+* \brief Tell the memory server to allocate a variable defined by the parameters of this method, or if the id is already defined then change it's value. This method works for regular variables, structaccesses and reference variables
 * 
 * \param ptrType the type that the reference points to, this is just to check that the type it points to matches the type of reference assigned (the type inside <>, without the <>); Example: int
 * \param id the id of the new reference variable
@@ -65,15 +76,6 @@ void Interpreter::reference_declaration(string ptrType, string id, string assign
 {
     return;
 }
-
-/*!
- * \brief Like declaration but for stuff inside a struct, so id in this case is a STRUCTACCESS (id.id), it checks that the type of the id and the assignType match and handles references
- * 
- * \param id is a STRUCTACCESS (structid.attributeid), is the attribute that gets modified
- * \param assignType the type of the the value being assigned
- * \param value the value being assigned
- */
-void Interpreter::struct_declaration(string id, string assignType, string value) {}
 
 /*!
  * \brief Tell the memory server that the following declarations are for attributes of a struct being constructed

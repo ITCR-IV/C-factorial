@@ -1,6 +1,7 @@
 #include "JsonEncoder.h"
 #include <nlohmann/json.hpp>
-#include "string"
+#include <string>
+#include "UpdateInfo.h"
 
 using namespace std;
 using json = nlohmann::json;
@@ -10,18 +11,17 @@ using json = nlohmann::json;
  *
  * \param text The entire code text
  */
-JsonEncoder::JsonEncoder(UpdateInfo data) {
-    this->data = data;
-}
+JsonEncoder::JsonEncoder(const UpdateInfo &data) : data(data) {}
 
 /*!
  * \brief translates the UpdateInfo object to a jsonString
  *
  * \return A string form of the a json
  */
-string JsonEncoder::encode() {
+string JsonEncoder::encode()
+{
     this->jFile["dataName"] = this->data.getDataName();
-    //this->jFile["dataValue"] = this->data.getDataValue();
+    this->jFile["dataValue"] = this->data.getDataValue();
     this->jFile["dataType"] = this->data.getDataType();
     this->jFile["dataCount"] = this->data.getDataCount();
 

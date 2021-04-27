@@ -14,10 +14,22 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
-    return a.exec();
+    // QApplication a(argc, argv);
+    // MainWindow w;
+    // w.show();
+    // return a.exec();
+
+    //Server testing
+
+    ServerManager *man = ServerManager::getInstance();
+
+    string req;
+
+    cin >> req;
+
+    int ireq = stoi(req);
+
+    man->sendRequest(ireq);
 
     //Parser testing
 

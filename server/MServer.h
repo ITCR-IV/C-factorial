@@ -5,14 +5,13 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "StructAttribute.h"
+#include "Variable.h"
 
 //! Class that creates the server socket and listen the client
 class MServer
 {
 
 public:
-
     MServer(int PORT, int size);
     void request(sockaddr_in address, int serverSocket);
 
@@ -25,16 +24,15 @@ public:
 
     void reference_declaration(std::string ptrType, std::string id, std::string assignType = "", std::string value = "");
 
-    void struct_declaration(std::string id, std::string assignType, std::string value);
+    void update_value(std::string id, std::string assignType, std::string value);
 
     void enter_struct();
 
     void exit_struct(std::string id);
 
-    std::string getInfo(std::string id); //send the variable with type, value, and adress info packaged
+    std::string getInfo(std::string id); //send the variable with type, value, and address info packaged
 
 private:
-
     //! points to the start of the memory, is char so that getting to an address through arithmetic is easy
     char *serverMemory;
 
@@ -45,7 +43,7 @@ private:
     std::map<std::string, std::string> varTypes;
 
     //! The keys are the names of structs previously defined and the the values are StructAttributes which hold the info to build the structs attributes
-    std::map<std::string, std::vector<StructAttribute>> structDefinitions;
+    std::map<std::string, std::vector<Variable>> structDefinitions;
 
     int scopeLevel;
 

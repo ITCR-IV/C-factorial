@@ -1,7 +1,7 @@
 #ifndef SERVER_MANAGER_H
 #define SERVER_MANAGER_H
 
-#include "server/UpdateInfo.h"
+#include <string>
 
 class ServerManager
 {
@@ -12,11 +12,11 @@ private:
 
     static ServerManager *singleton;
 
-    UpdateInfo info;
-
     //aquí método para deserealizar json?
 
     //método general para comunicarse con server, tipo para mandar mensajes y que luego creamos métodos públicos para mandar mensajes específicos
+
+    int serverSocket;
 
 public:
     //! port number to which it connects
@@ -27,6 +27,11 @@ public:
     void operator=(const ServerManager &) = delete; //delete assignment operator (non-assignable)
 
     static ServerManager *getInstance(int PORT = 9999);
+
+    // Communications stuff
+    void sendRequest(int request);
+
+    void sendJson(std::string jsonStr);
 };
 
 #endif
