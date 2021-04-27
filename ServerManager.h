@@ -14,10 +14,12 @@ private:
 
     //aquí método para deserealizar json?
 
-    //método general para comunicarse con server, tipo para mandar mensajes y que luego creamos métodos públicos para mandar mensajes específicos
+    //private socket stuff
 
+    //! variable to store the current connected socket
     int serverSocket;
 
+    //! buffer array that gets reutilized when connecting to server's socket
     char buffer[1024];
 
     void listenServer();
@@ -38,6 +40,8 @@ public:
     void sendRequest(int request);
 
     void sendJson(std::string jsonStr);
+
+    std::string getServerMsg();
 };
 
 #endif

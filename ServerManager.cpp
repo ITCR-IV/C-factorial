@@ -71,6 +71,11 @@ void ServerManager::connectSocket()
     this->buffer[0] = '\0';
 }
 
+/*!
+ * \brief Sends an int as a request to the server so it knows which protocol to follow
+ * 
+ * \param request int as specified by the server/RequestConstants.h file
+ */
 void ServerManager::sendRequest(int request)
 {
     connectSocket();
@@ -81,6 +86,11 @@ void ServerManager::sendRequest(int request)
     send(this->serverSocket, msg.c_str(), msg.length(), 0);
 }
 
+/*!
+ * \brief Sends any type of string to the server but it should mostly expect json encoded strings
+ * 
+ * \param jsonStr the message to be sent, possibly encoded in json format
+ */
 void ServerManager::sendJson(std::string jsonStr)
 {
     connectSocket();
@@ -91,8 +101,17 @@ void ServerManager::sendJson(std::string jsonStr)
     send(this->serverSocket, msg.c_str(), msg.length(), 0);
 }
 
+//! Essentially executes a read of the socket, call only if expecting the server to send a message back after a request or during a protocol
 void ServerManager::listenServer()
 {
     read(this->serverSocket, this->buffer, 1024);
     printf("Received: '%s'\n", this->buffer);
+}
+
+//! Calls listenServer to get a message from the server and returns it as an std::string, call only if expecting the server to send a message back after a request or during a protocol
+std::string ServerManager::getServerMsg()
+{
+    listenServer();
+    std::string msg = std::string(this->buffer);
+    return msg;
 }

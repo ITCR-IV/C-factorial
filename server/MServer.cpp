@@ -5,8 +5,7 @@
 #include <cstring>
 #include <iostream>
 #include "RequestConstants.h"
-
-using namespace std;
+#include "JsonDecoder.h"
 
 /*!
  * \brief Construct a new MServer object, and configures the socket
@@ -73,6 +72,12 @@ MServer::MServer(int PORT, int size)
     this->request(address, serverSocket);
 }
 
+//! Destroy the MServer::MServer object, the destructor is defined to make sure that the memory allocated with the initial malloc is freed
+MServer::~MServer()
+{
+    free(this->serverMemory);
+}
+
 /*!
  * \brief accepts and reads all the incoming messages from the client
  *
@@ -83,7 +88,6 @@ void MServer::request(sockaddr_in address, int serverSocket)
 {
     int newSocket = 0;
     char buffer[1024] = {0};
-    const char *hello = "Hello from server";
     bool listening = true;
     while (listening)
     {
@@ -101,26 +105,69 @@ void MServer::request(sockaddr_in address, int serverSocket)
             switch (req)
             {
             case ENTERSCOPE:
-                printf("Entering scope");
+                printf("Entering scope\n");
+                enter_scope();
                 break;
             case EXITSCOPE:
-                printf("Exiting scope");
+                printf("Exiting scope\n");
+                exit_scope();
                 break;
             case DECLARE:
-                printf("Getting ready for a declaration\n");
-                printf("Waiting...\n");
+            {
+                printf("Doing a declaration\n");
                 readSocket(buffer, address, serverSocket, newSocket);
+                int exitStatus;
+                exitStatus = declaration(JsonDecoder(buffer).decode());
+                std::string info = std::to_string(exitStatus);
+                send(newSocket, info.c_str(), info.length(), 0);
                 break;
+            }
             case DECLAREREF:
-                printf("Okay I'm not doing any others...");
+            {
+                printf("Doing a reference declaration\n");
+                readSocket(buffer, address, serverSocket, newSocket);
+                int exitStatus;
+                exitStatus = reference_declaration(JsonDecoder(buffer).decode());
+                std::string info = std::to_string(exitStatus);
+                send(newSocket, info.c_str(), info.length(), 0);
                 break;
+            }
             case CHANGEVALUE:
+            {
+                printf("Changing an existing value\n");
+                readSocket(buffer, address, serverSocket, newSocket);
+                int exitStatus;
+                exitStatus = update_value(JsonDecoder(buffer).decode());
+                std::string info = std::to_string(exitStatus);
+                send(newSocket, info.c_str(), info.length(), 0);
                 break;
+            }
             case ENTERSTRUCT:
+                printf("Entering struct\n");
+                enter_struct();
                 break;
             case EXITSTRUCT:
+            {
+                printf("Exiting struct\n");
+                readSocket(buffer, address, serverSocket, newSocket);
+                int exitStatus;
+                exitStatus = exit_struct(std::string(buffer));
+                std::string info = std::to_string(exitStatus);
+                send(newSocket, info.c_str(), info.length(), 0);
                 break;
+            }
+            case REQUESTVARIABLE:
+            {
+                printf("Fulfilling variable request");
+                readSocket(buffer, address, serverSocket, newSocket);
+                std::string info;
+                info = getInfo(std::string(buffer));
+                send(newSocket, info.c_str(), info.length(), 0);
+                break;
+            }
             case REQUESTMEMORYSTATE:
+                printf("Sending memory state...\n");
+                //Add method for this
                 break;
             default:
                 printf("Undefined request '%d'\n", req);
@@ -129,12 +176,20 @@ void MServer::request(sockaddr_in address, int serverSocket)
         }
         else
         {
-            cout << "Couldn't understand request: \"" << buffer << "\". Make sure to send a single integer to indicate the type of request being made.";
+            std::cout << "Couldn't understand request: \"" << buffer << "\". Make sure to send a single integer to indicate the type of request being made.";
         }
-        send(newSocket, hello, strlen(hello), 0);
+        //send(newSocket, hello, strlen(hello), 0);
     }
 }
 
+/*!
+ * \brief Wait and read a message incoming in the server socket
+ * 
+ * \param buffer a char* buffer to store the contents read
+ * \param address indicates de IP address
+ * \param serverSocket indicates the serverSocket
+ * \param newSocket the socket that will be accepted and read
+ */
 void MServer::readSocket(char *buffer, sockaddr_in address, int serverSocket, int &newSocket)
 {
     int addressLen = sizeof(address);
@@ -159,21 +214,62 @@ void MServer::readSocket(char *buffer, sockaddr_in address, int serverSocket, in
     printf("Received: '%s'\n", buffer);
 }
 
-void MServer::enter_scope() {}
+//! Increment the scope counte and add a new 0 entry to the structDefsCounter and declarationsCounter
+void MServer::enter_scope()
+{
+    this->scopeLevel++;
+    this->structDefsCounter.push_back(0);
+    this->declarationsCounter.push_back(0);
+}
 
+//! Decrease the scope counter and release the amount of variables equal to the last entry in declarationsCounter while popping it, also removes the last entry in structDefsCounter and removes the amount of struct definitions equal to the counter
 void MServer::exit_scope() {}
 
-void MServer::declaration(string type, string id, string assignType /* = ""*/, string value /* = ""*/) {}
+/*!
+ * \brief Add to memory the variable described by declarationInfo and increase the last entry in declarationsCounter, if inside struct then they don't get stored but assigned to the currentStruct vector as StructAttribute objects and no counter is increased. Lastly, if a defined struct object is being declared the declarationCounter must be increased by as many attributes the struct has +1 (because a variable is stored for the struct itself + its attributes)
+ * 
+ * \param declarationInfo UpdateInfo where the counter value is ignored and the rest is used to store a new variable in memory
+ * \return int -1 for error (most likely the variable is already stored) and 0 for success
+ */
+int MServer::declaration(UpdateInfo declarationInfo)
+{
+    return SUCCESS;
+}
 
-void MServer::reference_declaration(string ptrType, string id, string assignType /* = ""*/, string value /* = ""*/) {}
+/*!
+ * \brief Add to memory the variable described by declarationInfo and increase the last entry in declarationsCounter, if inside struct then they don't get stored but assigned to the currentStruct vector as StructAttribute objects and no counter is increased
+ * 
+ * \param declarationInfo UpdateInfo where the counter value is ignored and the rest is used to store a new variable in memory, the type is the type the reference points to and has "reference<$type>" wrapped around it when stored
+ * \return int -1 for error (most likely the variable is already stored) and 0 for success
+ */
+int MServer::reference_declaration(UpdateInfo declarationInfo) { return SUCCESS; }
 
-void MServer::update_value(string id, string assignType, string value) {}
+/*!
+ * \brief Changes the value of a stored variable
+ * 
+ * \param declarationInfo the name and value are extracted
+ * \return int -1 for error (most likely the variable hasn't been previously defined) and 0 for success
+ */
+int MServer::update_value(UpdateInfo declarationInfo) { return SUCCESS; }
 
+//! Changes the insideStruct flag to true so the next declarations go to the currentStruct vector instead of being stored in memory
 void MServer::enter_struct() {}
 
-void MServer::exit_struct(string id) {}
+/*!
+ * \brief Changes the insideStruct flag to false and assigns the struct name along with the currentStruct vector (which gets flushed) to the structDefinitions vector, also increments the structDefs counter for the last element so when exiting the scope the definition can be erased
+ * 
+ * \param id name of the new struct class
+ * \return int -1 for error (most likely the struct has been previously defined) and 0 for success
+ */
+int MServer::exit_struct(std::string id) { return SUCCESS; }
 
-string getInfo(string id) //send a variable with type, value, and address info packaged, if it doesn't exist send it with empty fields
+/*!
+ * \brief Send a variable with type, value, address, and counters info packaged as an UpdateInfo, if it doesn't exist send it with empty fields
+ * 
+ * \param id name of the variable
+ * \return std::string formatted UpdateInfo as json
+ */
+std::string MServer::getInfo(std::string id)
 {
     return "aa";
 }

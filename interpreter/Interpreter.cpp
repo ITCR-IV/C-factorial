@@ -1,7 +1,11 @@
 #include "Interpreter.h"
 #include <string>
+#include "ServerManager.h"
 #include "Token.h"
 #include "TokenConstants.h"
+#include "server/JsonDecoder.h"
+#include "server/JsonEncoder.h"
+#include "server/RequestConstants.h"
 
 using namespace std;
 
@@ -51,17 +55,9 @@ void Interpreter::exit_scope() {}
 * \param assignType the type of the value being assigned
 * \param value the value being assigned
 */
-void Interpreter::declaration(string type, string id, string assignType /*= ""*/, string value /*= ""*/) {}
-
-/*!
-* \brief  Tell the memory server to change the value of an existing variable, if the id isn't already defined then throw an exception
-* 
-* \param id the id of the variable
-* \param assignType the type of the value being assigned
-* \param value the value being assigned
- */
-void Interpreter::update_value(string id, string assignType, string value)
+void Interpreter::declaration(string type, string id, string assignType /*= ""*/, string value /*= ""*/)
 {
+    //Default values: 0 for any number and '\0' for chars
 }
 
 /*!
@@ -72,9 +68,20 @@ void Interpreter::update_value(string id, string assignType, string value)
 * \param assignType the type of the value being assigned, this is to check that it IS a reference and that the type inside <> matches the ptrType; Example: reference<int>
 * \param value the value being assigned
 */
-void Interpreter::reference_declaration(string ptrType, string id, string assignType /*= ""*/, string value /*= ""*/)
+void Interpreter::reference_declaration(string ptrType, string id, string assignType /*= ""*/, string value /*= ""*/) //default value for references is 0
 {
     return;
+}
+
+/*!
+* \brief  Tell the memory server to change the value of an existing variable, if the id isn't already defined then throw an exception
+* 
+* \param id the id of the variable
+* \param assignType the type of the value being assigned
+* \param value the value being assigned
+ */
+void Interpreter::update_value(string id, string assignType, string value)
+{
 }
 
 /*!

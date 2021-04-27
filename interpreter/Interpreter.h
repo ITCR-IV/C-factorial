@@ -29,9 +29,9 @@ public:
 
     void declaration(string type, string id, string assignType = "", string value = "");
 
-    void update_value(string id, string assignType, string value);
-
     void reference_declaration(string ptrType, string id, string assignType = "", string value = "");
+
+    void update_value(string id, string assignType, string value);
 
     void enter_struct();
 

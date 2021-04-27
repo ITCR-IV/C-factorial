@@ -49,9 +49,20 @@ private:
     //! The keys are the names of structs previously defined and the the values are StructAttributes which hold the info to build the structs attributes
     std::map<std::string, std::vector<StructAttribute>> structDefinitions;
 
+    //! The counter keeping track of which scope the program is in at the moment
     int scopeLevel;
 
+    //! This flag signals to the declaration method whether the declarations are part of a struct definition or if they are to be stored in memory
     bool insideStruct;
+
+    //! This vector holds the declarations made for a struct being defined until it gets finished
+    std::vector<StructAttribute> currentStruct;
+
+    //! This vector holds a counter for each scope level as to ho wmany structs have been defined so that they can be undefined when exiting scopes
+    std::vector<int> structDefsCounter;
+
+    //! This vector holds a counter for each variable that has been declared (including structs and their attributes) so that when exiting a scope they can be freed from memory
+    std::vector<int> declarationsCounter;
 };
 
 #endif // MSERVER_H
