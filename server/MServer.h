@@ -5,7 +5,8 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "Variable.h"
+#include "StructAttribute.h"
+#include "UpdateInfo.h"
 
 //! Class that creates the server socket and listen the client
 class MServer
@@ -13,6 +14,8 @@ class MServer
 
 public:
     MServer(int PORT, int size);
+    ~MServer();
+
     void request(sockaddr_in address, int serverSocket);
     void readSocket(char *bufferOut, sockaddr_in address, int serverSocket, int &newSocket);
 
@@ -21,15 +24,15 @@ public:
 
     void exit_scope();
 
-    void declaration(std::string type, std::string id, std::string assignType = "", std::string value = "");
+    int declaration(UpdateInfo declarationInfo);
 
-    void reference_declaration(std::string ptrType, std::string id, std::string assignType = "", std::string value = "");
+    int reference_declaration(UpdateInfo declarationInfo);
 
-    void update_value(std::string id, std::string assignType, std::string value);
+    int update_value(UpdateInfo declarationInfo);
 
     void enter_struct();
 
-    void exit_struct(std::string id);
+    int exit_struct(std::string id);
 
     std::string getInfo(std::string id); //send the variable with type, value, and address info packaged
 
@@ -44,7 +47,7 @@ private:
     std::map<std::string, std::string> varTypes;
 
     //! The keys are the names of structs previously defined and the the values are StructAttributes which hold the info to build the structs attributes
-    std::map<std::string, std::vector<Variable>> structDefinitions;
+    std::map<std::string, std::vector<StructAttribute>> structDefinitions;
 
     int scopeLevel;
 
