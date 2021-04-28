@@ -356,7 +356,10 @@ int MServer::declaration(UpdateInfo declarationInfo)
             {
                 printf("Attempted declaration with unrecognized type");
                 return ERROR;
-            } // todo find a way to check if an existing struct is being assigned to this one and instead of creating a new one in memory just create new variables in the map pointing to same addresses
+            }
+            // todo find a way to check if an existing struct is being assigned to this one and instead of creating a new one in memory just create new variables in the map pointing to same addresses
+            // for the todo: the value field for a defined struct would be it's address
+            // for the todo: because of the way popping variables works when going out of scope, i'd either need to implement a vector to keep track of the order in which i assign new variables or possibly lie in the ram live view
             //now declare all of the struct attributes and a struct variable pointing to the start of the struct with the size of 1
             this->varAddresses.insert({name, newAddress});
             this->varTypes.insert({name, type});
@@ -365,7 +368,7 @@ int MServer::declaration(UpdateInfo declarationInfo)
             for (attribute = definition.begin(); attribute < definition.end(); attribute++)
             {
                 std::string fullName = name + "." + attribute->name;
-                if (attribute->type.find('<') == std::string::npos) // it's a reference
+                if (attribute->type.find('<') != std::string::npos) // it's a reference
                 {
                     this->reference_declaration(UpdateInfo(extract_refType(attribute->type), fullName, attribute->defaultValue));
                 }
@@ -548,8 +551,8 @@ std::string MServer::getInfo(std::string id)
     }
     else
     {
-        //If a struct object is being requested then value == ""
-        value = "";
+        //If a struct object is being requested then value == it's address
+        value = this->varAddresses.at(id);
     }
 
     // get count
@@ -650,8 +653,33 @@ int MServer::getAvailableAddress()
  * \param reference a string of format "reference<$type>" where $type is the type it points to 
  * \return returns the type it points to as a string
  */
-string MServer::extract_refType(string reference)
+std::string MServer::extract_refType(std::string reference)
 {
     string ptrType = reference.substr(reference.find('<') + 1, reference.find('>') - reference.find('<') - 1); //extract the type inside <>
     return ptrType;
+}
+
+/*!
+ * \brief Changes all the addresses of a struct type and it's attributes to a new struct type that's assigned
+ * 
+ * \param structName the name of the struct type variable that is being assigned the new address
+ * \param newStructName the name of the struct who's addresses are going to be copied to the structName
+ */
+void MServer::updateStructAddresses(std::string structName, std::string newStructName)
+{
+    this->varAddresses.at(structName) = this->varAddresses.at(newStructName);
+
+    std::string structPrefix = structName + ".";
+    std::string newStructPrefix = newStructName + ".";
+
+    map<std::string, int>::iterator p;
+    for (p = varAddresses.begin(); p != varAddresses.end(); p++)
+    {
+        if (p->first.find(newStructPrefix) != std::string::npos)
+        {
+            std::string attributeName = p->first.substr(p->first.find(".") + 1); // the name of the attribute without prefix
+            std::string attributeEquivalent = structPrefix + attributeName;
+            varAddresses.at(attributeEquivalent) = p->second;
+        }
+    }
 }

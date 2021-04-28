@@ -71,7 +71,9 @@ private:
 
     int getAvailableAddress();
 
-    string extract_refType(string reference);
+    std::string extract_refType(std::string reference);
+
+    void updateStructAddresses(std::string structName, std::string newStructName);
 };
 
 #endif // MSERVER_H
