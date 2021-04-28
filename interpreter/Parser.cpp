@@ -16,21 +16,6 @@
 Parser::Parser(Lexer inputLexer) : lexer(inputLexer), currentToken(this->lexer.getNextToken()), interpreter(Interpreter()), insideStruct(false), scopeLevel(0) {}
 
 /*!
- * \brief struct SemanticException to define the exception thrown by the parser
- * 
- */
-struct Parser::SemanticException : public exception
-{
-
-    SemanticException(const string &msg) : msg_(msg) {}
-
-    const char *what() const noexcept { return (&msg_[0]); }
-
-private:
-    string msg_;
-};
-
-/*!
  * \brief The lexer throws a SyntaxException if it can't tokenize properly
  * 
  * \param extraDetails Extra information relating to the error
@@ -438,6 +423,7 @@ Token Parser::factor()
     else if (this->currentToken.getType() == ID)
     {
         string id_ = this->currentToken.getValue();
+        eat(ID);
         return Token(this->interpreter.getType(id_), this->interpreter.getValue(id_));
     }
     else
