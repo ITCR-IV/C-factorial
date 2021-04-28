@@ -634,14 +634,18 @@ std::string MServer::getLastVariable()
  */
 int MServer::getAvailableAddress()
 {
-    int lastVarAddress = (std::max_element(this->varAddresses.begin(), this->varAddresses.end(), [](const std::pair<std::string, int> &p1, const std::pair<std::string, int> &p2) {
-                             return p1.second < p2.second;
-                         }))->second;
-
     int availAddress;
 
-    if (lastVarAddress > 0)
+    if (varAddresses.empty())
     {
+        availAddress = 0;
+    }
+    else
+    {
+        int lastVarAddress = (std::max_element(this->varAddresses.begin(), this->varAddresses.end(), [](const std::pair<std::string, int> &p1, const std::pair<std::string, int> &p2) {
+                                 return p1.second < p2.second;
+                             }))->second;
+
         std::string lastVarId = getLastVariable();
         std::string type = this->varTypes.at(lastVarId);
         if (type == CHAR)
@@ -660,10 +664,6 @@ int MServer::getAvailableAddress()
         { //The last address is an empty struct
             availAddress = lastVarAddress + 1;
         }
-    }
-    else
-    {
-        availAddress = 0;
     }
 
     return availAddress;
