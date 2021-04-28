@@ -31,8 +31,17 @@ private:
 public:
     Parser(Lexer inputLexer);
 
-    //the type of exception thrown by the parser
-    struct SemanticException;
+    //!struct SemanticException to define the exception thrown by the parser
+    struct SemanticException : public exception
+    {
+
+        SemanticException(const string &msg) : msg_(msg) {}
+
+        const char *what() const noexcept { return (&msg_[0]); }
+
+    private:
+        string msg_;
+    };
 
     void scope();
 

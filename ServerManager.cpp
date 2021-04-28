@@ -68,7 +68,7 @@ void ServerManager::connectSocket()
     }
 
     // Clear buffer
-    this->buffer[0] = '\0';
+    memset(this->buffer, 0, 1024);
 }
 
 /*!

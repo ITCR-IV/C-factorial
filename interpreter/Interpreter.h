@@ -17,8 +17,16 @@ private:
     void error(const string extraDetails);
 
 public:
-    //error stuff
-    struct RuntimeException;
+    //!struct RuntimeException to define the exception thrown while interpreting
+    struct RuntimeException : public exception
+    {
+        RuntimeException(const string &msg) : msg_(msg) {}
+
+        const char *what() const noexcept { return (&msg_[0]); }
+
+    private:
+        string msg_;
+    };
 
     //methods to communicate with server and process stuff
     Interpreter();

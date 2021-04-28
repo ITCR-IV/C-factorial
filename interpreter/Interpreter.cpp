@@ -11,17 +11,6 @@ using namespace std;
 
 Interpreter::Interpreter() : manager(ServerManager::getInstance()) {}
 
-//! struct RuntimeException to define the exception thrown while interpreting
-struct Interpreter::RuntimeException : public exception
-{
-    RuntimeException(const string &msg) : msg_(msg) {}
-
-    const char *what() const noexcept { return (&msg_[0]); }
-
-private:
-    string msg_;
-};
-
 /*!
  * \brief The interpreter throws a RuntimeException if an expression is invalid
  * 
@@ -145,7 +134,7 @@ void Interpreter::reference_declaration(string ptrType, string id, string assign
         manager->sendJson(encoder.encode());
         if (stoi(manager->getServerMsg()) == ERROR)
         {
-            error("Couldn't declare the given variable, already stored in memory");
+            error("Couldn't declare the given variable, already stored in memory or type undefined");
         }
         return;
     }
@@ -160,7 +149,7 @@ void Interpreter::reference_declaration(string ptrType, string id, string assign
         manager->sendJson(encoder.encode());
         if (stoi(manager->getServerMsg()) == ERROR)
         {
-            error("Couldn't declare the given variable, already stored in memory");
+            error("Couldn't declare the given variable, already stored in memory or type undefined");
         }
         return;
     }
@@ -225,7 +214,7 @@ void Interpreter::enter_struct()
  */
 void Interpreter::exit_struct(string id)
 {
-    manager->sendRequest(ENTERSTRUCT);
+    manager->sendRequest(EXITSTRUCT);
     manager->sendJson(id);
     if (stoi(manager->getServerMsg()) == ERROR)
     {
@@ -357,6 +346,10 @@ string Interpreter::getAddr(string id)
     manager->sendRequest(REQUESTVARIABLE);
     manager->sendJson(id);
     std::string info = manager->getServerMsg();
+    if (info == "-1")
+    {
+        error("Requesting variable not stored in memory");
+    }
     JsonDecoder decoder = JsonDecoder(info);
     UpdateInfo idInfo = decoder.decode();
     return to_string(idInfo.getDataAddress());
@@ -374,6 +367,10 @@ string Interpreter::getValue(string id)
     manager->sendRequest(REQUESTVARIABLE);
     manager->sendJson(id);
     std::string info = manager->getServerMsg();
+    if (info == "-1")
+    {
+        error("Requesting variable not stored in memory");
+    }
     JsonDecoder decoder = JsonDecoder(info);
     UpdateInfo idInfo = decoder.decode();
     return idInfo.getDataValue();
@@ -403,6 +400,10 @@ string Interpreter::getType(string id)
     manager->sendRequest(REQUESTVARIABLE);
     manager->sendJson(id);
     std::string info = manager->getServerMsg();
+    if (info == "-1")
+    {
+        error("Requesting variable not stored in memory");
+    }
     JsonDecoder decoder = JsonDecoder(info);
     UpdateInfo idInfo = decoder.decode();
     return idInfo.getDataType();
