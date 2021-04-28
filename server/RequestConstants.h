@@ -12,5 +12,7 @@ const int ENTERSTRUCT           = 6;
 const int EXITSTRUCT            = 7;
 const int REQUESTVARIABLE       = 8;
 const int REQUESTMEMORYSTATE    = 9;
+const int FLUSH                 = 10;
+const int REQUESTBYADDRESS      = 11;
 
 #endif

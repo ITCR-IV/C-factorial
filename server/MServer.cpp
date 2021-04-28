@@ -9,6 +9,8 @@
 #include "JsonEncoder.h"
 #include "TypeConstants.h"
 #include "StructAttribute.h"
+#include <chrono>
+#include <thread>
 
 /*!
  * \brief Construct a new MServer object, and configures the socket
@@ -122,7 +124,7 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 int exitStatus;
                 exitStatus = declaration(JsonDecoder(buffer).decode());
                 std::string info = std::to_string(exitStatus);
-                send(newSocket, info.c_str(), info.length(), 0);
+                send(newSocket, info.c_str(), info.length() + 1, 0);
                 break;
             }
             case DECLAREREF:
@@ -132,7 +134,7 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 int exitStatus;
                 exitStatus = reference_declaration(JsonDecoder(buffer).decode());
                 std::string info = std::to_string(exitStatus);
-                send(newSocket, info.c_str(), info.length(), 0);
+                send(newSocket, info.c_str(), info.length() + 1, 0);
                 break;
             }
             case CHANGEVALUE:
@@ -142,7 +144,7 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 int exitStatus;
                 exitStatus = update_value(JsonDecoder(buffer).decode());
                 std::string info = std::to_string(exitStatus);
-                send(newSocket, info.c_str(), info.length(), 0);
+                send(newSocket, info.c_str(), info.length() + 1, 0);
                 break;
             }
             case ENTERSTRUCT:
@@ -156,7 +158,7 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 int exitStatus;
                 exitStatus = exit_struct(std::string(buffer));
                 std::string info = std::to_string(exitStatus);
-                send(newSocket, info.c_str(), info.length(), 0);
+                send(newSocket, info.c_str(), info.length() + 1, 0);
                 break;
             }
             case REQUESTVARIABLE:
@@ -165,7 +167,7 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 readSocket(buffer, address, serverSocket, newSocket);
                 std::string info;
                 info = getInfo(std::string(buffer));
-                send(newSocket, info.c_str(), info.length(), 0);
+                send(newSocket, info.c_str(), info.length() + 1, 0);
                 break;
             }
             case REQUESTMEMORYSTATE:
@@ -190,13 +192,23 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 for (vp = addressVector.begin(); vp != addressVector.end(); vp++)
                 {
                     info = getInfo(vp->first);
-                    send(newSocket, info.c_str(), info.length(), 0);
+                    send(newSocket, info.c_str(), info.length() + 1, 0);
+                    std::this_thread::sleep_for(std::chrono::milliseconds(10));
                 }
 
                 std::string exitStatus = std::to_string(SUCCESS);
-                send(newSocket, info.c_str(), info.length(), 0);
+                std::this_thread::sleep_for(std::chrono::milliseconds(50));
+                send(newSocket, exitStatus.c_str(), exitStatus.length() + 1, 0);
                 break;
             }
+            case FLUSH:
+                printf("Flushing memory state");
+                //Reset the memory server state
+                break;
+            case REQUESTBYADDRESS:
+                printf("Fulfilling variable by address request");
+                //Receive an address and send back an updateInfo packaged variable
+                break;
             default:
                 printf("Undefined request '%d'\n", req);
             }
