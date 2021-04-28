@@ -39,13 +39,21 @@ void Interpreter::error(const string extraDetails = "")
  * \brief Tell the memory server to increment the scope stack so that it can assign new variables in the new scope
  * 
  */
-void Interpreter::enter_scope() {}
+void Interpreter::enter_scope()
+{
+    manager->sendRequest(ENTERSCOPE);
+    return;
+}
 
 /*!
  * \brief Tell the memory server to descrease scope stack and release all memory pertaining to the exited scope
  * 
  */
-void Interpreter::exit_scope() {}
+void Interpreter::exit_scope()
+{
+    manager->sendRequest(EXITSCOPE);
+    return;
+}
 
 /*!
 * \brief  Tell the memory server to allocate a variable defined by the parameters of this method, if the id is already defined then throw an exception
@@ -57,7 +65,54 @@ void Interpreter::exit_scope() {}
 */
 void Interpreter::declaration(string type, string id, string assignType /*= ""*/, string value /*= ""*/)
 {
-    //Default values: 0 for any number and '\0' for chars
+    if (assignType != "")
+    {
+        if (type != assignType)
+        {
+            if (type == LONG && assignType == INT)
+            {
+                ;
+            }
+            else if (type == DOUBLE && (assignType == FLOAT || assignType == INT))
+            {
+                ;
+            }
+            else if (type == FLOAT && assignType == INT)
+            {
+                ;
+            }
+            else
+            {
+                string msg = "Wrong type assignment, attempting to assign '" + assignType + "' to '" + type + "'";
+                error(msg);
+            }
+        }
+        UpdateInfo varDeclare = UpdateInfo(type, id, value);
+
+        JsonEncoder encoder = JsonEncoder(varDeclare);
+        manager->sendRequest(DECLARE);
+        manager->sendJson(encoder.encode());
+        if (stoi(manager->getServerMsg()) == ERROR)
+        {
+            error("Couldn't declare the given variable, already stored in memory");
+        }
+        return;
+    }
+    else
+    {
+        //Default values are always ""
+        std::string defValue = "";
+
+        UpdateInfo varDeclare = UpdateInfo(type, id, defValue);
+        JsonEncoder encoder = JsonEncoder(varDeclare);
+        manager->sendRequest(DECLARE);
+        manager->sendJson(encoder.encode());
+        if (stoi(manager->getServerMsg()) == ERROR)
+        {
+            error("Couldn't declare the given variable, already stored in memory");
+        }
+        return;
+    }
 }
 
 /*!
@@ -70,7 +125,45 @@ void Interpreter::declaration(string type, string id, string assignType /*= ""*/
 */
 void Interpreter::reference_declaration(string ptrType, string id, string assignType /*= ""*/, string value /*= ""*/) //default value for references is 0
 {
-    return;
+    if (assignType != "")
+    {
+        if (assignType.find('<') == string::npos)
+        {
+            error("Trying to assing non-reference to reference type");
+        }
+        string assignPtrType = this->extract_refType(assignType);
+
+        if (ptrType != assignPtrType)
+        {
+            string msg = "Wrong type assignment, attempting to assign '" + assignPtrType + "' reference to '" + ptrType + "' reference";
+            error(msg);
+        }
+        UpdateInfo varDeclare = UpdateInfo(ptrType, id, value);
+
+        JsonEncoder encoder = JsonEncoder(varDeclare);
+        manager->sendRequest(DECLAREREF);
+        manager->sendJson(encoder.encode());
+        if (stoi(manager->getServerMsg()) == ERROR)
+        {
+            error("Couldn't declare the given variable, already stored in memory");
+        }
+        return;
+    }
+    else
+    {
+        //Default values are always ""
+        std::string defValue = "";
+
+        UpdateInfo varDeclare = UpdateInfo(ptrType, id, defValue);
+        JsonEncoder encoder = JsonEncoder(varDeclare);
+        manager->sendRequest(DECLARE);
+        manager->sendJson(encoder.encode());
+        if (stoi(manager->getServerMsg()) == ERROR)
+        {
+            error("Couldn't declare the given variable, already stored in memory");
+        }
+        return;
+    }
 }
 
 /*!
@@ -82,20 +175,65 @@ void Interpreter::reference_declaration(string ptrType, string id, string assign
  */
 void Interpreter::update_value(string id, string assignType, string value)
 {
+    string type = getType(id);
+    if (type != assignType)
+    {
+        if (type == LONG && assignType == INT)
+        {
+            ;
+        }
+        else if (type == DOUBLE && (assignType == FLOAT || assignType == INT))
+        {
+            ;
+        }
+        else if (type == FLOAT && assignType == INT)
+        {
+            ;
+        }
+        else
+        {
+            string msg = "Wrong type assignment, attempting to assign '" + assignType + "' to '" + type + "'";
+            error(msg);
+        }
+    }
+    UpdateInfo varChange = UpdateInfo(type, id, value);
+
+    JsonEncoder encoder = JsonEncoder(varChange);
+    manager->sendRequest(CHANGEVALUE);
+    manager->sendJson(encoder.encode());
+    if (stoi(manager->getServerMsg()) == ERROR)
+    {
+        error("Can't change variable that wasn't declared previously");
+    }
+    return;
 }
 
 /*!
  * \brief Tell the memory server that the following declarations are for attributes of a struct being constructed
  * 
  */
-void Interpreter::enter_struct() {}
+void Interpreter::enter_struct()
+{
+    manager->sendRequest(ENTERSTRUCT);
+    return;
+}
 
 /*!
  * \brief Tell the memory server to stop assigning the declarations to the struct type and finishes defining the struct by giving it an id
  * 
  * \param id The identifier of the struct type
  */
-void Interpreter::exit_struct(string id) {}
+void Interpreter::exit_struct(string id)
+{
+    manager->sendRequest(ENTERSTRUCT);
+    manager->sendJson(id);
+    if (stoi(manager->getServerMsg()) == ERROR)
+    {
+        string msg = "Previous definition exists for struct type '" + id + "'";
+        error(msg);
+    }
+    return;
+}
 
 /*!
  * \brief Run the actual arithmetic evaluation
@@ -216,28 +354,41 @@ Token Interpreter::arithmetic(char operation, Token op1, Token op2)
  */
 string Interpreter::getAddr(string id)
 {
-    return id;
+    manager->sendRequest(REQUESTVARIABLE);
+    manager->sendJson(id);
+    std::string info = manager->getServerMsg();
+    JsonDecoder decoder = JsonDecoder(info);
+    UpdateInfo idInfo = decoder.decode();
+    return to_string(idInfo.getDataAddress());
 }
 
 /*!
- * \brief Returns the value of a given variable, if no such variable hsa been defined throws error
+ * \brief Returns the value of a given variable, if no such variable has been defined throws error
  * 
  * \param id is a variable and can be a plain variable or a struct access refering to a variable inside a struct
  * \return string identifier of the variable
  */
 string Interpreter::getValue(string id)
 {
-    return id;
+    // For structs this function will return their address
+    manager->sendRequest(REQUESTVARIABLE);
+    manager->sendJson(id);
+    std::string info = manager->getServerMsg();
+    JsonDecoder decoder = JsonDecoder(info);
+    UpdateInfo idInfo = decoder.decode();
+    return idInfo.getDataValue();
 }
 
 /*!
- * \brief do rereference the reference type variables
+ * \brief dereference the reference type variables
  * 
  * \param id the id of the reference variable
  * \return string containing the value of the variable the reference points to
  */
 string Interpreter::getRefValue(string id)
 {
+    // Check that a reference type is passed
+    // Still need to add to server a method to send back the info for a variable by giving it's address
     return id;
 }
 
@@ -249,7 +400,12 @@ string Interpreter::getRefValue(string id)
  */
 string Interpreter::getType(string id)
 {
-    return id;
+    manager->sendRequest(REQUESTVARIABLE);
+    manager->sendJson(id);
+    std::string info = manager->getServerMsg();
+    JsonDecoder decoder = JsonDecoder(info);
+    UpdateInfo idInfo = decoder.decode();
+    return idInfo.getDataType();
 }
 
 /*!
