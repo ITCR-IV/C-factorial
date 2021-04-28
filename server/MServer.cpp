@@ -221,6 +221,7 @@ void MServer::request(sockaddr_in address, int serverSocket)
 void MServer::readSocket(char *buffer, sockaddr_in address, int serverSocket, int &newSocket)
 {
     int addressLen = sizeof(address);
+    memset(buffer, 0, 1024); // Clear buffer
 
     // accept
     newSocket = accept(serverSocket, (sockaddr *)&address, (socklen_t *)&addressLen);
@@ -378,8 +379,8 @@ int MServer::declaration(UpdateInfo declarationInfo)
                 }
             }
         }
+        declarationsCounter.back()++;
     }
-    declarationsCounter.back()++;
     return SUCCESS;
 }
 
@@ -419,8 +420,8 @@ int MServer::reference_declaration(UpdateInfo declarationInfo)
 
         std::string refType = "reference<" + type + ">";
         this->varTypes.insert({name, refType});
+        declarationsCounter.back()++;
     }
-    declarationsCounter.back()++;
     return SUCCESS;
 }
 
@@ -518,7 +519,15 @@ std::string MServer::getInfo(std::string id)
     int dataAddress;
 
     // get type
-    type = varTypes.at(id);
+    try
+    {
+        type = varTypes.at(id);
+    }
+    catch (std::out_of_range e)
+    {
+        printf("Variable not present in memory");
+        return std::to_string(ERROR);
+    }
 
     // get address
     dataAddress = varAddresses.at(id);

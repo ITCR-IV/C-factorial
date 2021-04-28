@@ -34,8 +34,17 @@ private:
     void advance();
 
 public:
-    //!the type of exception thrown by the lexer
-    struct SyntaxException;
+    //!struct SyntaxException to define the exception thrown by the lexer
+    struct SyntaxException : public exception
+    {
+
+        SyntaxException(const string &msg) : msg_(msg) {}
+
+        const char *what() const noexcept { return (&msg_[0]); }
+
+    private:
+        string msg_;
+    };
 
     //!index of line
     int line;

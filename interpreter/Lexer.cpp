@@ -22,21 +22,6 @@ Lexer::Lexer(string stringText)
 }
 
 /*!
- * \brief struct SyntaxException to define the exception thrown by the lexer
- * 
- */
-struct Lexer::SyntaxException : public exception
-{
-
-    SyntaxException(const string &msg) : msg_(msg) {}
-
-    const char *what() const noexcept { return (&msg_[0]); }
-
-private:
-    string msg_;
-};
-
-/*!
  * \brief The lexer throws a SyntaxException if it can't tokenize properly
  * 
  * \param extraDetails Extra information relating to the error
@@ -148,11 +133,15 @@ Token Lexer::findId()
 
     if (RESERVED_KEYWORDS.find(result) == RESERVED_KEYWORDS.end())
     {
-        return Token(ID, result);
-    }
-    else if (this->current_char == '.')
-    {
-        return Token(STRUCTACCESS, result + "." + this->findId().getValue());
+        if (this->current_char == '.')
+        {
+            this->advance();
+            return Token(STRUCTACCESS, result + "." + this->findId().getValue());
+        }
+        else
+        {
+            return Token(ID, result);
+        }
     }
     else
     {
