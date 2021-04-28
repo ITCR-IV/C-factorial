@@ -156,7 +156,6 @@ void MainWindow::on_actionNext_line_triggered()
  */
 void MainWindow::on_actionPrev_line_triggered()
 {
-    ui->textBrowser_2->setText("hola");
 }
 
 /*!
@@ -187,8 +186,40 @@ void MainWindow::delete_row()
     ui->tableWidget->setRowCount(0);
 }
 
+/*!
+ * \brief sets the text on stdout textBrowser
+ *
+ */
+
 void MainWindow::set_stdout_text(string text)
 {
     QString qstr = QString::fromStdString(text);
     ui->textBrowser_2->setText(qstr);
+}
+
+/*!
+ * \brief sets the text on log textBrowser
+ *
+ */
+
+void MainWindow::set_log_text(string text)
+{
+    QString qstr = QString::fromStdString(text);
+    ui->textBrowser->setText(qstr);
+}
+
+
+/*!
+ * \brief deletes all the text on textBrowsers
+ *
+ */
+void MainWindow::delete_text(int identifier)
+{
+    if (identifier == 1)
+    {
+        ui->textBrowser->clear();
+    } else if (identifier == 2)
+    {
+        ui->textBrowser_2->clear();
+    }
 }
