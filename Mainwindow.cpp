@@ -8,6 +8,14 @@
 #include <string>
 #include <iostream>
 
+// include log4cxx header files.
+#include "log4cxx/logger.h"
+#include "log4cxx/basicconfigurator.h"
+#include "log4cxx/helpers/exception.h"
+
+using namespace log4cxx;
+using namespace log4cxx::helpers;
+
 /*!
  * \brief Construct a new MainWindow object
  *
@@ -124,7 +132,7 @@ void MainWindow::on_actionRun_triggered()
 {
     QString code = (ui->plainTextEdit->toPlainText());
     std::string plainCode = code.toUtf8().constData();
-    //std::cout << plainCode + '\n';
+    std::cout << plainCode + '\n';
     Lexer lexer = Lexer("{" + plainCode + "\n}");
     Parser parser = Parser(lexer);
 
@@ -148,6 +156,7 @@ void MainWindow::on_actionNext_line_triggered()
  */
 void MainWindow::on_actionPrev_line_triggered()
 {
+    ui->textBrowser_2->setText("hola");
 }
 
 /*!
@@ -176,4 +185,10 @@ void MainWindow::add_row(string dir, string label, string value, string count)
 void MainWindow::delete_row()
 {
     ui->tableWidget->setRowCount(0);
+}
+
+void MainWindow::set_stdout_text(string text)
+{
+    QString qstr = QString::fromStdString(text);
+    ui->textBrowser_2->setText(qstr);
 }

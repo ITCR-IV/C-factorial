@@ -21,6 +21,7 @@ public:
 
     void add_row(string dir, string label, string value, string count);
     void delete_row();
+    void set_stdout_text(string text);
 
 private slots:
 
