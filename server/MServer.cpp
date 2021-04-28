@@ -398,7 +398,8 @@ int MServer::reference_declaration(UpdateInfo declarationInfo)
     if (insideStruct)
     {
         //add to vector a StructAttribute
-        this->currentStruct.push_back(StructAttribute(type, name, value));
+        std::string refType = "reference<" + type + ">";
+        this->currentStruct.push_back(StructAttribute(refType, name, value));
     }
     else
     {

@@ -178,8 +178,8 @@ void Parser::declaration()
             eat(EQUAL);
 
             Token token_ = return_expression();
-            string assignmentType_ = token_.getType();
-            string assignmentValue_ = token_.getValue();
+            assignmentType_ = token_.getType();
+            assignmentValue_ = token_.getValue();
             this->interpreter.reference_declaration(ptrType_, id_, assignmentType_, assignmentValue_);
             return;
         }
@@ -192,8 +192,8 @@ void Parser::declaration()
         eat(EQUAL);
 
         Token token_ = return_expression();
-        string assignmentType_ = token_.getType();
-        string assignmentValue_ = token_.getValue();
+        assignmentType_ = token_.getType();
+        assignmentValue_ = token_.getValue();
         this->interpreter.declaration(type_, id_, assignmentType_, assignmentValue_);
         return;
     }
