@@ -572,10 +572,15 @@ std::string MServer::getInfo(std::string id)
         long *l = reinterpret_cast<long *>(this->serverMemory + dataAddress);
         value = std::to_string(*l);
     }
+    else if (type.find('<') != std::string::npos)
+    {
+        int *i = reinterpret_cast<int *>(this->serverMemory + dataAddress);
+        value = std::to_string(*i);
+    }
     else
     {
         //If a struct object is being requested then value == it's address
-        value = this->varAddresses.at(id);
+        value = std::to_string(this->varAddresses.at(id));
     }
 
     // get count

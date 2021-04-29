@@ -362,7 +362,11 @@ Token Parser::method_call()
         if (this->currentToken.getType() == STRUCTACCESS || this->currentToken.getType() == ID)
         {
             Token token_ = this->currentToken;
-            eat(ID);
+            if (this->interpreter.getType(token_.getValue()).find('<') == string::npos)
+            {
+                error("getValue() method called for non-reference type");
+            }
+            eat(this->currentToken.getType());
             eat(RPAREN);
             return Token(this->interpreter.getType(token_.getValue()), this->interpreter.getRefValue(token_.getValue()));
         }
@@ -378,7 +382,11 @@ Token Parser::method_call()
         if (this->currentToken.getType() == STRUCTACCESS || this->currentToken.getType() == ID)
         {
             Token token_ = this->currentToken;
-            eat(ID);
+            if (this->interpreter.getType(token_.getValue()).find('<') != string::npos)
+            {
+                error("getAddr() method called for a reference type");
+            }
+            eat(this->currentToken.getType());
             eat(RPAREN);
             return Token(REFERENCE + "<" + this->interpreter.getType(token_.getValue()) + ">", this->interpreter.getAddr(token_.getValue()));
         }
