@@ -204,6 +204,7 @@ void MServer::request(sockaddr_in address, int serverSocket)
             case FLUSH:
                 printf("Flushing memory state");
                 //Reset the memory server state
+                flushMemory();
                 break;
             case REQUESTBYADDRESS:
                 printf("Fulfilling variable by address request");
@@ -704,4 +705,22 @@ void MServer::updateStructAddresses(std::string structName, std::string newStruc
             varAddresses.at(attributeEquivalent) = p->second;
         }
     }
+}
+
+void MServer::flushMemory()
+{
+    // Clear maps
+    this->varAddresses.clear();
+    this->varTypes.clear();
+    this->structDefinitions.clear();
+
+    // Clear vectors
+    this->currentStruct.clear();
+    this->structDefsCounter.clear();
+    this->structDefinitionsOrder.clear();
+    this->declarationsCounter.clear();
+
+    // Clear flags/variables
+    this->scopeLevel = 0;
+    this->insideStruct = false;
 }
