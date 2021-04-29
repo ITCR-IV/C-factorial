@@ -7,15 +7,7 @@
 #include <vector>
 #include "StructAttribute.h"
 #include "UpdateInfo.h"
-// include log4cxx header files.
-//#include "log4cxx/logger.h"
-//#include "log4cxx/basicconfigurator.h"
-//#include "log4cxx/helpers/exception.h"
-//
-//using namespace log4cxx;
-//using namespace log4cxx::helpers;
-//
-//LoggerPtr logger(Logger::getLogger("MyApp"));
+
 
 //! Class that creates the server socket and listen the client
 class MServer
