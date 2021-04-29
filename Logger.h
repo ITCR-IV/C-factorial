@@ -6,7 +6,17 @@
 #include <string>
 
 using namespace std;
+
+
+
 class Logger {
+    enum LogLevel
+    {
+        All,
+        INFO,
+        WARNING,
+        ERROR
+    };
 
 private:
 
@@ -17,8 +27,8 @@ private:
     Logger& operator= (const Logger&) = delete;
 
     // Logger stuff
-    LogLevel Level = ALL;
-    string LevelNames["ALL","INFO","WARNING","ERROR"];
+    LogLevel Level = All;
+    string LevelNames[5] = { "ALL","INFO","WARNING", "ERROR", "NEEDED" };
     const char * filepath = 0;
     FILE* file = 0;
 
@@ -38,35 +48,27 @@ private:
 
 public:
 
-    enum LogLevel
-    {
-        All,
-        INFO,
-        WARNING,
-        ERROR
-    };
 
-
-    static void SetPriority(LogPriority new_priority)
+    static void SetPriority(LogLevel newLevel)
     {
-        get_instance().priority = new_priority;
+        getInstance()->Level = newLevel;
     }
 
     static void EnableFileOutput();
 
     static void Info(const char* message)
     {
-        get_instance().log(INFO, InfoPriority);
+        getInstance()->log(INFO, message);
     }
 
     static void Warn(const char* message)
     {
-        get_instance().log(WARNING, message);
+        getInstance()->log(WARNING, message);
     }
 
     static void Error(const char* message)
     {
-        get_instance().log(ERROR, message);
+        getInstance()->log(ERROR, message);
     }
 
 };

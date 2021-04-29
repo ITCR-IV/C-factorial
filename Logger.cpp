@@ -15,13 +15,13 @@ void Logger::log(int newlevel, string message)
 {
     if (this->Level <= newlevel)
     {
-        if (this->file)
+        if (file)
         {
             string currentTime = this->getCurrentDate();
-            fprintf(this->file, "%s\t", buffer);
-            fprintf(this->file, LevelNames[newlevel]);
-            fprintf(this->file, message);
-            fprintf(this->file, "\n");
+            fprintf(file, "%s\t", buffer);
+            fprintf(file, LevelNames[newlevel]);
+            fprintf(file, message);
+            fprintf(file, "\n");
         }
     }
 }
@@ -39,14 +39,14 @@ string Logger::getCurrentDate(){
 
 void Logger::enable_file_output()
 {
-    if (this->file != 0)
+    if (file != 0)
     {
-        fclose(this->file);
+        fclose(file);
     }
 
-    this->file = fopen(filepath, "a");
+    file = fopen(filepath, "a");
 
-    if (this->file == 0)
+    if (file == 0)
     {
         printf("Logger: Failed to open file at %s", filepath);
     }
@@ -61,6 +61,6 @@ void Logger::free_file()
 static void Logger::EnableFileOutput()
 {
     Logger& logger_instance = get_instance();
-    logger_instance.filepath = "log.txt";
-    logger_instance.enable_file_output();
+    logger_instance->filepath = "log.txt";
+    logger_instance->enable_file_output();
 }

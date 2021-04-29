@@ -11,11 +11,15 @@
 #include "interpreter/Parser.cpp"
 #include "server/JsonEncoder.h"
 #include "unistd.h"
+#include "Logger.h"
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
+//    Logger::EnableFileOutput();
+//    Logger::Info("EL logger sirve");
+
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
