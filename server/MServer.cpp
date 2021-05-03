@@ -169,7 +169,7 @@ void MServer::request(sockaddr_in address, int serverSocket)
             }
             case REQUESTVARIABLE:
             {
-                printf("Fulfilling variable request");
+                printf("Fulfilling variable request\n");
                 readSocket(buffer, address, serverSocket, newSocket);
                 std::string info;
                 info = getInfo(std::string(buffer));
@@ -208,12 +208,12 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 break;
             }
             case FLUSH:
-                printf("Flushing memory state");
+                printf("Flushing memory state\n");
                 //Reset the memory server state
                 flushMemory();
                 break;
             case REQUESTBYADDRESS:
-                printf("Fulfilling variable by address request");
+                printf("Fulfilling variable by address request\n");
                 //Receive an address and send back an updateInfo packaged variable
                 break;
             default:
@@ -313,7 +313,7 @@ int MServer::declaration(UpdateInfo declarationInfo)
     {
         if (this->varAddresses.find(name) != this->varAddresses.end())
         {
-            printf("Attempted to allocate an existing variable as a new one");
+            printf("Attempted to allocate an existing variable as a new one\n");
             return ERROR;
         }
 
@@ -374,7 +374,7 @@ int MServer::declaration(UpdateInfo declarationInfo)
             // Note about structs: their size by themselves is just 1 byte pointing to the struct start, the total size would be the size of their attributes + 1
             if (this->structDefinitions.find(type) == this->structDefinitions.end())
             {
-                printf("Attempted declaration with unrecognized type");
+                printf("Attempted declaration with unrecognized type\n");
                 return ERROR;
             }
             // todo find a way to check if an existing struct is being assigned to this one and instead of creating a new one in memory just create new variables in the map pointing to same addresses
@@ -425,7 +425,7 @@ int MServer::reference_declaration(UpdateInfo declarationInfo)
     {
         if (this->varAddresses.find(name) != this->varAddresses.end())
         {
-            printf("Attempted to allocate an existing variable as a new one");
+            printf("Attempted to allocate an existing variable as a new one\n");
             return ERROR;
         }
         int newAddress = getAvailableAddress();
@@ -457,7 +457,7 @@ int MServer::update_value(UpdateInfo declarationInfo)
 
     if (this->varAddresses.find(name) == this->varAddresses.end())
     {
-        printf("Attempted to change the value of a variable that wasn't previously defined");
+        printf("Attempted to change the value of a variable that wasn't previously defined\n");
         return ERROR;
     }
     std::string type = this->varTypes.at(name);
@@ -512,7 +512,7 @@ int MServer::exit_struct(std::string id)
 {
     if (this->structDefinitions.find(id) != this->structDefinitions.end())
     {
-        printf("Attempted to redefine a struct that was previously defined");
+        printf("Attempted to redefine a struct that was previously defined\n");
         return ERROR;
     }
     this->structDefinitions.insert({id, this->currentStruct});
@@ -544,7 +544,7 @@ std::string MServer::getInfo(std::string id)
     }
     catch (std::out_of_range e)
     {
-        printf("Variable not present in memory");
+        printf("Variable not present in memory\n");
         return std::to_string(ERROR);
     }
 
