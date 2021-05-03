@@ -1,5 +1,5 @@
-#ifndef C_FACTORIAL_LOGGER_H
-#define C_FACTORIAL_LOGGER_H
+#ifndef LOGGER_H
+#define LOGGER_H
 
 #include <stdio.h>
 #include <ctime>

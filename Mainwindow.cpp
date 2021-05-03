@@ -7,6 +7,8 @@
 #include "interpreter/Parser.h"
 #include <string>
 #include <iostream>
+#include "Logger.h"
+#include <thread>
 
 
 /*!
@@ -149,6 +151,7 @@ void MainWindow::on_actionNext_line_triggered()
  */
 void MainWindow::on_actionPrev_line_triggered()
 {
+    this->set_log_text();
 }
 
 /*!
@@ -195,9 +198,30 @@ void MainWindow::set_stdout_text(string text)
  *
  */
 
-void MainWindow::set_log_text(string text)
+void MainWindow::set_log_text()
 {
-    QString qstr = QString::fromStdString(text);
+    FILE * logFile;
+
+    long fileSize;
+
+    char * fileText;
+
+    logFile = fopen("log.txt", "r");
+    fseek (logFile , 0 , SEEK_END);
+
+    fileSize = ftell (logFile);
+
+    rewind (logFile);
+
+    fileText = (char*) malloc (sizeof(char)*fileSize);
+
+    fread(fileText, fileSize+1, 1, logFile);
+
+    fclose(logFile);
+
+
+
+    QString qstr = QString::fromStdString(fileText);
     ui->textBrowser->setText(qstr);
 }
 

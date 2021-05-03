@@ -1,15 +1,11 @@
 #include "Logger.h"
 #include <iostream>
+#include "Mainwindow.h"
 
 Logger *Logger::instance = nullptr;
 
 Logger &Logger::getInstance()
 {
-    //    if (instance == nullptr)
-    //    {
-    //        instance = new Logger();
-    //    }
-    //    return instance;
     static Logger instance;
     return instance;
 }
@@ -27,6 +23,9 @@ void Logger::log(LogLevel newlevel, string message)
             fprintf(file, levelString.c_str());
             fprintf(file, message.c_str());
             fprintf(file, "\n");
+
+            string showString = currentTime + levelString + message;
+
         }
     }
 }

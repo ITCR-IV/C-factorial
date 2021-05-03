@@ -12,6 +12,11 @@
 #include "server/JsonEncoder.h"
 #include "unistd.h"
 #include "Logger.h"
+#include "QFile"
+#include "QTextStream"
+#include "QFileDialog"
+#include "qmessagebox.h"
+
 
 using namespace std;
 
