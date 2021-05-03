@@ -7,18 +7,18 @@
 #include <string>
 #include "interpreter/Lexer.h"
 #include "interpreter/Parser.h"
-#include "interpreter/Lexer.cpp"
-#include "interpreter/Parser.cpp"
 #include "server/JsonEncoder.h"
 #include "unistd.h"
 #include "Logger.h"
 
-using namespace std;
-
 int main(int argc, char *argv[])
 {
-    ServerManager *manager = ServerManager::getInstance(9999);
+    int PORT;
+    std::cout << "Enter port number: ";
+    std::cin >> PORT;
+    std::cout << "\n";
 
+    ServerManager *manager = ServerManager::getInstance(PORT);
 
     QApplication a(argc, argv);
     MainWindow w;
