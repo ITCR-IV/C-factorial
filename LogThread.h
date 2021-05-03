@@ -9,14 +9,14 @@ class LogThread : public QThread
 public:
     LogThread(int type, int sleepTime, QObject *parent = nullptr);
 signals:
-    void logData(char*);
+    void logData(char *);
+
 protected:
     void run() override;
+
 private:
     int sleepTime; //milisegundos
     int threadType;
-
-
 };
 
 #endif // LOGTHREAD_H
