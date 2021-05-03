@@ -19,7 +19,8 @@ SOURCES += \
     ServerManager.cpp \
     server/UpdateInfo.cpp \
     server/JsonDecoder.cpp \
-    server/JsonEncoder.cpp
+    server/JsonEncoder.cpp \
+    Logger.cpp
 
 HEADERS += \
     CodeEditor.h \
@@ -32,7 +33,8 @@ HEADERS += \
     ServerManager.h \
     server/UpdateInfo.h \
     server/JsonDecoder.h \
-    server/JsonEncoder.h
+    server/JsonEncoder.h \
+    Logger.h
 
 FORMS += \
     Mainwindow.ui

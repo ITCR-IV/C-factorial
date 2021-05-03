@@ -11,14 +11,9 @@
 #include "server/JsonDecoder.h"
 #include "interpreter/Parser.h"
 #include "ServerManager.h"
+#include "Logger.h"
+#include <thread>
 
-// include log4cxx header files.
-#include "log4cxx/logger.h"
-#include "log4cxx/basicconfigurator.h"
-#include "log4cxx/helpers/exception.h"
-
-using namespace log4cxx;
-using namespace log4cxx::helpers;
 
 /*!
  * \brief Construct a new MainWindow object
@@ -197,6 +192,7 @@ void MainWindow::on_actionNext_line_triggered()
  */
 void MainWindow::on_actionPrev_line_triggered()
 {
+    this->set_log_text();
 }
 
 void MainWindow::updateRamView()
@@ -264,9 +260,30 @@ void MainWindow::set_stdout_text(string text)
  *
  */
 
-void MainWindow::set_log_text(string text)
+void MainWindow::set_log_text()
 {
-    QString qstr = QString::fromStdString(text);
+    FILE * logFile;
+
+    long fileSize;
+
+    char * fileText;
+
+    logFile = fopen("log.txt", "r");
+    fseek (logFile , 0 , SEEK_END);
+
+    fileSize = ftell (logFile);
+
+    rewind (logFile);
+
+    fileText = (char*) malloc (sizeof(char)*fileSize);
+
+    fread(fileText, fileSize+1, 1, logFile);
+
+    fclose(logFile);
+
+
+
+    QString qstr = QString::fromStdString(fileText);
     ui->textBrowser->setText(qstr);
 }
 

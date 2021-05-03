@@ -28,7 +28,7 @@ public:
     void delete_row();
     void set_stdout_text(string text);
     void delete_text(int identifier);
-    void set_log_text(string text);
+    void set_log_text();
 
     //! Flag so the next line button knows whether a program is being run atm or not
     bool isRunning;
