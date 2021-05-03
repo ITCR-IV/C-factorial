@@ -13,6 +13,7 @@
 #include "ServerManager.h"
 #include "Logger.h"
 #include <thread>
+#include "LogThread.h"
 
 
 /*!
@@ -24,6 +25,9 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    mLogThread = new LogThread(1, 1000, this);
+    mLogThread->start();
+    connect(mLogThread, &LogThread::logData, ui->textBrowser, &QTextBrowser::setText);
 }
 
 /*!
@@ -121,6 +125,9 @@ void MainWindow::on_actionAboutQt_triggered()
  */
 void MainWindow::on_actionDelete_triggered()
 {
+    Logger::EnableFileOutput();
+    Logger::Info("nueva info");
+    Logger::Error("prueba de error 2");
 }
 
 /*!
@@ -192,7 +199,6 @@ void MainWindow::on_actionNext_line_triggered()
  */
 void MainWindow::on_actionPrev_line_triggered()
 {
-    this->set_log_text();
 }
 
 void MainWindow::updateRamView()
@@ -260,26 +266,26 @@ void MainWindow::set_stdout_text(string text)
  *
  */
 
-void MainWindow::set_log_text()
+void MainWindow::set_log_text(string fileText)
 {
-    FILE * logFile;
+//    FILE * logFile;
 
-    long fileSize;
+//    long fileSize;
 
-    char * fileText;
+//    char * fileText;
 
-    logFile = fopen("log.txt", "r");
-    fseek (logFile , 0 , SEEK_END);
+//    logFile = fopen("log.txt", "r");
+//    fseek (logFile , 0 , SEEK_END);
 
-    fileSize = ftell (logFile);
+//    fileSize = ftell (logFile);
 
-    rewind (logFile);
+//    rewind (logFile);
 
-    fileText = (char*) malloc (sizeof(char)*fileSize);
+//    fileText = (char*) malloc (sizeof(char)*fileSize);
 
-    fread(fileText, fileSize+1, 1, logFile);
+//    fread(fileText, fileSize+1, 1, logFile);
 
-    fclose(logFile);
+//    fclose(logFile);
 
 
 
@@ -301,4 +307,11 @@ void MainWindow::delete_text(int identifier)
     {
         ui->textBrowser_2->clear();
     }
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    FILE * logFile;
+    logFile = fopen("log.txt", "w");
+    fclose(logFile);
 }

@@ -14,6 +14,8 @@ namespace Ui
 }
 QT_END_NAMESPACE
 
+class LogThread;
+
 //! Class that handles the GUI and the events
 class MainWindow : public QMainWindow
 {
@@ -28,7 +30,6 @@ public:
     void delete_row();
     void set_stdout_text(string text);
     void delete_text(int identifier);
-    void set_log_text();
 
     //! Flag so the next line button knows whether a program is being run atm or not
     bool isRunning;
@@ -40,7 +41,7 @@ public:
     string StdoutString;
 
 private slots:
-
+    void set_log_text(string text);
     void on_actionRun_triggered();
 
     void on_actionNext_line_triggered();
@@ -61,9 +62,12 @@ private slots:
 
     void on_actionDelete_triggered();
 
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 
+    LogThread *mLogThread;
     //! emun to facilitate the column location with the label of the column
     enum Column
     {

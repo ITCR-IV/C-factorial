@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     CodeEditor.cpp \
+    LogThread.cpp \
     Mainwindow.cpp \
     interpreter/Lexer.cpp \
     interpreter/Parser.cpp \
@@ -25,6 +26,7 @@ SOURCES += \
 HEADERS += \
     CodeEditor.h \
     LineNumberArea.h \
+    LogThread.h \
     Mainwindow.h \
     interpreter/Lexer.h \
     interpreter/Parser.h \
