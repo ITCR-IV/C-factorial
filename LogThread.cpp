@@ -32,16 +32,13 @@ void LogThread::run()
                 fread(fileText, fileSize+1, 1, logFile);
 
                 fclose(logFile);
+                emit logData(fileText);
 
             } else{
-
-                printf("no hay file");
                 Logger::EnableFileOutput();
                 Logger::Info("se crea .txt para el log");
             }
 
-
-            emit logData(fileText);
             msleep(sleepTime);
         }
     }
