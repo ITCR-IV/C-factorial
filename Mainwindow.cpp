@@ -209,7 +209,7 @@ void MainWindow::updateRamView()
         // std::cout << "INFO: ";
         // std::cout << info << "\n";
         UpdateInfo infoObj = JsonDecoder(info).decode();
-        add_row(infoObj.getDataAddress(), infoObj.getDataName(), infoObj.getDataValue(), infoObj.getDataCount());
+        add_row(to_string(infoObj.getDataAddress()), infoObj.getDataName(), infoObj.getDataValue(), to_string(infoObj.getDataCount()));
 
         // Get next info packet
         info = man->getServerMsg();
