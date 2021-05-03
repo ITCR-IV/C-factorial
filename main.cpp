@@ -17,8 +17,9 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-//    Logger::EnableFileOutput();
-//    Logger::Info("EL logger sirve");
+    Logger::EnableFileOutput();
+    Logger::Info("EL logger sirve");
+    Logger::Error("prueba de error");
 
     QApplication a(argc, argv);
     MainWindow w;

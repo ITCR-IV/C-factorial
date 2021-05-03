@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <ctime>
 #include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -22,7 +23,7 @@ private:
 
     // singleton
     static Logger *instance;
-    static Logger *getInstance();
+    static Logger &getInstance();
     Logger(const Logger&) = delete;
     Logger& operator= (const Logger&) = delete;
 
@@ -31,13 +32,14 @@ private:
     string LevelNames[5] = { "ALL","INFO","WARNING", "ERROR", "NEEDED" };
     const char * filepath = 0;
     FILE* file = 0;
+    char buffer[80];
 
-    Logger() {}
+    Logger() {};
 
     ~Logger()
     {
         free_file();
-    }
+    };
     void log(LogLevel newlevel, string message);
 
     string getCurrentDate();
@@ -51,24 +53,30 @@ public:
 
     static void SetPriority(LogLevel newLevel)
     {
-        getInstance()->Level = newLevel;
+        getInstance().Level = newLevel;
     }
 
     static void EnableFileOutput();
 
     static void Info(const char* message)
     {
-        getInstance()->log(INFO, message);
+        string tmp = message;
+        string tmp2 = tmp + "   ";
+        getInstance().log(INFO, tmp2);
     }
 
     static void Warn(const char* message)
     {
-        getInstance()->log(WARNING, message);
+        string tmp = message;
+        string tmp2 = tmp + "   ";
+        getInstance().log(WARNING, tmp2);
     }
 
     static void Error(const char* message)
     {
-        getInstance()->log(ERROR, message);
+        string tmp = message;
+        string tmp2 = tmp + "   ";
+        getInstance().log(ERROR, tmp2);
     }
 
 };
