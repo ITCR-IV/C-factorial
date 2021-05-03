@@ -21,15 +21,15 @@ private:
     //! Flag so when going line by line parser knows which kind of loc to except (can vary between loc1 and struct_loc)
     bool insideStruct;
 
-    //! Value so when going line by line the parser knows how deep it is and when it gets to end if all scopes were closed
-    int scopeLevel;
-
     void error(const string extraDetails);
 
     void eat(string tokenType);
 
 public:
     Parser(Lexer inputLexer);
+
+    //! Value so when going line by line the parser knows how deep it is and when it gets to end if all scopes were closed
+    int scopeLevel;
 
     //!struct SemanticException to define the exception thrown by the parser
     struct SemanticException : public exception
@@ -43,8 +43,7 @@ public:
         string msg_;
     };
 
-    void scope();
-
+private:
     void loc();
 
     void declaration();
@@ -81,7 +80,9 @@ public:
 
     void struct_definition_close1();
 
+public:
     void advance_1loc();
+    void scope();
 };
 
 #endif
