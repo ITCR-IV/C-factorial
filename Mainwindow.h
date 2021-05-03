@@ -29,6 +29,7 @@ public:
     void add_row(string dir, string label, string value, string count);
     void delete_row();
     void set_stdout_text(string text);
+    void append_stdout_line(string text);
     void delete_text(int identifier);
 
     //! Flag so the next line button knows whether a program is being run atm or not

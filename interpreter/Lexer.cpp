@@ -18,7 +18,7 @@ Lexer::Lexer(string stringText)
     this->pos = 0;
     this->current_char = text[this->pos];
     //cout << "Length: " << this->text.length() << endl;
-    this->line = 1;
+    this->line = 0;
 }
 
 /*!
@@ -31,7 +31,7 @@ void Lexer::error(const string extraDetails = "")
     string msg = "Syntax error found in line: ";
     string lineNum = to_string(this->line);
 
-    string fullMsg = msg + lineNum + '\n' + extraDetails;
+    string fullMsg = msg + lineNum + '\n' + extraDetails + '\n';
 
     throw SyntaxException(fullMsg);
 }

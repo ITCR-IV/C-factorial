@@ -13,7 +13,7 @@
  * 
  * \param inputLexer must provide a fresh lexer to scan the code with
  */
-Parser::Parser(Lexer inputLexer) : lexer(inputLexer), currentToken(this->lexer.getNextToken()), interpreter(Interpreter()), insideStruct(false), scopeLevel(0) {}
+Parser::Parser(Lexer inputLexer, MainWindow &window) : lexer(inputLexer), currentToken(this->lexer.getNextToken()), interpreter(window), insideStruct(false), scopeLevel(0) {}
 
 /*!
  * \brief The lexer throws a SyntaxException if it can't tokenize properly
@@ -24,7 +24,7 @@ void Parser::error(const string extraDetails = "")
 {
     string msg = "Semantic error found in line: ";
     string lineNum = to_string(this->lexer.line);
-    string fullMsg = msg + lineNum + '\n' + extraDetails;
+    string fullMsg = msg + lineNum + '\n' + extraDetails + '\n';
 
     throw SemanticException(fullMsg);
 }
@@ -145,6 +145,7 @@ void Parser::declaration()
 
     if (this->currentToken.getType() != ID)
     {
+        this->interpreter.getValue(type_); // this is to check that the lonely identifier is at least a declared variable
         cout << "Exiting because nothing's going on........";
         return;
     }

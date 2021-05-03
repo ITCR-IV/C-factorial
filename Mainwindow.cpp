@@ -21,7 +21,7 @@
  * \param parent
  */
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow), parser(Parser(Lexer(""))), isRunning(false) //have to construct a parser with an empty lexer
+    : QMainWindow(parent), ui(new Ui::MainWindow), parser(Parser(Lexer(""), *this)), isRunning(false) //have to construct a parser with an empty lexer
 {
     ui->setupUi(this);
     mLogThread = new LogThread(1, 1000, this);
@@ -149,10 +149,12 @@ void MainWindow::on_actionRun_triggered()
     //Test with a fresh memory state
     ServerManager *manager = ServerManager::getInstance();
     manager->sendRequest(FLUSH);
+    this->isRunning = false;
+    this->set_stdout_text("");
 
     // Create lexer and parser for test run
     Lexer testLexer = Lexer(fullCode);
-    Parser testParser = Parser(testLexer);
+    Parser testParser = Parser(testLexer, *this);
     try
     {
         testParser.scope();
@@ -182,7 +184,7 @@ void MainWindow::on_actionRun_triggered()
 
     // Create real lexer and parser and start
     Lexer lexer = Lexer(fullCode);
-    this->parser = Parser(lexer);
+    this->parser = Parser(lexer, *this);
     this->parser.advance_1loc(); // Get through the first scope
     return;
 }
@@ -241,6 +243,7 @@ void MainWindow::on_actionPrev_line_triggered()
 {
 }
 
+//! Whenever this is called the Ram view info is flushed completely, then current memory state is requested from the memory server and the ram view is updated line by line
 void MainWindow::updateRamView()
 {
     delete_row();
@@ -290,11 +293,7 @@ void MainWindow::delete_row()
     ui->tableWidget->setRowCount(0);
 }
 
-/*!
- * \brief sets the text on stdout textBrowser
- *
- */
-
+//! sets the text on stdout textBrowser
 void MainWindow::set_stdout_text(string text)
 {
     QString qstr = QString::fromStdString(text);
@@ -302,10 +301,25 @@ void MainWindow::set_stdout_text(string text)
 }
 
 /*!
- * \brief sets the text on log textBrowser
- *
+ * \brief Appends a new line to the stdout with the text given
+ * 
+ * \param text that line of text desired to be appended
  */
+void MainWindow::append_stdout_line(string text)
+{
+    if (!this->isRunning)
+    { // if not running then do nothing (this is so test run doesn't print anything)
+        return;
+    }
+    // Add newline to end of string
+    this->StdoutString += '\n';
+    // Add text of new line
+    this->StdoutString += text;
+    // Set new stdout as new string
+    this->set_stdout_text(this->StdoutString);
+}
 
+//! sets the text on log textBrowser
 void MainWindow::set_log_text(string fileText)
 {
     //    FILE * logFile;

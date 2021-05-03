@@ -7,12 +7,18 @@
 
 using namespace std;
 
+class MainWindow; // Forward declaration
+
+//! The interpreter class is in charge of evaluating the expressions parsed by the parser, whether it be arithmetic or interacting with the memoryserver through the ServerManager
 class Interpreter
 {
 
 private:
-    //socket attribute and stuff
+    //! Interpreter holds a pointer to the ServerManager singleton so it can communicate with the memory server
     ServerManager *manager;
+
+    //! Interpreter holds a reference to the GUI window so that it can print stuff into the Stdout, could've used an observer pattern for this but it's unnecessary for this specific scenario
+    MainWindow *guiWindow;
 
     void error(const string extraDetails);
 
@@ -29,7 +35,7 @@ public:
     };
 
     //methods to communicate with server and process stuff
-    Interpreter();
+    Interpreter(MainWindow &guiWindow);
 
     void enter_scope();
 

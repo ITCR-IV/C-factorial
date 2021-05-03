@@ -6,10 +6,11 @@
 #include "server/JsonDecoder.h"
 #include "server/JsonEncoder.h"
 #include "server/RequestConstants.h"
+#include "Mainwindow.h"
 
 using namespace std;
 
-Interpreter::Interpreter() : manager(ServerManager::getInstance()) {}
+Interpreter::Interpreter(MainWindow &guiWindow) : manager(ServerManager::getInstance()), guiWindow(&guiWindow) {}
 
 /*!
  * \brief The interpreter throws a RuntimeException if an expression is invalid
@@ -19,7 +20,7 @@ Interpreter::Interpreter() : manager(ServerManager::getInstance()) {}
 void Interpreter::error(const string extraDetails = "")
 {
     string msg = "Runtime error";
-    string fullMsg = msg + '\n' + extraDetails;
+    string fullMsg = msg + '\n' + extraDetails + '\n';
 
     throw RuntimeException(fullMsg);
 }
@@ -348,7 +349,7 @@ string Interpreter::getAddr(string id)
     std::string info = manager->getServerMsg();
     if (info == "-1")
     {
-        error("Requesting variable not stored in memory");
+        error("Requesting undeclared variable");
     }
     JsonDecoder decoder = JsonDecoder(info);
     UpdateInfo idInfo = decoder.decode();
@@ -356,20 +357,19 @@ string Interpreter::getAddr(string id)
 }
 
 /*!
- * \brief Returns the value of a given variable, if no such variable has been defined throws error
+ * \brief Returns the value of a given variable, if no such variable has been defined throws error; for structs (not their attributes but the actual struct) this function will return their address
  * 
  * \param id is a variable and can be a plain variable or a struct access refering to a variable inside a struct
  * \return string identifier of the variable
  */
 string Interpreter::getValue(string id)
 {
-    // For structs this function will return their address
     manager->sendRequest(REQUESTVARIABLE);
     manager->sendJson(id);
     std::string info = manager->getServerMsg();
     if (info == "-1")
     {
-        error("Requesting variable not stored in memory");
+        error("Requesting undeclared variable");
     }
     JsonDecoder decoder = JsonDecoder(info);
     UpdateInfo idInfo = decoder.decode();
@@ -416,7 +416,7 @@ string Interpreter::getType(string id)
  */
 void Interpreter::print_call(string msg)
 {
-    printf(&msg[0]);
+    guiWindow->append_stdout_line(msg);
 }
 
 /*!

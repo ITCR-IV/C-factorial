@@ -26,7 +26,7 @@ private:
     void eat(string tokenType);
 
 public:
-    Parser(Lexer inputLexer);
+    Parser(Lexer inputLexer, MainWindow &window);
 
     //! Value so when going line by line the parser knows how deep it is and when it gets to end if all scopes were closed
     int scopeLevel;
