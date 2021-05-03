@@ -15,14 +15,13 @@
 #include <thread>
 #include "LogThread.h"
 
-
 /*!
  * \brief Construct a new MainWindow object
  *
  * \param parent
  */
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow)
+    : QMainWindow(parent), ui(new Ui::MainWindow), parser(Parser(Lexer(""))), isRunning(false) //have to construct a parser with an empty lexer
 {
     ui->setupUi(this);
     mLogThread = new LogThread(1, 1000, this);
@@ -131,21 +130,57 @@ void MainWindow::on_actionDelete_triggered()
 }
 
 /*!
- * \brief Run the first line of code
+ * \brief Test code and run the first line of code
  *
  */
 void MainWindow::on_actionRun_triggered()
 {
-    //Start with a fresh memory state
-    ServerManager *manager = ServerManager::getInstance(9999);
-    manager->sendRequest(FLUSH);
-
     // Extract code and format it
     QString code = (ui->plainTextEdit->toPlainText());
     std::string plainCode = code.toUtf8().constData();
+
+    if (plainCode == "")
+    {
+        return; //do nothing if no input is given
+    }
+
     string fullCode = "{\n" + plainCode + "\n}\n";
 
-    // Create lexer and parser
+    //Test with a fresh memory state
+    ServerManager *manager = ServerManager::getInstance();
+    manager->sendRequest(FLUSH);
+
+    // Create lexer and parser for test run
+    Lexer testLexer = Lexer(fullCode);
+    Parser testParser = Parser(testLexer);
+    try
+    {
+        testParser.scope();
+    }
+    catch (Lexer::SyntaxException syntaxE)
+    {
+        printf("Syntaxis error:\n");
+        std::cout << syntaxE.what();
+        return;
+    }
+    catch (Parser::SemanticException semanticE)
+    {
+        printf("Parser error:\n");
+        std::cout << semanticE.what();
+        return;
+    }
+    catch (Interpreter::RuntimeException runtimeE)
+    {
+        printf("Interpreter error:\n");
+        std::cout << runtimeE.what();
+        return;
+    }
+
+    // Refresh memory state for real run
+    manager->sendRequest(FLUSH);
+    this->isRunning = true;
+
+    // Create real lexer and parser and start
     Lexer lexer = Lexer(fullCode);
     this->parser = Parser(lexer);
     this->parser.advance_1loc(); // Get through the first scope
@@ -188,7 +223,12 @@ void MainWindow::on_actionNext_line_triggered()
         if (parser.scopeLevel == 0)
         {
             this->isRunning = false;
+            printf("PROGRAM FINISHED\n\n");
         }
+    }
+    else
+    {
+        printf("Program is not currently being ran, click the run button to start!");
     }
     return;
 }
@@ -268,31 +308,28 @@ void MainWindow::set_stdout_text(string text)
 
 void MainWindow::set_log_text(string fileText)
 {
-//    FILE * logFile;
+    //    FILE * logFile;
 
-//    long fileSize;
+    //    long fileSize;
 
-//    char * fileText;
+    //    char * fileText;
 
-//    logFile = fopen("log.txt", "r");
-//    fseek (logFile , 0 , SEEK_END);
+    //    logFile = fopen("log.txt", "r");
+    //    fseek (logFile , 0 , SEEK_END);
 
-//    fileSize = ftell (logFile);
+    //    fileSize = ftell (logFile);
 
-//    rewind (logFile);
+    //    rewind (logFile);
 
-//    fileText = (char*) malloc (sizeof(char)*fileSize);
+    //    fileText = (char*) malloc (sizeof(char)*fileSize);
 
-//    fread(fileText, fileSize+1, 1, logFile);
+    //    fread(fileText, fileSize+1, 1, logFile);
 
-//    fclose(logFile);
-
-
+    //    fclose(logFile);
 
     QString qstr = QString::fromStdString(fileText);
     ui->textBrowser->setText(qstr);
 }
-
 
 /*!
  * \brief deletes all the text on textBrowsers
@@ -303,7 +340,8 @@ void MainWindow::delete_text(int identifier)
     if (identifier == 1)
     {
         ui->textBrowser->clear();
-    } else if (identifier == 2)
+    }
+    else if (identifier == 2)
     {
         ui->textBrowser_2->clear();
     }
@@ -311,7 +349,7 @@ void MainWindow::delete_text(int identifier)
 
 void MainWindow::on_pushButton_clicked()
 {
-    FILE * logFile;
+    FILE *logFile;
     logFile = fopen("log.txt", "w");
     fclose(logFile);
 }

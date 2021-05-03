@@ -79,7 +79,7 @@ void ServerManager::connectSocket()
 void ServerManager::sendRequest(int request)
 {
     connectSocket();
-    printf("Sending: %d\n", request);
+    printf("Sending request: %d\n", request);
 
     std::string msg = std::to_string(request);
 
