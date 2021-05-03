@@ -18,7 +18,7 @@ Interpreter::Interpreter() : manager(ServerManager::getInstance()) {}
  */
 void Interpreter::error(const string extraDetails = "")
 {
-    string msg = "Semantic error found in line: ";
+    string msg = "Runtime error";
     string fullMsg = msg + '\n' + extraDetails;
 
     throw RuntimeException(fullMsg);
