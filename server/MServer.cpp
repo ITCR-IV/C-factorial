@@ -42,18 +42,24 @@ MServer::MServer(int PORT, int size)
     address.sin_port = htons(PORT);
 
     // binding to port
-    serverBind = bind(serverSocket, (sockaddr *)&address, sizeof(sockaddr));
-
-    if (serverBind < 0)
+    while (true)
     {
-        // add to log
-        printf("Fail to bind local port\n");
-    }
+        serverBind = bind(serverSocket, (sockaddr *)&address, sizeof(sockaddr));
 
-    else
-    {
-        // add to log
-        printf("Successfully bind to local port\nPort number: %d\n", PORT);
+        if (serverBind < 0)
+        {
+            // add to log
+            printf("Port number: %d\nFail to bind local port\n", PORT);
+            PORT--;
+            address.sin_port = htons(PORT);
+        }
+
+        else
+        {
+            // add to log
+            printf("Port number: %d\nSuccessfully bind to local port\n", PORT);
+            break;
+        }
     }
 
     // set socket to an especific port
@@ -103,9 +109,9 @@ void MServer::request(sockaddr_in address, int serverSocket)
             listening = false;
             return;
         }
-        if (strlen(buffer) == 1 && isdigit(buffer[0]))
+        if (isInt(buffer) && atoi(buffer) < REQUESTUPPERBOUND)
         {
-            int req = buffer[0] - '0';
+            int req = atoi(buffer);
             //////////////////////////// Here starts switch to evaluate types of requests
             switch (req)
             {
@@ -728,4 +734,17 @@ void MServer::flushMemory()
     // Clear flags/variables
     this->scopeLevel = 0;
     this->insideStruct = false;
+}
+
+bool MServer::isInt(char *numberPtr)
+{
+    while (*numberPtr != '\0')
+    {
+        if (!isdigit(*numberPtr))
+        {
+            return false;
+        }
+        numberPtr++;
+    }
+    return true;
 }

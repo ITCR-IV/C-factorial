@@ -15,4 +15,6 @@ const int REQUESTMEMORYSTATE    = 9;
 const int FLUSH                 = 10;
 const int REQUESTBYADDRESS      = 11;
 
+const int REQUESTUPPERBOUND     = 12; //This isn't a real request but it's used to keep track of the maximum possible value for a request, if new requests added then update this 
+
 #endif

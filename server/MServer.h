@@ -8,7 +8,6 @@
 #include "StructAttribute.h"
 #include "UpdateInfo.h"
 
-
 //! Class that creates the server socket and listen the client
 class MServer
 {
@@ -77,6 +76,8 @@ private:
     void updateStructAddresses(std::string structName, std::string newStructName);
 
     void flushMemory();
+
+    bool isInt(char *charstr);
 };
 
 #endif // MSERVER_H
