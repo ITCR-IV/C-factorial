@@ -3,11 +3,15 @@
 
 #include <QMainWindow>
 #include "string"
+#include "interpreter/Parser.h"
 
 using namespace std;
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui
+{
+    class MainWindow;
+}
 QT_END_NAMESPACE
 
 //! Class that handles the GUI and the events
@@ -19,11 +23,21 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void updateRamView();
     void add_row(string dir, string label, string value, string count);
     void delete_row();
     void set_stdout_text(string text);
     void delete_text(int identifier);
     void set_log_text(string text);
+
+    //! Flag so the next line button knows whether a program is being run atm or not
+    bool isRunning;
+
+    //! Parser being utilized to parse through code
+    Parser parser;
+
+    //! The string being held in Stdout, it's an attribute so that the Mainwindow can pass itself down to the interpreter and it can modify this string
+    string StdoutString;
 
 private slots:
 
@@ -53,7 +67,10 @@ private:
     //! emun to facilitate the column location with the label of the column
     enum Column
     {
-        DIR, LABEL, VALUE, COUNT
+        DIR,
+        LABEL,
+        VALUE,
+        COUNT
     };
 };
 #endif // MAINWINDOW_H

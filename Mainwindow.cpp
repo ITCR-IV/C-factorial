@@ -4,9 +4,13 @@
 #include "QFileDialog"
 #include "QFile"
 #include "QTextStream"
-#include "interpreter/Parser.h"
 #include <string>
 #include <iostream>
+#include "server/RequestConstants.h"
+#include "server/UpdateInfo.h"
+#include "server/JsonDecoder.h"
+#include "interpreter/Parser.h"
+#include "ServerManager.h"
 
 // include log4cxx header files.
 #include "log4cxx/logger.h"
@@ -130,14 +134,19 @@ void MainWindow::on_actionDelete_triggered()
  */
 void MainWindow::on_actionRun_triggered()
 {
+    //Start with a fresh memory state
+    ServerManager *manager = ServerManager::getInstance(9999);
+    manager->sendRequest(FLUSH);
+
+    // Extract code and format it
     QString code = (ui->plainTextEdit->toPlainText());
     std::string plainCode = code.toUtf8().constData();
-    std::cout << plainCode + '\n';
-    Lexer lexer = Lexer("{" + plainCode + "\n}");
-    Parser parser = Parser(lexer);
+    string fullCode = "{\n" + plainCode + "\n}\n";
 
-    parser.scope();
-    //Hacer lexer y parser
+    // Create lexer and parser
+    Lexer lexer = Lexer(fullCode);
+    this->parser = Parser(lexer);
+    this->parser.advance_1loc(); // Get through the first scope
     return;
 }
 
@@ -148,6 +157,38 @@ void MainWindow::on_actionRun_triggered()
 void MainWindow::on_actionNext_line_triggered()
 {
     //Correr método de parser para avanzar una línea
+    if (isRunning)
+    {
+        try
+        {
+            parser.advance_1loc();
+            //Update Ram Live View with current state
+            updateRamView();
+        }
+        catch (Lexer::SyntaxException syntaxE)
+        {
+            printf("Syntaxis error:\n");
+            std::cout << syntaxE.what();
+            this->isRunning = false;
+        }
+        catch (Parser::SemanticException semanticE)
+        {
+            printf("Parser error:\n");
+            std::cout << semanticE.what();
+            this->isRunning = false;
+        }
+        catch (Interpreter::RuntimeException runtimeE)
+        {
+            printf("Interpreter error:\n");
+            std::cout << runtimeE.what();
+            this->isRunning = false;
+        }
+        if (parser.scopeLevel == 0)
+        {
+            this->isRunning = false;
+        }
+    }
+    return;
 }
 
 /*!
@@ -156,6 +197,27 @@ void MainWindow::on_actionNext_line_triggered()
  */
 void MainWindow::on_actionPrev_line_triggered()
 {
+}
+
+void MainWindow::updateRamView()
+{
+    delete_row();
+    //std::cout << "\n\nREQUESTING CURRENT MEMORY:\n";
+
+    ServerManager *man = ServerManager::getInstance();
+    man->sendRequest(REQUESTMEMORYSTATE);
+    std::string info = man->getServerMsg(); // Get first packet of info
+    while (info != "0")                     // Server will send a SUCCESS ("0") when it's done
+    {
+        // Do stuff with info
+        // std::cout << "INFO: ";
+        // std::cout << info << "\n";
+        UpdateInfo infoObj = JsonDecoder(info).decode();
+        add_row(infoObj.getDataAddress(), infoObj.getDataName(), infoObj.getDataValue(), infoObj.getDataCount());
+
+        // Get next info packet
+        info = man->getServerMsg();
+    }
 }
 
 /*!

@@ -83,6 +83,8 @@ private:
     std::string extract_refType(std::string reference);
 
     void updateStructAddresses(std::string structName, std::string newStructName);
+
+    void flushMemory();
 };
 
 #endif // MSERVER_H

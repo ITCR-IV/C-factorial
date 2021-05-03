@@ -9,6 +9,8 @@
 #include "JsonEncoder.h"
 #include "TypeConstants.h"
 #include "StructAttribute.h"
+#include <chrono>
+#include <thread>
 
 /*!
  * \brief Construct a new MServer object, and configures the socket
@@ -122,7 +124,7 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 int exitStatus;
                 exitStatus = declaration(JsonDecoder(buffer).decode());
                 std::string info = std::to_string(exitStatus);
-                send(newSocket, info.c_str(), info.length(), 0);
+                send(newSocket, info.c_str(), info.length() + 1, 0);
                 break;
             }
             case DECLAREREF:
@@ -132,7 +134,7 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 int exitStatus;
                 exitStatus = reference_declaration(JsonDecoder(buffer).decode());
                 std::string info = std::to_string(exitStatus);
-                send(newSocket, info.c_str(), info.length(), 0);
+                send(newSocket, info.c_str(), info.length() + 1, 0);
                 break;
             }
             case CHANGEVALUE:
@@ -142,7 +144,7 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 int exitStatus;
                 exitStatus = update_value(JsonDecoder(buffer).decode());
                 std::string info = std::to_string(exitStatus);
-                send(newSocket, info.c_str(), info.length(), 0);
+                send(newSocket, info.c_str(), info.length() + 1, 0);
                 break;
             }
             case ENTERSTRUCT:
@@ -156,7 +158,7 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 int exitStatus;
                 exitStatus = exit_struct(std::string(buffer));
                 std::string info = std::to_string(exitStatus);
-                send(newSocket, info.c_str(), info.length(), 0);
+                send(newSocket, info.c_str(), info.length() + 1, 0);
                 break;
             }
             case REQUESTVARIABLE:
@@ -165,7 +167,7 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 readSocket(buffer, address, serverSocket, newSocket);
                 std::string info;
                 info = getInfo(std::string(buffer));
-                send(newSocket, info.c_str(), info.length(), 0);
+                send(newSocket, info.c_str(), info.length() + 1, 0);
                 break;
             }
             case REQUESTMEMORYSTATE:
@@ -190,13 +192,24 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 for (vp = addressVector.begin(); vp != addressVector.end(); vp++)
                 {
                     info = getInfo(vp->first);
-                    send(newSocket, info.c_str(), info.length(), 0);
+                    send(newSocket, info.c_str(), info.length() + 1, 0);
+                    std::this_thread::sleep_for(std::chrono::milliseconds(10));
                 }
 
                 std::string exitStatus = std::to_string(SUCCESS);
-                send(newSocket, info.c_str(), info.length(), 0);
+                std::this_thread::sleep_for(std::chrono::milliseconds(50));
+                send(newSocket, exitStatus.c_str(), exitStatus.length() + 1, 0);
                 break;
             }
+            case FLUSH:
+                printf("Flushing memory state");
+                //Reset the memory server state
+                flushMemory();
+                break;
+            case REQUESTBYADDRESS:
+                printf("Fulfilling variable by address request");
+                //Receive an address and send back an updateInfo packaged variable
+                break;
             default:
                 printf("Undefined request '%d'\n", req);
             }
@@ -559,10 +572,15 @@ std::string MServer::getInfo(std::string id)
         long *l = reinterpret_cast<long *>(this->serverMemory + dataAddress);
         value = std::to_string(*l);
     }
+    else if (type.find('<') != std::string::npos)
+    {
+        int *i = reinterpret_cast<int *>(this->serverMemory + dataAddress);
+        value = std::to_string(*i);
+    }
     else
     {
         //If a struct object is being requested then value == it's address
-        value = this->varAddresses.at(id);
+        value = std::to_string(this->varAddresses.at(id));
     }
 
     // get count
@@ -622,14 +640,18 @@ std::string MServer::getLastVariable()
  */
 int MServer::getAvailableAddress()
 {
-    int lastVarAddress = (std::max_element(this->varAddresses.begin(), this->varAddresses.end(), [](const std::pair<std::string, int> &p1, const std::pair<std::string, int> &p2) {
-                             return p1.second < p2.second;
-                         }))->second;
-
     int availAddress;
 
-    if (lastVarAddress > 0)
+    if (varAddresses.empty())
     {
+        availAddress = 0;
+    }
+    else
+    {
+        int lastVarAddress = (std::max_element(this->varAddresses.begin(), this->varAddresses.end(), [](const std::pair<std::string, int> &p1, const std::pair<std::string, int> &p2) {
+                                 return p1.second < p2.second;
+                             }))->second;
+
         std::string lastVarId = getLastVariable();
         std::string type = this->varTypes.at(lastVarId);
         if (type == CHAR)
@@ -648,10 +670,6 @@ int MServer::getAvailableAddress()
         { //The last address is an empty struct
             availAddress = lastVarAddress + 1;
         }
-    }
-    else
-    {
-        availAddress = 0;
     }
 
     return availAddress;
@@ -692,4 +710,22 @@ void MServer::updateStructAddresses(std::string structName, std::string newStruc
             varAddresses.at(attributeEquivalent) = p->second;
         }
     }
+}
+
+void MServer::flushMemory()
+{
+    // Clear maps
+    this->varAddresses.clear();
+    this->varTypes.clear();
+    this->structDefinitions.clear();
+
+    // Clear vectors
+    this->currentStruct.clear();
+    this->structDefsCounter.clear();
+    this->structDefinitionsOrder.clear();
+    this->declarationsCounter.clear();
+
+    // Clear flags/variables
+    this->scopeLevel = 0;
+    this->insideStruct = false;
 }
