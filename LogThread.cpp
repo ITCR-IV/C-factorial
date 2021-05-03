@@ -1,4 +1,6 @@
 #include "LogThread.h"
+#include "Logger.h"
+#include <iostream>
 
 LogThread::LogThread(int type, int time, QObject *parent)
     : QThread(parent)
@@ -18,17 +20,26 @@ void LogThread::run()
             char * fileText;
 
             logFile = fopen("log.txt", "r");
-            fseek (logFile , 0 , SEEK_END);
+            if (logFile != NULL){
+                fseek (logFile , 0 , SEEK_END);
 
-            fileSize = ftell (logFile);
+                fileSize = ftell (logFile);
 
-            rewind (logFile);
+                rewind (logFile);
 
-            fileText = (char*) malloc (sizeof(char)*fileSize);
+                fileText = (char*) malloc (sizeof(char)*fileSize);
 
-            fread(fileText, fileSize+1, 1, logFile);
+                fread(fileText, fileSize+1, 1, logFile);
 
-            fclose(logFile);
+                fclose(logFile);
+
+            } else{
+
+                printf("no hay file");
+                Logger::EnableFileOutput();
+                Logger::Info("se crea .txt para el log");
+            }
+
 
             emit logData(fileText);
             msleep(sleepTime);
