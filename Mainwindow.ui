@@ -85,7 +85,7 @@
        <item>
         <widget class="QGroupBox" name="groupBox_3">
          <property name="title">
-          <string>Stout</string>
+          <string>Stdout</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
