@@ -150,6 +150,7 @@ void MainWindow::on_actionRun_triggered()
     ServerManager *manager = ServerManager::getInstance();
     manager->sendRequest(FLUSH);
     this->isRunning = false;
+    this->StdoutString = "";
     this->set_stdout_text("");
 
     // Create lexer and parser for test run
@@ -163,18 +164,27 @@ void MainWindow::on_actionRun_triggered()
     {
         printf("Syntax error:\n");
         std::cout << syntaxE.what();
+        this->isRunning = true; // it needs to be running to be able to add anything ti Stdout
+        this->append_stdout_line(syntaxE.what());
+        this->isRunning = false;
         return;
     }
     catch (Parser::SemanticException semanticE)
     {
         printf("Parser error:\n");
         std::cout << semanticE.what();
+        this->isRunning = true;
+        this->append_stdout_line(semanticE.what());
+        this->isRunning = false;
         return;
     }
     catch (Interpreter::RuntimeException runtimeE)
     {
         printf("Interpreter error:\n");
         std::cout << runtimeE.what();
+        this->isRunning = true;
+        this->append_stdout_line(runtimeE.what());
+        this->isRunning = false;
         return;
     }
 
@@ -208,18 +218,21 @@ void MainWindow::on_actionNext_line_triggered()
         {
             printf("Syntax error:\n");
             std::cout << syntaxE.what();
+            this->append_stdout_line(syntaxE.what());
             this->isRunning = false;
         }
         catch (Parser::SemanticException semanticE)
         {
             printf("Parser error:\n");
             std::cout << semanticE.what();
+            this->append_stdout_line(semanticE.what());
             this->isRunning = false;
         }
         catch (Interpreter::RuntimeException runtimeE)
         {
             printf("Interpreter error:\n");
             std::cout << runtimeE.what();
+            this->append_stdout_line(runtimeE.what());
             this->isRunning = false;
         }
         if (parser.scopeLevel == 0)
@@ -311,8 +324,11 @@ void MainWindow::append_stdout_line(string text)
     { // if not running then do nothing (this is so test run doesn't print anything)
         return;
     }
-    // Add newline to end of string
-    this->StdoutString += '\n';
+    if (this->StdoutString != "")
+    {
+        // Add newline to end of string
+        this->StdoutString += '\n';
+    }
     // Add text of new line
     this->StdoutString += text;
     // Set new stdout as new string

@@ -274,8 +274,9 @@ Token Lexer::getNextToken()
             this->advance();
             return Token(DIV, DIV);
         }
-        string errorMsg = "Invalid character '" + this->current_char;
-        this->error(errorMsg + "'");
+        string errorMsg = "Invalid character \'" + string(1, this->current_char);
+        cout << "Error Message:" << errorMsg;
+        this->error(errorMsg + "\'");
         return Token("ERROR", "ERROR");
     }
     return Token(EOFF, EOFF);
