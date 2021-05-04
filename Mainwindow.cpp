@@ -52,6 +52,8 @@ void MainWindow::on_actionOpen_triggered()
     if (!file.isOpen())
     {
         QMessageBox::critical(this, "Error", file.errorString());
+        Logger::EnableFileOutput();
+        Logger::Error(file.errorString().toStdString().c_str());
         return;
     }
     io.setDevice(&file);
@@ -75,6 +77,8 @@ void MainWindow::on_actionSave_triggered()
     if (!file.isOpen())
     {
         QMessageBox::critical(this, "Error", file.errorString());
+        Logger::EnableFileOutput();
+        Logger::Error(file.errorString().toStdString().c_str());
         return;
     }
     io.setDevice(&file);
@@ -124,9 +128,15 @@ void MainWindow::on_actionAboutQt_triggered()
  */
 void MainWindow::on_actionDelete_triggered()
 {
-    Logger::EnableFileOutput();
-    Logger::Info("nueva info");
-    Logger::Error("prueba de error 2");
+}
+
+/*!
+ * \brief Stop the interpreter
+ *
+ */
+void MainWindow::on_actionStop_triggered()
+{
+
 }
 
 /*!
@@ -167,6 +177,8 @@ void MainWindow::on_actionRun_triggered()
         this->isRunning = true; // it needs to be running to be able to add anything ti Stdout
         this->append_stdout_line(syntaxE.what());
         this->isRunning = false;
+        Logger::EnableFileOutput();
+        Logger::Error(syntaxE.what());
         return;
     }
     catch (Parser::SemanticException semanticE)
@@ -176,6 +188,8 @@ void MainWindow::on_actionRun_triggered()
         this->isRunning = true;
         this->append_stdout_line(semanticE.what());
         this->isRunning = false;
+        Logger::EnableFileOutput();
+        Logger::Error(semanticE.what());
         return;
     }
     catch (Interpreter::RuntimeException runtimeE)
@@ -185,6 +199,8 @@ void MainWindow::on_actionRun_triggered()
         this->isRunning = true;
         this->append_stdout_line(runtimeE.what());
         this->isRunning = false;
+        Logger::EnableFileOutput();
+        Logger::Error(runtimeE.what());
         return;
     }
 
@@ -220,6 +236,8 @@ void MainWindow::on_actionNext_line_triggered()
             std::cout << syntaxE.what();
             this->append_stdout_line(syntaxE.what());
             this->isRunning = false;
+            Logger::EnableFileOutput();
+            Logger::Error(syntaxE.what());
         }
         catch (Parser::SemanticException semanticE)
         {
@@ -227,6 +245,8 @@ void MainWindow::on_actionNext_line_triggered()
             std::cout << semanticE.what();
             this->append_stdout_line(semanticE.what());
             this->isRunning = false;
+            Logger::EnableFileOutput();
+            Logger::Error(semanticE.what());
         }
         catch (Interpreter::RuntimeException runtimeE)
         {
@@ -234,27 +254,26 @@ void MainWindow::on_actionNext_line_triggered()
             std::cout << runtimeE.what();
             this->append_stdout_line(runtimeE.what());
             this->isRunning = false;
+            Logger::EnableFileOutput();
+            Logger::Error(runtimeE.what());
         }
         if (parser.scopeLevel == 0)
         {
             this->isRunning = false;
             printf("PROGRAM FINISHED\n\n");
+            Logger::EnableFileOutput();
+            Logger::Info("Programa finalizado");
         }
     }
     else
     {
         printf("Program is not currently being ran, click the run button to start!");
+        Logger::EnableFileOutput();
+        Logger::Info("Program is not currently being ran, click the run button to start!");
     }
     return;
 }
 
-/*!
- * \brief
- *
- */
-void MainWindow::on_actionPrev_line_triggered()
-{
-}
 
 //! Whenever this is called the Ram view info is flushed completely, then current memory state is requested from the memory server and the ram view is updated line by line
 void MainWindow::updateRamView()
@@ -306,7 +325,10 @@ void MainWindow::delete_row()
     ui->tableWidget->setRowCount(0);
 }
 
-//! sets the text on stdout textBrowser
+/*!
+* \brief sets the text on stdout textBrowser
+*
+*/
 void MainWindow::set_stdout_text(string text)
 {
     QString qstr = QString::fromStdString(text);
@@ -338,25 +360,6 @@ void MainWindow::append_stdout_line(string text)
 //! sets the text on log textBrowser
 void MainWindow::set_log_text(string fileText)
 {
-    //    FILE * logFile;
-
-    //    long fileSize;
-
-    //    char * fileText;
-
-    //    logFile = fopen("log.txt", "r");
-    //    fseek (logFile , 0 , SEEK_END);
-
-    //    fileSize = ftell (logFile);
-
-    //    rewind (logFile);
-
-    //    fileText = (char*) malloc (sizeof(char)*fileSize);
-
-    //    fread(fileText, fileSize+1, 1, logFile);
-
-    //    fclose(logFile);
-
     QString qstr = QString::fromStdString(fileText);
     ui->textBrowser->setText(qstr);
 }
@@ -377,9 +380,15 @@ void MainWindow::delete_text(int identifier)
     }
 }
 
+/*!
+ * \brief deletes the text on log file
+ *
+ */
 void MainWindow::on_pushButton_clicked()
 {
     FILE *logFile;
     logFile = fopen("log.txt", "w");
     fclose(logFile);
 }
+
+

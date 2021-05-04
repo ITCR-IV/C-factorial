@@ -198,7 +198,7 @@
     <addaction name="actionRun"/>
     <addaction name="separator"/>
     <addaction name="actionNext_line"/>
-    <addaction name="actionPrev_line"/>
+    <addaction name="actionStop"/>
    </widget>
    <addaction name="menuArchivo"/>
    <addaction name="menuEdici_n"/>
@@ -217,7 +217,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionRun"/>
-   <addaction name="actionPrev_line"/>
+   <addaction name="actionStop"/>
    <addaction name="actionNext_line"/>
   </widget>
   <action name="actionOpen">
@@ -300,16 +300,19 @@
     <string>Ctrl+N</string>
    </property>
   </action>
-  <action name="actionPrev_line">
+  <action name="actionStop">
    <property name="icon">
     <iconset resource="Icons.qrc">
-     <normaloff>:/Icons/prevLine.png</normaloff>:/Icons/prevLine.png</iconset>
+     <normaloff>:/Icons/stop.png</normaloff>:/Icons/stop.png</iconset>
    </property>
    <property name="text">
-    <string>Prev line</string>
+    <string>Stop</string>
+   </property>
+   <property name="toolTip">
+    <string>Stop</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+P</string>
+    <string>Ctrl+S</string>
    </property>
   </action>
  </widget>
