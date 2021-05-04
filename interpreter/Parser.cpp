@@ -23,6 +23,10 @@ Parser::Parser(Lexer inputLexer, MainWindow &window) : lexer(inputLexer), curren
 void Parser::error(const string extraDetails = "")
 {
     string msg = "Semantic error found in line: ";
+    if (this->currentToken.getValue() == EOL)
+    {
+        this->lexer.line--;
+    }
     string lineNum = to_string(this->lexer.line);
     string fullMsg = msg + lineNum + '\n' + extraDetails + '\n';
 

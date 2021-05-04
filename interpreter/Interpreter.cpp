@@ -19,6 +19,10 @@ Interpreter::Interpreter(MainWindow &guiWindow) : manager(ServerManager::getInst
  */
 void Interpreter::error(const string extraDetails = "")
 {
+    if (!guiWindow->isRunning)
+    {
+        return; // This is so it the interpreter won't raise runtime exceptions when just doing a syntax/semantic check
+    }
     string msg = "Runtime error";
     string fullMsg = msg + '\n' + extraDetails + '\n';
 
@@ -350,6 +354,7 @@ string Interpreter::getAddr(string id)
     if (info == "-1")
     {
         error("Requesting undeclared variable");
+        return "0";
     }
     JsonDecoder decoder = JsonDecoder(info);
     UpdateInfo idInfo = decoder.decode();
@@ -370,6 +375,7 @@ string Interpreter::getValue(string id)
     if (info == "-1")
     {
         error("Requesting undeclared variable");
+        return "0";
     }
     JsonDecoder decoder = JsonDecoder(info);
     UpdateInfo idInfo = decoder.decode();
@@ -403,6 +409,7 @@ string Interpreter::getType(string id)
     if (info == "-1")
     {
         error("Requesting variable not stored in memory");
+        return "0";
     }
     JsonDecoder decoder = JsonDecoder(info);
     UpdateInfo idInfo = decoder.decode();

@@ -161,7 +161,7 @@ void MainWindow::on_actionRun_triggered()
     }
     catch (Lexer::SyntaxException syntaxE)
     {
-        printf("Syntaxis error:\n");
+        printf("Syntax error:\n");
         std::cout << syntaxE.what();
         return;
     }
@@ -206,7 +206,7 @@ void MainWindow::on_actionNext_line_triggered()
         }
         catch (Lexer::SyntaxException syntaxE)
         {
-            printf("Syntaxis error:\n");
+            printf("Syntax error:\n");
             std::cout << syntaxE.what();
             this->isRunning = false;
         }
