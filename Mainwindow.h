@@ -47,8 +47,6 @@ private slots:
 
     void on_actionNext_line_triggered();
 
-    void on_actionPrev_line_triggered();
-
     void on_actionOpen_triggered();
 
     void on_actionSave_triggered();
@@ -71,6 +69,7 @@ private:
     Ui::MainWindow *ui;
 
     LogThread *mLogThread;
+
     //! emun to facilitate the column location with the label of the column
     enum Column
     {

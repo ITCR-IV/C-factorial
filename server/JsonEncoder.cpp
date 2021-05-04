@@ -2,6 +2,7 @@
 #include <nlohmann/json.hpp>
 #include <string>
 #include "UpdateInfo.h"
+#include "Logger.h"
 
 using namespace std;
 using json = nlohmann::json;
@@ -27,5 +28,9 @@ string JsonEncoder::encode()
     this->jFile["dataCount"] = this->data.getDataCount();
 
     string jString = this->jFile.dump();
+
+    Logger::EnableFileOutput();
+    Logger::Info("Json codificado [JsonEncoder]");
+
     return jString;
 }

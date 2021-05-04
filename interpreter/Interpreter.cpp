@@ -7,6 +7,7 @@
 #include "server/JsonEncoder.h"
 #include "server/RequestConstants.h"
 #include "Mainwindow.h"
+#include "Logger.h"
 
 using namespace std;
 
@@ -375,6 +376,8 @@ string Interpreter::getValue(string id)
     if (info == "-1")
     {
         error("Requesting undeclared variable");
+        Logger::EnableFileOutput();
+        Logger::Error("Llamado a una variable no declarada");
         return "0";
     }
     JsonDecoder decoder = JsonDecoder(info);
