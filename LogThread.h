@@ -3,6 +3,7 @@
 
 #include <QThread>
 
+//! Class that handles thread events
 class LogThread : public QThread
 {
     Q_OBJECT
@@ -15,7 +16,11 @@ protected:
     void run() override;
 
 private:
-    int sleepTime; //milisegundos
+
+    //! indicates the sleep time on miliseconds
+    int sleepTime;
+
+    //! indicates the type of thread
     int threadType;
 };
 

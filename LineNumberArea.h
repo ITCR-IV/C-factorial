@@ -3,7 +3,7 @@
 #include <QPlainTextEdit>
 #include "CodeEditor.h"
 
-//! Class
+//! Class that calculates the variables for the codeEditor
 class LineNumberArea : public QWidget
 {
 public:

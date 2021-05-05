@@ -178,8 +178,8 @@ void MainWindow::on_actionRun_triggered()
         this->isRunning = true; // it needs to be running to be able to add anything ti Stdout
         this->append_stdout_line(syntaxE.what());
         this->isRunning = false;
-//        Logger::EnableFileOutput();
-//        Logger::Error(syntaxE.what());
+        Logger::EnableFileOutput();
+        Logger::Error(syntaxE.what());
         return;
     }
     catch (Parser::SemanticException semanticE)
@@ -189,8 +189,8 @@ void MainWindow::on_actionRun_triggered()
         this->isRunning = true;
         this->append_stdout_line(semanticE.what());
         this->isRunning = false;
-//        Logger::EnableFileOutput();
-//        Logger::Error(semanticE.what());
+        Logger::EnableFileOutput();
+        Logger::Error(semanticE.what());
         return;
     }
     catch (Interpreter::RuntimeException runtimeE)
@@ -200,8 +200,8 @@ void MainWindow::on_actionRun_triggered()
         this->isRunning = true;
         this->append_stdout_line(runtimeE.what());
         this->isRunning = false;
-//        Logger::EnableFileOutput();
-//        Logger::Error(runtimeE.what());
+        Logger::EnableFileOutput();
+        Logger::Error(runtimeE.what());
         return;
     }
 

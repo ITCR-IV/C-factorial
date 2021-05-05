@@ -9,7 +9,7 @@
 using namespace std;
 
 
-
+//! Class handles the erros, info and warnings outputs
 class Logger {
     enum LogLevel
     {
@@ -23,14 +23,22 @@ private:
 
     // singleton
     static Logger *instance;
+
     static Logger &getInstance();
+
     Logger(const Logger&) = delete;
     Logger& operator= (const Logger&) = delete;
 
-    // Logger stuff
+    //! init level
     LogLevel Level = All;
+
+    //! array with the names of the levels
     string LevelNames[5] = { "ALL","INFO","WARNING", "ERROR", "NEEDED" };
+
+    //! stores the filepath of the file
     const char * filepath = 0;
+
+    //! stores the file
     FILE* file = 0;
     char buffer[80];
 
@@ -50,7 +58,7 @@ private:
 
 public:
 
-
+    //! set level priority
     static void SetPriority(LogLevel newLevel)
     {
         getInstance().Level = newLevel;
@@ -58,6 +66,7 @@ public:
 
     static void EnableFileOutput();
 
+    //! append a info message on the file
     static void Info(const char* message)
     {
         string tmp = message;
@@ -65,6 +74,7 @@ public:
         getInstance().log(INFO, tmp2);
     }
 
+    //! append a warning message on the file
     static void Warn(const char* message)
     {
         string tmp = message;
@@ -72,6 +82,7 @@ public:
         getInstance().log(WARNING, tmp2);
     }
 
+    //! append a error message on the file
     static void Error(const char* message)
     {
         string tmp = message;

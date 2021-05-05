@@ -4,12 +4,23 @@
 
 Logger *Logger::instance = nullptr;
 
+/*!
+ * \brief singleton constructor
+ *
+ */
+
 Logger &Logger::getInstance()
 {
     static Logger instance;
     return instance;
 }
 
+/*!
+ * \brief writes on the log.txt file the log message
+ *
+ * \param newLevel indicates the level
+ * \param message indicates the message to append on the file
+ */
 void Logger::log(LogLevel newlevel, string message)
 {
     if (this->Level <= newlevel)
@@ -30,6 +41,11 @@ void Logger::log(LogLevel newlevel, string message)
     }
 }
 
+/*!
+ * \brief this method creates the format of the date and hour
+ *
+ * \return string with the date
+ */
 string Logger::getCurrentDate(){
     time_t now = time(0);
     struct tm  tstruct;
@@ -41,6 +57,9 @@ string Logger::getCurrentDate(){
     return string(buf);
 };
 
+/*!
+ * \brief check if the file exists
+ */
 void Logger::enable_file_output()
 {
     if (file != 0)
@@ -56,12 +75,20 @@ void Logger::enable_file_output()
     }
 }
 
+/*!
+ * \brief closes the log.txt file
+ *
+ */
 void Logger::free_file()
 {
     fclose(file);
     file = 0;
 }
 
+/*!
+ * \brief this methot call the singleton and creates the file output
+ *
+ */
 void Logger::EnableFileOutput()
 {
     Logger& logger_instance = getInstance();

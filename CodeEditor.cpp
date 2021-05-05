@@ -15,7 +15,7 @@ CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
     // connect the new slots
     connect(this, &CodeEditor::blockCountChanged, this, &CodeEditor::updateLineNumberAreaWidth);
     connect(this, &CodeEditor::updateRequest, this, &CodeEditor::updateLineNumberArea);
-
+    connect(this, &CodeEditor::cursorPositionChanged, this, &CodeEditor::highlightCurrentLine);
     updateLineNumberAreaWidth(0);
 }
 
@@ -76,6 +76,29 @@ void CodeEditor::resizeEvent(QResizeEvent *e)
 
     QRect cr = contentsRect();
     lineNumberArea->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
+}
+
+/*!
+ * \brief paint the line that is currently running
+ *
+ */
+void CodeEditor::highlightCurrentLine()
+{
+    QList<QTextEdit::ExtraSelection> extraSelections;
+
+    if (!isReadOnly()) {
+        QTextEdit::ExtraSelection selection;
+
+        QColor lineColor = QColor(Qt::green).lighter(160);
+
+        selection.format.setBackground(lineColor);
+        selection.format.setProperty(QTextFormat::FullWidthSelection, true);
+        selection.cursor = textCursor();
+        selection.cursor.clearSelection();
+        extraSelections.append(selection);
+    }
+
+    setExtraSelections(extraSelections);
 }
 
 /*!

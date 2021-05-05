@@ -2,12 +2,24 @@
 #include "Logger.h"
 #include <iostream>
 
+/*!
+ * \brief Constructor for LogThread
+ *
+ * \param type indicates the type of thread that is going to run
+ * \param time indicates the sleep time for the thread
+ */
 LogThread::LogThread(int type, int time, QObject *parent)
     : QThread(parent)
 {
     sleepTime = time;
     threadType = type;
 }
+
+
+/*!
+ * \brief Override method that handles the logic of the thread
+ *
+ */
 
 void LogThread::run()
 {
@@ -32,13 +44,13 @@ void LogThread::run()
                 fread(fileText, fileSize+1, 1, logFile);
 
                 fclose(logFile);
+
                 emit logData(fileText);
 
             } else{
                 Logger::EnableFileOutput();
                 Logger::Info("se crea .txt para el log");
             }
-
             msleep(sleepTime);
         }
     }
