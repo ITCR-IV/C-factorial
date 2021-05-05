@@ -373,7 +373,7 @@ Token Parser::method_call()
             }
             eat(this->currentToken.getType());
             eat(RPAREN);
-            return Token(this->interpreter.getType(token_.getValue()), this->interpreter.getRefValue(token_.getValue()));
+            return Token(this->interpreter.extract_refType(this->interpreter.getType(token_.getValue())), this->interpreter.getRefValue(token_.getValue()));
         }
         else
         {

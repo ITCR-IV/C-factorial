@@ -671,6 +671,7 @@ std::string MServer::getInfoByAddr(std::string address)
     }
     int iAddress = std::stoi(address);
     map<std::string, int>::iterator p;
+    p = this->varAddresses.begin();
     while (true)
     {
         if (p == this->varAddresses.end())
@@ -684,6 +685,7 @@ std::string MServer::getInfoByAddr(std::string address)
         }
         p++;
     }
+    std::cout << "Found variable: " << p->first << "\nWith address: '" << p->second << "' so, yea...\n";
     return getInfo(p->first);
 }
 

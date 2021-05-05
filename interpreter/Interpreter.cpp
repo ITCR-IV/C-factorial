@@ -100,7 +100,7 @@ void Interpreter::declaration(string type, string id, string assignType /*= ""*/
     else
     {
         //Default values are always ""
-        std::string defValue = "";
+        string defValue = "";
 
         UpdateInfo varDeclare = UpdateInfo(type, id, defValue);
         JsonEncoder encoder = JsonEncoder(varDeclare);
@@ -151,7 +151,7 @@ void Interpreter::reference_declaration(string ptrType, string id, string assign
     else
     {
         //Default values are always ""
-        std::string defValue = "";
+        string defValue = "";
 
         UpdateInfo varDeclare = UpdateInfo(ptrType, id, defValue);
         JsonEncoder encoder = JsonEncoder(varDeclare);
@@ -355,7 +355,7 @@ string Interpreter::getAddr(string id)
 {
     manager->sendRequest(REQUESTVARIABLE);
     manager->sendJson(id);
-    std::string info = manager->getServerMsg();
+    string info = manager->getServerMsg();
     if (info == "-1")
     {
         error("Requesting undeclared variable");
@@ -376,7 +376,7 @@ string Interpreter::getValue(string id)
 {
     manager->sendRequest(REQUESTVARIABLE);
     manager->sendJson(id);
-    std::string info = manager->getServerMsg();
+    string info = manager->getServerMsg();
     if (info == "-1")
     {
         error("Requesting undeclared variable");
@@ -404,7 +404,7 @@ string Interpreter::getRefValue(string id)
 
     manager->sendRequest(REQUESTBYADDRESS);
     manager->sendJson(address);
-    std::string info = manager->getServerMsg();
+    string info = manager->getServerMsg();
     if (info == "-1")
     {
         error("Requesting to dereference dangling pointer");
@@ -427,7 +427,7 @@ string Interpreter::getType(string id)
 {
     manager->sendRequest(REQUESTVARIABLE);
     manager->sendJson(id);
-    std::string info = manager->getServerMsg();
+    string info = manager->getServerMsg();
     if (info == "-1")
     {
         error("Requesting variable not stored in memory");
