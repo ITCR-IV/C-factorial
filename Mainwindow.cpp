@@ -112,14 +112,7 @@ void MainWindow::on_actionCut_triggered()
  */
 void MainWindow::on_actionPaste_triggered()
 {
-    //ui->plainTextEdit->paste();
-    if (firstLine == 1){
-       hightligthLine(1);
-       //firstLine = 0;
-    } else{
-        hightligthLine(0);
-    }
-
+    ui->plainTextEdit->paste();
 }
 
 /*!
@@ -137,7 +130,6 @@ void MainWindow::on_actionAboutQt_triggered()
  */
 void MainWindow::on_actionDelete_triggered()
 {
-
 }
 
 /*!
