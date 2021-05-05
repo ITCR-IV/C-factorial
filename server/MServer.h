@@ -66,6 +66,9 @@ private:
     //! Vector used to keep track of the insertion order of the structDefinitions map in order to get rid of them when exiting a scope
     std::vector<std::string> structDefinitionsOrder;
 
+    //! Vector used to keep track of the declaration order of all the declarations, so that server doesn't have to rely on the variable with highest address to deallocate memory
+    std::vector<std::string> declarationsOrder;
+
     //! This vector holds a counter for each variable that has been declared (including structs and their attributes) so that when exiting a scope they can be freed from memory
     std::vector<int> declarationsCounter;
 

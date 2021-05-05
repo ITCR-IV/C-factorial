@@ -164,6 +164,7 @@ void MainWindow::on_actionRun_triggered()
     this->isRunning = false;
     this->StdoutString = "";
     this->set_stdout_text("");
+    this->deleteHightlight();
 
     // Create lexer and parser for test run
     Lexer testLexer = Lexer(fullCode);
@@ -229,10 +230,13 @@ void MainWindow::on_actionNext_line_triggered()
         try
         {
             parser.advance_1loc();
-            if (firstLine == 1){
-               hightligthLine(1);
-               firstLine = 0;
-            } else{
+            if (firstLine == 1)
+            {
+                hightligthLine(1);
+                firstLine = 0;
+            }
+            else
+            {
                 hightligthLine(0);
             }
 
@@ -282,7 +286,6 @@ void MainWindow::on_actionNext_line_triggered()
     }
     return;
 }
-
 
 //! Whenever this is called the Ram view info is flushed completely, then current memory state is requested from the memory server and the ram view is updated line by line
 void MainWindow::updateRamView()
@@ -402,7 +405,8 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::hightligthLine(int firstLine)
 {
-    if (firstLine==1){
+    if (firstLine == 1)
+    {
         QTextCursor cur = ui->plainTextEdit->textCursor();
         QTextBlockFormat f;
         cur.setBlockFormat(f);
@@ -411,7 +415,9 @@ void MainWindow::hightligthLine(int firstLine)
         ui->plainTextEdit->setTextCursor(cur);
         cur.select(QTextCursor::LineUnderCursor);
         cur.setBlockFormat(f);
-    } else {
+    }
+    else
+    {
         QTextCursor cur = ui->plainTextEdit->textCursor();
         QTextBlockFormat f;
         QTextBlockFormat P;
@@ -423,10 +429,9 @@ void MainWindow::hightligthLine(int firstLine)
         cur.select(QTextCursor::LineUnderCursor);
         cur.setBlockFormat(f);
     }
-
 }
 
-void MainWindow::deleteHightligth()
+void MainWindow::deleteHightlight()
 {
     QTextCursor cur = ui->plainTextEdit->textCursor();
     QTextBlockFormat P;
@@ -435,11 +440,15 @@ void MainWindow::deleteHightligth()
     cur.setBlockFormat(P);
     bool tmp = true;
     int blockCount = ui->plainTextEdit->blockCount();
-    while (tmp) {
-        if (cur.position() == blockCount-1){
+    while (tmp)
+    {
+        if (cur.position() == blockCount - 1)
+        {
             cur.setBlockFormat(P);
             tmp = false;
-        } else {
+        }
+        else
+        {
             cur.setBlockFormat(P);
             cur.movePosition(QTextCursor::NextBlock);
         }

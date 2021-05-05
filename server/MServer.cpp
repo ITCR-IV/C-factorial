@@ -430,6 +430,7 @@ int MServer::declaration(UpdateInfo declarationInfo)
             }
         }
         declarationsCounter.back()++;
+        declarationsOrder.push_back(name);
     }
     return SUCCESS;
 }
@@ -794,6 +795,7 @@ void MServer::flushMemory()
     this->structDefsCounter.clear();
     this->structDefinitionsOrder.clear();
     this->declarationsCounter.clear();
+    this->declarationsOrder.clear();
 
     // Clear flags/variables
     this->scopeLevel = 0;
