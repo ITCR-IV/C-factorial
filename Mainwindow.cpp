@@ -52,9 +52,9 @@ void MainWindow::on_actionOpen_triggered()
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     if (!file.isOpen())
     {
-        QMessageBox::critical(this, "Error", file.errorString());
         Logger::EnableFileOutput();
         Logger::Error(file.errorString().toStdString().c_str());
+        QMessageBox::critical(this, "Error", file.errorString());
         return;
     }
     io.setDevice(&file);
@@ -129,6 +129,8 @@ void MainWindow::on_actionAboutQt_triggered()
  */
 void MainWindow::on_actionDelete_triggered()
 {
+    Logger::EnableFileOutput();
+    Logger::Error("test");
 }
 
 /*!

@@ -23,7 +23,6 @@ protected:
 private slots:
     void updateLineNumberAreaWidth(int newBlockCount);
     void updateLineNumberArea(const QRect &rect, int dy);
-    void highlightCurrentLine();
 };
 
 #endif // CODEEDITOR_H
