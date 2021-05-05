@@ -398,8 +398,23 @@ string Interpreter::getValue(string id)
 string Interpreter::getRefValue(string id)
 {
     // Check that a reference type is passed
-    // Still need to add to server a method to send back the info for a variable by giving it's address
-    return id;
+    // Nvm, check is made by the parser ¯\_(ツ)_/¯
+    // Call server to request the value of the variable the reference is pointing to
+    string address = this->getValue(id);
+
+    manager->sendRequest(REQUESTBYADDRESS);
+    manager->sendJson(address);
+    std::string info = manager->getServerMsg();
+    if (info == "-1")
+    {
+        error("Requesting to dereference dangling pointer");
+        Logger::EnableFileOutput();
+        Logger::Error("Llamado a dereferenciar un puntero que no apunta a nada");
+        return "0";
+    }
+    JsonDecoder decoder = JsonDecoder(info);
+    UpdateInfo pointedInfo = decoder.decode();
+    return pointedInfo.getDataValue();
 }
 
 /*!
