@@ -148,6 +148,7 @@ void MainWindow::on_actionDelete_triggered()
  */
 void MainWindow::on_actionStop_triggered()
 {
+    this->isRunning = false;
 }
 
 /*!
