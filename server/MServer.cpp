@@ -310,7 +310,8 @@ void MServer::exit_scope()
     this->structDefsCounter.pop_back();
     for (declarationNum; declarationNum > 0; declarationNum--)
     {
-        std::string last = getLastVariable();
+        std::string last = this->declarationsOrder.back();
+        this->declarationsOrder.pop_back();
         this->varAddresses.erase(last);
         this->varTypes.erase(last);
     }
@@ -472,6 +473,7 @@ int MServer::reference_declaration(UpdateInfo declarationInfo)
         std::string refType = "reference<" + type + ">";
         this->varTypes.insert({name, refType});
         declarationsCounter.back()++;
+        declarationsOrder.push_back(name);
     }
     return SUCCESS;
 }
