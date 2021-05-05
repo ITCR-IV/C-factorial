@@ -1,7 +1,6 @@
 #include "JsonDecoder.h"
 #include <nlohmann/json.hpp>
 #include <string>
-#include "Logger.h"
 
 using json = nlohmann::json;
 
@@ -28,9 +27,5 @@ UpdateInfo JsonDecoder::decode()
     int address = this->jFile["dataAddress"].get<int>();
     int count = this->jFile["dataCount"].get<int>();
     UpdateInfo returnInfo = UpdateInfo(type, name, value, address, count);
-
-    Logger::EnableFileOutput();
-    Logger::Info("Json decodificado [JsonDecoder]");
-
     return returnInfo;
 }

@@ -45,8 +45,6 @@ void ServerManager::connectSocket()
     if ((serverSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
         printf("\n Socket creation error \n");
-        Logger::EnableFileOutput();
-        Logger::Error("Error al crear el socket [serverManager]");
         return;
     }
 
@@ -60,8 +58,6 @@ void ServerManager::connectSocket()
     if (inet_pton(AF_INET, "127.0.0.1", &address.sin_addr) <= 0)
     {
         printf("\nInvalid address/ Address not supported \n");
-        Logger::EnableFileOutput();
-        Logger::Error("Invvalid Address: Direccion no soportada");
         return;
     }
 
@@ -69,8 +65,6 @@ void ServerManager::connectSocket()
     if (connect(serverSocket, (struct sockaddr *)&address, sizeof(address)) < 0)
     {
         printf("\nConnection Failed \n");
-        Logger::EnableFileOutput();
-        Logger::Error("Fallo en la conexion [serverManager]");
         return;
     }
 
@@ -117,8 +111,6 @@ void ServerManager::listenServer()
 {
     read(this->serverSocket, this->buffer, 1024);
     printf("Received: '%s'\n", this->buffer);
-    Logger::EnableFileOutput();
-    Logger::Info("Informaciòn recibida del server [serverManager]");
 }
 
 //! Calls listenServer to get a message from the server and returns it as an std::string, call only if expecting the server to send a message back after a request or during a protocol

@@ -1,6 +1,6 @@
 #include "Logger.h"
 #include <iostream>
-#include "Mainwindow.h"
+
 
 Logger *Logger::instance = nullptr;
 
