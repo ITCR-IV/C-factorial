@@ -80,7 +80,7 @@ void ServerManager::connectSocket()
 void ServerManager::sendRequest(int request)
 {
     connectSocket();
-    printf("Sending request: %d\n", request);
+    //printf("Sending request: %d\n", request);
     Logger::EnableFileOutput();
     Logger::Info("Enviando el request [serverManager]");
 
@@ -97,7 +97,7 @@ void ServerManager::sendRequest(int request)
 void ServerManager::sendJson(std::string jsonStr)
 {
     connectSocket();
-    printf("Sending: %s\n", jsonStr.c_str());
+    //printf("Sending: %s\n", jsonStr.c_str());
     Logger::EnableFileOutput();
     Logger::Info("Enviando Json [serverManager]");
 
@@ -110,7 +110,7 @@ void ServerManager::sendJson(std::string jsonStr)
 void ServerManager::listenServer()
 {
     read(this->serverSocket, this->buffer, 1024);
-    printf("Received: '%s'\n", this->buffer);
+    //printf("Received: '%s'\n", this->buffer);
 }
 
 //! Calls listenServer to get a message from the server and returns it as an std::string, call only if expecting the server to send a message back after a request or during a protocol

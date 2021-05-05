@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
     mLogThread = new LogThread(1, 1000, this);
     mLogThread->start();
     connect(mLogThread, &LogThread::logData, ui->textBrowser, &QTextBrowser::setText);
+    this->lineNumber = 0;
 }
 
 /*!
@@ -163,6 +164,8 @@ void MainWindow::on_actionRun_triggered()
     this->isRunning = false;
     this->StdoutString = "";
     this->set_stdout_text("");
+    this->delete_row();
+    this->lineNumber = 0;
 
     // Create lexer and parser for test run
     Lexer testLexer = Lexer(fullCode);
@@ -227,6 +230,8 @@ void MainWindow::on_actionNext_line_triggered()
     {
         try
         {
+            this->lineNumber++;
+            printf("Parsing line number: %d\n", this->lineNumber);
             parser.advance_1loc();
 
             //Update Ram Live View with current state

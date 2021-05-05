@@ -59,7 +59,7 @@ void Parser::eat(string tokenType)
  */
 void Parser::scope()
 {
-    printf("Entering scope \n");
+    //printf("Entering scope \n");
     eat(LBRACK);
     if (this->currentToken.getType() == EOL)
     {
@@ -81,7 +81,7 @@ void Parser::scope()
     }
 
     eat(RBRACK);
-    printf("Exiting scope\n");
+    //printf("Exiting scope\n");
 
     this->interpreter.exit_scope();
     if (this->currentToken.getType() == EOL)

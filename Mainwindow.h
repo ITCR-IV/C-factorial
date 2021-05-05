@@ -42,6 +42,9 @@ public:
     //! The string being held in Stdout, it's an attribute so that the Mainwindow can pass itself down to the interpreter and it can modify this string
     string StdoutString;
 
+    //! An integer that keeps track for the UI which line is being inspected
+    int lineNumber;
+
 private slots:
     void set_log_text(string text);
     void on_actionRun_triggered();
@@ -70,7 +73,6 @@ private:
     Ui::MainWindow *ui;
 
     LogThread *mLogThread;
-
 
     //! emun to facilitate the column location with the label of the column
     enum Column
