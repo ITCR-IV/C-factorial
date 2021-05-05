@@ -429,6 +429,39 @@ int MServer::declaration(UpdateInfo declarationInfo)
                     this->declaration(UpdateInfo(attribute->type, fullName, attribute->defaultValue));
                 }
             }
+            if (value != "")
+            { // an existing struct is being assigned to this one
+                int assignAddress;
+                //verify value is an integer and turn to int
+                if (this->isInt(value.c_str()))
+                {
+                    assignAddress = stoi(value);
+                }
+                else
+                {
+                    printf("Somehow declaration for a struct was called and it was assigned a struct but the value isn't an int?? Value: ");
+                    std::cout << value << "\n";
+                    return ERROR;
+                }
+                //find the struct that is being assigned from its address
+                map<std::string, int>::iterator pType;
+                std::string assignStructName = "";
+                for (pType = this->varAddresses.begin(); pType != this->varAddresses.end(); pType++)
+                {
+                    if (pType->second == assignAddress)
+                    {
+                        assignStructName = pType->first;
+                    }
+                }
+                if (assignStructName == "")
+                {
+                    printf("Somehow declaration for a struct was called and it was assigned a struct address that _is_ an int but no variable stored in memory has that address??\n");
+                    return ERROR;
+                }
+
+                //then change the addresses just assigned for the current struct
+                this->updateStructAddresses(name, assignStructName);
+            }
         }
         declarationsCounter.back()++;
         declarationsOrder.push_back(name);
@@ -768,19 +801,19 @@ std::string MServer::extract_refType(std::string reference)
  */
 void MServer::updateStructAddresses(std::string structName, std::string newStructName)
 {
-    this->varAddresses.at(structName) = this->varAddresses.at(newStructName);
+    this->varAddresses.at(structName) = this->varAddresses.at(newStructName); //change address of the struct variable that's just the name
 
-    std::string structPrefix = structName + ".";
-    std::string newStructPrefix = newStructName + ".";
+    std::string structPrefix = structName + ".";       //get the prefix
+    std::string newStructPrefix = newStructName + "."; // get the prefix of the struct being assigned
 
     map<std::string, int>::iterator p;
-    for (p = varAddresses.begin(); p != varAddresses.end(); p++)
+    for (p = varAddresses.begin(); p != varAddresses.end(); p++) //iterate through the map with addresses
     {
-        if (p->first.find(newStructPrefix) != std::string::npos)
+        if (p->first.find(newStructPrefix) != std::string::npos) //whenever it finds a variable with the prefix of the struct being assigned this is true
         {
-            std::string attributeName = p->first.substr(p->first.find(".") + 1); // the name of the attribute without prefix
-            std::string attributeEquivalent = structPrefix + attributeName;
-            varAddresses.at(attributeEquivalent) = p->second;
+            std::string attributeName = p->first.substr(p->first.find(".") + 1); // gets the name of the attribute without prefix
+            std::string attributeEquivalent = structPrefix + attributeName;      // gets the equivalent of this attribute of the newStruct but for the struct being assigned the new addresses
+            varAddresses.at(attributeEquivalent) = p->second;                    // assigns the address of the new struct's attribute to the old struct's attribute
         }
     }
 }
