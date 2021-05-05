@@ -27,7 +27,6 @@ MainWindow::MainWindow(QWidget *parent)
     mLogThread = new LogThread(1, 1000, this);
     mLogThread->start();
     connect(mLogThread, &LogThread::logData, ui->textBrowser, &QTextBrowser::setText);
-    firstLine = 1;
 }
 
 /*!
@@ -164,7 +163,6 @@ void MainWindow::on_actionRun_triggered()
     this->isRunning = false;
     this->StdoutString = "";
     this->set_stdout_text("");
-    //this->deleteHightlight();
 
     // Create lexer and parser for test run
     Lexer testLexer = Lexer(fullCode);
@@ -230,15 +228,6 @@ void MainWindow::on_actionNext_line_triggered()
         try
         {
             parser.advance_1loc();
-            if (firstLine == 1)
-            {
-                hightligthLine(1);
-                firstLine = 0;
-            }
-            else
-            {
-                hightligthLine(0);
-            }
 
             //Update Ram Live View with current state
             updateRamView();
@@ -401,56 +390,4 @@ void MainWindow::on_pushButton_clicked()
     FILE *logFile;
     logFile = fopen("log.txt", "w");
     fclose(logFile);
-}
-
-void MainWindow::hightligthLine(int firstLine)
-{
-    if (firstLine == 1)
-    {
-        QTextCursor cur = ui->plainTextEdit->textCursor();
-        QTextBlockFormat f;
-        cur.setBlockFormat(f);
-        f.setBackground(Qt::green);
-        cur.movePosition(QTextCursor::Start);
-        ui->plainTextEdit->setTextCursor(cur);
-        cur.select(QTextCursor::LineUnderCursor);
-        cur.setBlockFormat(f);
-    }
-    else
-    {
-        QTextCursor cur = ui->plainTextEdit->textCursor();
-        QTextBlockFormat f;
-        QTextBlockFormat P;
-        P.setBackground(Qt::white);
-        cur.setBlockFormat(P);
-        f.setBackground(Qt::green);
-        cur.movePosition(QTextCursor::NextBlock);
-        ui->plainTextEdit->setTextCursor(cur);
-        cur.select(QTextCursor::LineUnderCursor);
-        cur.setBlockFormat(f);
-    }
-}
-
-void MainWindow::deleteHightlight()
-{
-    QTextCursor cur = ui->plainTextEdit->textCursor();
-    QTextBlockFormat P;
-    P.setBackground(Qt::white);
-    cur.movePosition(QTextCursor::Start);
-    cur.setBlockFormat(P);
-    bool tmp = true;
-    int blockCount = ui->plainTextEdit->blockCount();
-    while (tmp)
-    {
-        if (cur.position() == blockCount - 1)
-        {
-            cur.setBlockFormat(P);
-            tmp = false;
-        }
-        else
-        {
-            cur.setBlockFormat(P);
-            cur.movePosition(QTextCursor::NextBlock);
-        }
-    }
 }

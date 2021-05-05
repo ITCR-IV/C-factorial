@@ -32,8 +32,6 @@ public:
     void set_stdout_text(string text);
     void append_stdout_line(string text);
     void delete_text(int identifier);
-    void hightligthLine(int fistLine);
-    void deleteHightlight();
 
     //! Flag so the next line button knows whether a program is being run atm or not
     bool isRunning;
@@ -73,7 +71,6 @@ private:
 
     LogThread *mLogThread;
 
-    int firstLine;
 
     //! emun to facilitate the column location with the label of the column
     enum Column
