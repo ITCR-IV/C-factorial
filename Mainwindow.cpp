@@ -130,7 +130,6 @@ void MainWindow::on_actionAboutQt_triggered()
  */
 void MainWindow::on_actionDelete_triggered()
 {
-    hightligthLine(1);
 }
 
 /*!
