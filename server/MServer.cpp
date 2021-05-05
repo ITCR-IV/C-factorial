@@ -11,6 +11,7 @@
 #include "StructAttribute.h"
 #include <chrono>
 #include <thread>
+#include "Logger.h"
 
 /*!
  * \brief Construct a new MServer object, and configures the socket
@@ -48,16 +49,16 @@ MServer::MServer(int PORT, int size)
 
         if (serverBind < 0)
         {
-            // add to log
-            printf("Port number: %d\nFail to bind local port\n", PORT);
+            Logger::EnableFileOutput();
+            Logger::Error("Error al hacer bind al puerto local [MServer]");
             PORT--;
             address.sin_port = htons(PORT);
         }
 
         else
         {
-            // add to log
-            printf("Port number: %d\nSuccessfully bind to local port\n", PORT);
+            Logger::EnableFileOutput();
+            Logger::Info("Bind al puerto local con exito [MServer]");
             break;
         }
     }
@@ -70,14 +71,14 @@ MServer::MServer(int PORT, int size)
 
     if (serverBind < 0)
     {
-        // add to log
-        printf("Fail to start listening local port\n");
+        Logger::EnableFileOutput();
+        Logger::Error("Fallo al iniciar la escucha del puerto [MServer]");
     }
 
     else
     {
-        // add to log
-        printf("Started listening local port\n");
+        Logger::EnableFileOutput();
+        Logger::Info("Escuchando el puerto local[MServer]");
     }
 
     this->request(address, serverSocket);
@@ -116,16 +117,16 @@ void MServer::request(sockaddr_in address, int serverSocket)
             switch (req)
             {
             case ENTERSCOPE:
-                printf("Entering scope\n");
+                //printf("Entering scope\n");
                 enter_scope();
                 break;
             case EXITSCOPE:
-                printf("Exiting scope\n");
+                //printf("Exiting scope\n");
                 exit_scope();
                 break;
             case DECLARE:
             {
-                printf("Doing a declaration\n");
+                //printf("Doing a declaration\n");
                 readSocket(buffer, address, serverSocket, newSocket);
                 int exitStatus;
                 exitStatus = declaration(JsonDecoder(buffer).decode());
@@ -135,7 +136,7 @@ void MServer::request(sockaddr_in address, int serverSocket)
             }
             case DECLAREREF:
             {
-                printf("Doing a reference declaration\n");
+               // printf("Doing a reference declaration\n");
                 readSocket(buffer, address, serverSocket, newSocket);
                 int exitStatus;
                 exitStatus = reference_declaration(JsonDecoder(buffer).decode());
@@ -145,7 +146,7 @@ void MServer::request(sockaddr_in address, int serverSocket)
             }
             case CHANGEVALUE:
             {
-                printf("Changing an existing value\n");
+                //printf("Changing an existing value\n");
                 readSocket(buffer, address, serverSocket, newSocket);
                 int exitStatus;
                 exitStatus = update_value(JsonDecoder(buffer).decode());
@@ -154,12 +155,12 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 break;
             }
             case ENTERSTRUCT:
-                printf("Entering struct\n");
+                //printf("Entering struct\n");
                 enter_struct();
                 break;
             case EXITSTRUCT:
             {
-                printf("Exiting struct\n");
+                //printf("Exiting struct\n");
                 readSocket(buffer, address, serverSocket, newSocket);
                 int exitStatus;
                 exitStatus = exit_struct(std::string(buffer));
@@ -169,7 +170,7 @@ void MServer::request(sockaddr_in address, int serverSocket)
             }
             case REQUESTVARIABLE:
             {
-                printf("Fulfilling variable request\n");
+                //printf("Fulfilling variable request\n");
                 readSocket(buffer, address, serverSocket, newSocket);
                 std::string info;
                 info = getInfo(std::string(buffer));
@@ -178,7 +179,7 @@ void MServer::request(sockaddr_in address, int serverSocket)
             }
             case REQUESTMEMORYSTATE:
             {
-                printf("Sending memory state...\n");
+                //printf("Sending memory state...\n");
 
                 std::vector<std::pair<std::string, int>> addressVector; //we copy the map values into a vector so that we may then sort the vector and send the variables in address order
 
@@ -208,12 +209,12 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 break;
             }
             case FLUSH:
-                printf("Flushing memory state\n");
+                //printf("Flushing memory state\n");
                 //Reset the memory server state
                 flushMemory();
                 break;
             case REQUESTBYADDRESS:
-                printf("Fulfilling variable by address request\n");
+               //printf("Fulfilling variable by address request\n");
                 //Receive an address and send back an updateInfo packaged variable
                 break;
             default:
@@ -247,19 +248,17 @@ void MServer::readSocket(char *buffer, sockaddr_in address, int serverSocket, in
 
     if (newSocket < 0)
     {
-        // add to log
-        printf("Fail to accept\n");
+        Logger::EnableFileOutput();
+        Logger::Error("Fallo al aceptar [MServer]");
     }
     else
 
     {
-        // add to log
-        printf("accepted\n");
+        Logger::EnableFileOutput();
+        Logger::Info("Aceptado [MServer]");
     }
 
     read(newSocket, buffer, 1024);
-
-    printf("Received: '%s'\n", buffer);
 }
 
 //! Increment the scope counte and add a new 0 entry to the structDefsCounter and declarationsCounter
