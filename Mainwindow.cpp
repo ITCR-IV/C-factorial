@@ -112,7 +112,14 @@ void MainWindow::on_actionCut_triggered()
  */
 void MainWindow::on_actionPaste_triggered()
 {
-    ui->plainTextEdit->paste();
+    //ui->plainTextEdit->paste();
+    if (firstLine == 1){
+       hightligthLine(1);
+       //firstLine = 0;
+    } else{
+        hightligthLine(0);
+    }
+
 }
 
 /*!
@@ -130,6 +137,7 @@ void MainWindow::on_actionAboutQt_triggered()
  */
 void MainWindow::on_actionDelete_triggered()
 {
+    deleteHightligth();
 }
 
 /*!
@@ -424,4 +432,24 @@ void MainWindow::hightligthLine(int firstLine)
         cur.setBlockFormat(f);
     }
 
+}
+
+void MainWindow::deleteHightligth()
+{
+    QTextCursor cur = ui->plainTextEdit->textCursor();
+    QTextBlockFormat P;
+    P.setBackground(Qt::white);
+    cur.movePosition(QTextCursor::Start);
+    cur.setBlockFormat(P);
+    bool tmp = true;
+    int blockCount = ui->plainTextEdit->blockCount();
+    while (tmp) {
+        if (cur.position() == blockCount-1){
+            cur.setBlockFormat(P);
+            tmp = false;
+        } else {
+            cur.setBlockFormat(P);
+            cur.movePosition(QTextCursor::NextBlock);
+        }
+    }
 }
