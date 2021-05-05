@@ -5,6 +5,7 @@
 #include "Token.h"
 #include "Interpreter.h"
 
+//! Class that is in charge of parsing and interpreting the C! language, even though there's a Parser class and an Interpreter class these divisions are only for modularization convenience, in reality because the Parser directly owns and calls the interpreter methods it classifies as a syntax-directed interpreter
 class Parser
 {
 
