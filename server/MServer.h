@@ -36,6 +36,8 @@ public:
 
     std::string getInfo(std::string id); //send the variable with type, value, and address info packaged
 
+    std::string getInfoByAddr(std::string address); //send the variable to which the requested address belongs with type, value, and address info packaged
+
 private:
     //! points to the start of the memory, is char so that getting to an address through arithmetic is easy
     char *serverMemory;
@@ -77,7 +79,7 @@ private:
 
     void flushMemory();
 
-    bool isInt(char *charstr);
+    bool isInt(const char *charstr);
 };
 
 #endif // MSERVER_H

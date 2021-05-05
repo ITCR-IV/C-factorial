@@ -1,7 +1,6 @@
 #include "Logger.h"
 #include <iostream>
 
-
 Logger *Logger::instance = nullptr;
 
 /*!
@@ -36,7 +35,6 @@ void Logger::log(LogLevel newlevel, string message)
             fprintf(file, "\n");
 
             string showString = currentTime + levelString + message;
-
         }
     }
 }
@@ -46,10 +44,11 @@ void Logger::log(LogLevel newlevel, string message)
  *
  * \return string with the date
  */
-string Logger::getCurrentDate(){
+string Logger::getCurrentDate()
+{
     time_t now = time(0);
-    struct tm  tstruct;
-    char  buf[80];
+    struct tm tstruct;
+    char buf[80];
     tstruct = *localtime(&now);
 
     strftime(buf, sizeof(buf), "%Y-%m-%d %X     ", &tstruct);
@@ -91,7 +90,7 @@ void Logger::free_file()
  */
 void Logger::EnableFileOutput()
 {
-    Logger& logger_instance = getInstance();
+    Logger &logger_instance = getInstance();
     logger_instance.filepath = "log.txt";
     logger_instance.enable_file_output();
 }

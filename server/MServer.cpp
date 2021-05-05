@@ -51,6 +51,7 @@ MServer::MServer(int PORT, int size)
         {
             Logger::EnableFileOutput();
             Logger::Error("Error al hacer bind al puerto local [MServer]");
+            printf("Port number: %d\nFailed to bind to local port\n", PORT);
             PORT--;
             address.sin_port = htons(PORT);
         }
@@ -59,6 +60,7 @@ MServer::MServer(int PORT, int size)
         {
             Logger::EnableFileOutput();
             Logger::Info("Bind al puerto local con exito [MServer]");
+            printf("Port number: %d\nSuccessfully bind to local port\n", PORT);
             break;
         }
     }
@@ -117,16 +119,16 @@ void MServer::request(sockaddr_in address, int serverSocket)
             switch (req)
             {
             case ENTERSCOPE:
-                //printf("Entering scope\n");
+                printf("Entering scope\n");
                 enter_scope();
                 break;
             case EXITSCOPE:
-                //printf("Exiting scope\n");
+                printf("Exiting scope\n");
                 exit_scope();
                 break;
             case DECLARE:
             {
-                //printf("Doing a declaration\n");
+                printf("Doing a declaration\n");
                 readSocket(buffer, address, serverSocket, newSocket);
                 int exitStatus;
                 exitStatus = declaration(JsonDecoder(buffer).decode());
@@ -136,7 +138,7 @@ void MServer::request(sockaddr_in address, int serverSocket)
             }
             case DECLAREREF:
             {
-               // printf("Doing a reference declaration\n");
+                printf("Doing a reference declaration\n");
                 readSocket(buffer, address, serverSocket, newSocket);
                 int exitStatus;
                 exitStatus = reference_declaration(JsonDecoder(buffer).decode());
@@ -146,7 +148,7 @@ void MServer::request(sockaddr_in address, int serverSocket)
             }
             case CHANGEVALUE:
             {
-                //printf("Changing an existing value\n");
+                printf("Changing an existing value\n");
                 readSocket(buffer, address, serverSocket, newSocket);
                 int exitStatus;
                 exitStatus = update_value(JsonDecoder(buffer).decode());
@@ -155,12 +157,12 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 break;
             }
             case ENTERSTRUCT:
-                //printf("Entering struct\n");
+                printf("Entering struct\n");
                 enter_struct();
                 break;
             case EXITSTRUCT:
             {
-                //printf("Exiting struct\n");
+                printf("Exiting struct\n");
                 readSocket(buffer, address, serverSocket, newSocket);
                 int exitStatus;
                 exitStatus = exit_struct(std::string(buffer));
@@ -170,7 +172,7 @@ void MServer::request(sockaddr_in address, int serverSocket)
             }
             case REQUESTVARIABLE:
             {
-                //printf("Fulfilling variable request\n");
+                printf("Fulfilling variable request\n");
                 readSocket(buffer, address, serverSocket, newSocket);
                 std::string info;
                 info = getInfo(std::string(buffer));
@@ -179,7 +181,7 @@ void MServer::request(sockaddr_in address, int serverSocket)
             }
             case REQUESTMEMORYSTATE:
             {
-                //printf("Sending memory state...\n");
+                printf("Sending memory state...\n");
 
                 std::vector<std::pair<std::string, int>> addressVector; //we copy the map values into a vector so that we may then sort the vector and send the variables in address order
 
@@ -209,14 +211,20 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 break;
             }
             case FLUSH:
-                //printf("Flushing memory state\n");
+                printf("Flushing memory state\n");
                 //Reset the memory server state
                 flushMemory();
                 break;
             case REQUESTBYADDRESS:
-               //printf("Fulfilling variable by address request\n");
+            {
+                printf("Fulfilling variable by address request\n");
                 //Receive an address and send back an updateInfo packaged variable
+                readSocket(buffer, address, serverSocket, newSocket);
+                std::string info;
+                info = getInfoByAddr(std::string(buffer));
+                send(newSocket, info.c_str(), info.length() + 1, 0);
                 break;
+            }
             default:
                 printf("Undefined request '%d'\n", req);
             }
@@ -625,6 +633,37 @@ std::string MServer::getInfo(std::string id)
 }
 
 /*!
+ * \brief It finds the first variable that's stored in the given address (different struct identifiers can point to the same memory) and calls the getInfo method for the found id and returns it's info
+ * 
+ * \param address address of the variable requested, the string must contain an integer or the method will fail and return an error code
+ * \return std::string formatted UpdateInfo as json
+ */
+std::string MServer::getInfoByAddr(std::string address)
+{
+    if (!isInt(address.c_str()))
+    {
+        printf("Address given to getInfoByAddr() method is not an integer");
+        return std::to_string(ERROR);
+    }
+    int iAddress = std::stoi(address);
+    map<std::string, int>::iterator p;
+    while (true)
+    {
+        if (p == this->varAddresses.end())
+        { // if address not found return error
+            printf("Given address for getInfoByAddr() method is not pointed to by any stored variable");
+            return std::to_string(ERROR);
+        }
+        if (p->second == iAddress)
+        { // if address found exit loop
+            break;
+        }
+        p++;
+    }
+    return getInfo(p->first);
+}
+
+/*!
  * \brief Get the last variable assigned in memory, that is, the variable that has the highest address
  * 
  * \return std::string the variable's id
@@ -735,7 +774,7 @@ void MServer::flushMemory()
     this->insideStruct = false;
 }
 
-bool MServer::isInt(char *numberPtr)
+bool MServer::isInt(const char *numberPtr)
 {
     while (*numberPtr != '\0')
     {
