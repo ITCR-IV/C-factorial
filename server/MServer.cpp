@@ -121,10 +121,16 @@ void MServer::request(sockaddr_in address, int serverSocket)
             case ENTERSCOPE:
                 printf("Entering scope\n");
                 enter_scope();
+
+                Logger::EnableFileOutput();
+                Logger::Info("Entrando al scope[MServer]");
                 break;
             case EXITSCOPE:
                 printf("Exiting scope\n");
                 exit_scope();
+
+                Logger::EnableFileOutput();
+                Logger::Info("Saliendo al scope[MServer]");
                 break;
             case DECLARE:
             {
@@ -134,6 +140,9 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 exitStatus = declaration(JsonDecoder(buffer).decode());
                 std::string info = std::to_string(exitStatus);
                 send(newSocket, info.c_str(), info.length() + 1, 0);
+
+                Logger::EnableFileOutput();
+                Logger::Info("Haciendo una declaracion [MServer]");
                 break;
             }
             case DECLAREREF:
@@ -144,6 +153,9 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 exitStatus = reference_declaration(JsonDecoder(buffer).decode());
                 std::string info = std::to_string(exitStatus);
                 send(newSocket, info.c_str(), info.length() + 1, 0);
+
+                Logger::EnableFileOutput();
+                Logger::Info("Haciendo una declaracion por referencia[MServer]");
                 break;
             }
             case CHANGEVALUE:
@@ -154,11 +166,17 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 exitStatus = update_value(JsonDecoder(buffer).decode());
                 std::string info = std::to_string(exitStatus);
                 send(newSocket, info.c_str(), info.length() + 1, 0);
+
+                Logger::EnableFileOutput();
+                Logger::Info("Cambiando una variable existente [MServer]");
                 break;
             }
             case ENTERSTRUCT:
                 printf("Entering struct\n");
                 enter_struct();
+
+                Logger::EnableFileOutput();
+                Logger::Info("Entrando a un struct[MServer]");
                 break;
             case EXITSTRUCT:
             {
@@ -168,6 +186,9 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 exitStatus = exit_struct(std::string(buffer));
                 std::string info = std::to_string(exitStatus);
                 send(newSocket, info.c_str(), info.length() + 1, 0);
+
+                Logger::EnableFileOutput();
+                Logger::Info("Saliendo a un struct[MServer]");
                 break;
             }
             case REQUESTVARIABLE:
@@ -208,6 +229,9 @@ void MServer::request(sockaddr_in address, int serverSocket)
                 std::string exitStatus = std::to_string(SUCCESS);
                 std::this_thread::sleep_for(std::chrono::milliseconds(50));
                 send(newSocket, exitStatus.c_str(), exitStatus.length() + 1, 0);
+
+                Logger::EnableFileOutput();
+                Logger::Info("Solicitando estado de la memoria [MServer]");
                 break;
             }
             case FLUSH:

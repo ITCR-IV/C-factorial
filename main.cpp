@@ -13,7 +13,7 @@
 
 int main(int argc, char *argv[])
 {
-    int PORT = 9999;
+    int PORT;
     std::cout << "Enter port number: ";
     std::cin >> PORT;
     std::cout << "\n";
