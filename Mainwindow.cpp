@@ -164,7 +164,7 @@ void MainWindow::on_actionRun_triggered()
     this->isRunning = false;
     this->StdoutString = "";
     this->set_stdout_text("");
-    this->deleteHightlight();
+    //this->deleteHightlight();
 
     // Create lexer and parser for test run
     Lexer testLexer = Lexer(fullCode);
