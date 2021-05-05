@@ -137,7 +137,7 @@ void MainWindow::on_actionAboutQt_triggered()
  */
 void MainWindow::on_actionDelete_triggered()
 {
-    deleteHightligth();
+
 }
 
 /*!
@@ -146,7 +146,7 @@ void MainWindow::on_actionDelete_triggered()
  */
 void MainWindow::on_actionStop_triggered()
 {
-
+    this->isRunning = false;
 }
 
 /*!
