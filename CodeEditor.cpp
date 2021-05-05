@@ -15,7 +15,7 @@ CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
     // connect the new slots
     connect(this, &CodeEditor::blockCountChanged, this, &CodeEditor::updateLineNumberAreaWidth);
     connect(this, &CodeEditor::updateRequest, this, &CodeEditor::updateLineNumberArea);
-    connect(this, &CodeEditor::cursorPositionChanged, this, &CodeEditor::highlightCurrentLine);
+    //connect(this, &CodeEditor::cursorPositionChanged, this, &CodeEditor::highlightCurrentLine);
     updateLineNumberAreaWidth(0);
 }
 
