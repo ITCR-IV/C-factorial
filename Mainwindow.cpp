@@ -218,7 +218,7 @@ void MainWindow::on_actionRun_triggered()
 }
 
 /*!
- * \brief
+ * \brief this method run the code line by line
  *
  */
 void MainWindow::on_actionNext_line_triggered()

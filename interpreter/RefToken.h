@@ -7,6 +7,7 @@
 
 using namespace std;
 
+//! class reftoken indicates the reference to a token object
 class RefToken : public Token
 {
 private:

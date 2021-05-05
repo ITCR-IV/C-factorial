@@ -5,6 +5,7 @@
 
 using namespace std;
 
+//! this class indicates the type and the value of the token
 class Token
 {
 private:

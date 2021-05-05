@@ -11,6 +11,10 @@
 
 using namespace std;
 
+/*!
+ * \brief constructor of the Interpreter class
+ *
+ */
 Interpreter::Interpreter(MainWindow &guiWindow) : manager(ServerManager::getInstance()), guiWindow(&guiWindow) {}
 
 /*!

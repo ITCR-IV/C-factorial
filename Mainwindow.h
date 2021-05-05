@@ -14,6 +14,7 @@ namespace Ui
 }
 QT_END_NAMESPACE
 
+// foward declaration
 class LogThread;
 
 //! Class that handles the GUI and the events
