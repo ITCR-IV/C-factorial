@@ -3,6 +3,7 @@
 
 #include <string>
 
+//! Singleton class used by the client to interface with the memory server, all requests to the memory server are handled by this class
 class ServerManager
 {
 
