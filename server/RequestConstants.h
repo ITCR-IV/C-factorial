@@ -1,5 +1,5 @@
 #ifndef TYPE_CONSTANTS
-#define TOKEN_CONSTANTS_H
+#define TYPE_CONSTANTS_H
 
 const int ERROR                 = -1;
 const int SUCCESS               = 0;
